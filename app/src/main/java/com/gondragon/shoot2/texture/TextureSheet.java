@@ -1,10 +1,17 @@
 package com.gondragon.shoot2.texture;
 
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+
 import com.gondragon.shoot2.database.AccessOfTextureData;
 import com.gondragon.shoot2.vector.IntRect;
 
-import java.nio.file.Paths;
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 
 public class TextureSheet{
 
@@ -12,7 +19,7 @@ public class TextureSheet{
     public int textureID, gridSizeX, gridSizeY;
     public int frameNumberX, frameNumberY;
 
-   // public Image texImage;
+    public Bitmap texImage;
 
     public TextureSheet(){
 
@@ -27,14 +34,22 @@ public class TextureSheet{
 
         readImage();
 
-       // frameNumberX = (int)texImage.getWidth() / gridSizeX;
-        //frameNumberY = (int)texImage.getHeight() / gridSizeY;
+        frameNumberX = texImage.getWidth() / gridSizeX;
+        frameNumberY = texImage.getHeight() / gridSizeY;
     }
 
     private void readImage(){
 
         String filePath = AccessOfTextureData.getTexImageDir() + pictureName;
-        //texImage = new Image(Paths.get(filePath).toUri().toString());
+        File imageFile = new File(filePath);
+        try {
+            InputStream stream = new FileInputStream(imageFile);
+            texImage = BitmapFactory.decodeStream(new BufferedInputStream(stream));
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            texImage = null;
+        }
     }
 
     public void copy(TextureSheet src){
@@ -46,7 +61,7 @@ public class TextureSheet{
         this.frameNumberX = src.frameNumberX;
         this.frameNumberY = src.frameNumberY;
 
-        //this.texImage = src.texImage;
+        this.texImage = src.texImage;
     }
 
     private IntRect texRect = new IntRect();
