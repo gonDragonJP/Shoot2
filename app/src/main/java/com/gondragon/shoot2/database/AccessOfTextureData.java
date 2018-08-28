@@ -1,5 +1,7 @@
 package com.gondragon.shoot2.database;
 
+import android.content.res.Resources;
+
 import com.gondragon.shoot2.texture.TextureSheet;
 
 import java.sql.ResultSet;
