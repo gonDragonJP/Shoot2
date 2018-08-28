@@ -57,7 +57,7 @@ public class EnemyDrawer {
     }
 
     static void onDraw(Enemy enemy, int color){
-
+        /*
         context.setFill(color);
         context.fillOval
                 (enemy.x-drawRadius, enemy.y-drawRadius, drawRadius*2, drawRadius*2);
@@ -66,7 +66,7 @@ public class EnemyDrawer {
         drawCollisionRegions(enemy);
 
         context.setStroke(Color.WHITE);
-        drawFaceOnLine(enemy);
+        drawFaceOnLine(enemy);*/
     }
 
     static void drawCollisionRegions(Enemy enemy){
@@ -78,9 +78,9 @@ public class EnemyDrawer {
             int colX = enemy.x + e.centerX;
             int colY = enemy.y + e.centerY;
             int colRadius = e.size;
-
+/*
             context.strokeOval
-                    (colX-colRadius, colY-colRadius, colRadius*2, colRadius*2);
+                    (colX-colRadius, colY-colRadius, colRadius*2, colRadius*2);*/
         }
     }
 
@@ -91,7 +91,7 @@ public class EnemyDrawer {
         int px = enemy.x + (int)(drawAngleLineLength *vec.x);
         int py = enemy.y + (int)(drawAngleLineLength *vec.y);
 
-        context.strokeLine(enemy.x, enemy.y, px, py);
+       /* context.strokeLine(enemy.x, enemy.y, px, py);*/
     }
 
     static boolean onDrawWithTex(Enemy enemy){
@@ -110,30 +110,30 @@ public class EnemyDrawer {
 
         setAffine(enemy.x, enemy.y, drawSizeX, drawSizeY, enemy.drawAngle);
 
-        context.drawImage(
+       /* context.drawImage(
                 img, texRect.left, texRect.top, sheet.gridSizeX, sheet.gridSizeY,
                 0, 0, drawSizeX, drawSizeY
         );
 
-        toIdentityAffine();
+        toIdentityAffine();*/
         return true;
     }
 
-    private static Affine affine = new Affine();
+    //private static Affine affine = new Affine();
 
     static void setAffine(int x, int y, double sizeX, double sizeY, double angle){
 
         //affineのappendは数学の式のように左から行列を書き並べる感じで記述します
-        affine.appendTranslation(x, y);
+     /*   affine.appendTranslation(x, y);
         affine.appendRotation(angle);
         affine.appendTranslation(-sizeX/2, -sizeY/2);
 
-        context.setTransform(affine);
+        context.setTransform(affine);*/
     }
 
     static void toIdentityAffine(){
 
-        affine.setToIdentity();
-        context.setTransform(affine);
+        //affine.setToIdentity();
+        //context.setTransform(affine);
     }
 }
