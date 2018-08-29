@@ -7,6 +7,8 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
 
+import com.gondragon.shoot2.database.AccessOfTextureData;
+
 public class MainActivity extends Activity {
 
     @Override
@@ -20,6 +22,9 @@ public class MainActivity extends Activity {
 
         glSurface.setRenderer(new MyRenderer());
         setLayout(glSurface);
+
+        //リソース使用クラスにはコンテキストのセットが必要です
+        AccessOfTextureData.setContext(this);
     }
 
     private final int matchParent = LinearLayout.LayoutParams.MATCH_PARENT;
