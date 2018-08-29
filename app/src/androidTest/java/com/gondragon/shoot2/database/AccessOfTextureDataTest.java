@@ -17,14 +17,14 @@ public class AccessOfTextureDataTest {
     private static Context context;
 
     private static final String databaseAssetsDir = "database/";
-    private static final String databasePath = databaseAssetsDir + "texDB.db";
+    private static final String databaseUrl = "file:///android_asset/" + databaseAssetsDir + "texDB.db";
 
     @Test
     public void test() {
 
         setContext();
 
-        SQLiteManager.initDatabase(databasePath);
+        initDatabase(databaseUrl);
     }
 
     private void setContext() {
@@ -35,13 +35,13 @@ public class AccessOfTextureDataTest {
     private static Connection connection;
     private static Statement statement;
 
-    public static void initDatabase(String databasePath){
+    public static void initDatabase(String databaseUrl){
 
         try {
 
             Class.forName("org.sqlite.JDBC");
 
-            connection = DriverManager.getConnection("jdbc:sqlite:" + databasePath);
+            connection = DriverManager.getConnection("jdbc:sqlite:" + databaseUrl);
             statement = connection.createStatement();
 
         } catch (ClassNotFoundException | SQLException e) {
