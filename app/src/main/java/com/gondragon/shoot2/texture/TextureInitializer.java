@@ -15,12 +15,11 @@ public class TextureInitializer {
         List<TextureSheet> texSheetList = new ArrayList<TextureSheet>();
         AccessOfTextureData.setTexDataList(texSheetList, stageNumber);
         if (texSheetList.size() ==0) return null;
-
         int maxIndex = getMaxIndex(texSheetList);
+
         TextureSheet[] sheets = new TextureSheet[maxIndex + 1];
         for(TextureSheet e: texSheetList){
 
-            e.initialize();
             sheets[e.textureID] = new TextureSheet(e);
         }
 

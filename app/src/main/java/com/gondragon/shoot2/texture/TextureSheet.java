@@ -32,24 +32,6 @@ public class TextureSheet{
 
     public void initialize(){
 
-        readImage();
-
-        frameNumberX = texImage.getWidth() / gridSizeX;
-        frameNumberY = texImage.getHeight() / gridSizeY;
-    }
-
-    private void readImage(){
-
-        String filePath = AccessOfTextureData.getTexImageDir() + pictureName;
-        File imageFile = new File(filePath);
-        try {
-            InputStream stream = new FileInputStream(imageFile);
-            texImage = BitmapFactory.decodeStream(new BufferedInputStream(stream));
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-            texImage = null;
-        }
     }
 
     public void copy(TextureSheet src){
