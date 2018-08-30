@@ -11,8 +11,6 @@ import com.gondragon.shoot2.enemy.EnemyData;
 import com.gondragon.shoot2.enemy.GeneratingChild;
 import com.gondragon.shoot2.enemy.MovingNode;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Logger;
 
@@ -37,18 +35,13 @@ public class AccessOfEnemyData {
 
         SQLiteManager.initDatabase(context, databaseName, databaseVersion);
 
-        String sql;
-        ResultSet resultSet;
         ArrayList<Integer> stackList = new ArrayList<>();
-        // ResultSetが単一オブジェクトの為、ネストでクエリ呼び出しすると正常に作動しない
+        // cursorが単一オブジェクトの為、ネストでクエリ呼び出しすると正常に作動しない
         // ネストを避ける為、結果の一時退避用に使用しています
 
-       // sql = "select objectID from BasicData ;";
-
         Cursor cursor = SQLiteManager.getColumnValuesFromTable("BasicData", "objectID");
+        // sql = "select objectID from BasicData ;";
         cursor.moveToFirst();
-
-        logger.warning(String.valueOf(cursor.getCount()));
 
         do{
             int objectID = cursor.getInt(0);
@@ -77,169 +70,139 @@ public class AccessOfEnemyData {
     private static void setEnemyData(EnemyData enemyData){
 
         String objectID =String.valueOf(enemyData.objectID);
-        Cursor cursor = SQLiteManager.getRowValues("BasicData", "objectID", objectID);
+        Cursor cursor;
 
+        cursor = SQLiteManager.getRowValues("BasicData", "objectID", objectID);
         //sql = "select * from BasicData where objectID="+objectID+";";
-        //resultSet = SQLiteManager.getResultSet(sql);
-
         setBasicData(enemyData, cursor);
 
+        cursor = SQLiteManager.getRowValues("MovingNode", "parentID", objectID);
         //sql = "select * from MovingNode where parentID="+objectID+";";
-        //resultSet = SQLiteManager.getResultSet(sql);
+        setMovingNode(enemyData, cursor);
 
-        //setMovingNode(enemyData, resultSet);
-
+        cursor = SQLiteManager.getRowValues("GeneratorNode", "parentID", objectID);
         //sql = "select * from GeneratorNode where parentID="+objectID+";";
-        //resultSet = SQLiteManager.getResultSet(sql);
+        setGeneratorNode(enemyData, cursor);
 
-        //setGeneratorNode(enemyData, resultSet);
-
+        cursor = SQLiteManager.getRowValues("CollisionNode", "parentID", objectID);
         //sql = "select * from CollisionNode where parentID="+objectID+";";
-        //resultSet = SQLiteManager.getResultSet(sql);
+        setCollisionNode(enemyData, cursor);
 
-        //setCollisionNode(enemyData, resultSet);
-
+        cursor = SQLiteManager.getRowValues("AnimationData", "parentID", objectID);
         //sql = "select * from AnimationData where parentID="+objectID+";";
-        //resultSet = SQLiteManager.getResultSet(sql);
-
-        //setAnimationData(enemyData, resultSet);
+        setAnimationData(enemyData, cursor);
     }
 
     private static void setBasicData(EnemyData enemyData, Cursor cursor){
 
-        cursor.moveToFirst();
+        if(!cursor.moveToFirst()) return;
+
+            enemyData.name = cursor.getString(cursor.getColumnIndex("name"));
+            enemyData.isDerivativeType = cursor.getInt(cursor.getColumnIndex("isDerivativeType")) >0;
+            enemyData.textureID = cursor.getInt(cursor.getColumnIndex("textureID"));
+            enemyData.hitPoints = cursor.getInt(cursor.getColumnIndex("hitPoint"));
+            enemyData.atackPoints = cursor.getInt(cursor.getColumnIndex("atackPoint"));
+            enemyData.startPosition.x = cursor.getInt(cursor.getColumnIndex("startPosition_X"));
+            enemyData.startPosition.y = cursor.getInt(cursor.getColumnIndex("startPosition_Y"));
+            enemyData.startPosAttrib.x = cursor.getInt(cursor.getColumnIndex("startPosAttrib_X"));
+            enemyData.startPosAttrib.y = cursor.getInt(cursor.getColumnIndex("startPosAttrib_Y"));
+    }
+
+    private static void setMovingNode(EnemyData enemyData, Cursor cursor){
+
+        if(!cursor.moveToFirst()) return;
+
+        do{
+            MovingNode node = new MovingNode();
+            enemyData.node.add(cursor.getInt(cursor.getColumnIndex("nodeIndex")), node);
+
+            node.startVelocity.x = cursor.getDouble(cursor.getColumnIndex("startVelocity_X"));
+            node.startVelocity.y = cursor.getDouble(cursor.getColumnIndex("startVelocity_Y"));
+            node.startAcceleration.x = cursor.getDouble(cursor.getColumnIndex("startAcceleration_X"));
+            node.startAcceleration.y = cursor.getDouble(cursor.getColumnIndex("startAcceleration_Y"));
+            node.homingAcceleration.x = cursor.getDouble(cursor.getColumnIndex("homingAcceleration_X"));
+            node.homingAcceleration.y = cursor.getDouble(cursor.getColumnIndex("homingAcceleration_Y"));
+            node.nodeDurationFrame = cursor.getInt(cursor.getColumnIndex("nodeDurationFrame"));
+            node.startVelAttrib.x = cursor.getInt(cursor.getColumnIndex("startVelAttrib_X"));
+            node.startVelAttrib.y = cursor.getInt(cursor.getColumnIndex("startVelAttrib_Y"));
+            node.startAccAttrib.x = cursor.getInt(cursor.getColumnIndex("startAccAttrib_X"));
+            node.startAccAttrib.y = cursor.getInt(cursor.getColumnIndex("startAccAttrib_Y"));
+
+        }while(cursor.moveToNext());
+    }
+
+    private static void setGeneratorNode(EnemyData enemyData, Cursor cursor){
+
+        if(!cursor.moveToFirst()) return;
 
         do{
 
-            logger.warning(cursor.getString(0));
+            GeneratingChild node = new GeneratingChild();
+            enemyData.generator.add(cursor.getInt(cursor.getColumnIndex("nodeIndex")), node);
+
+            node.objectID = cursor.getInt(cursor.getColumnIndex("objectID"));
+            node.repeat = cursor.getInt(cursor.getColumnIndex("repeat"));
+            node.startFrame = cursor.getInt(cursor.getColumnIndex("startFrame"));
+            node.intervalFrame = cursor.getInt(cursor.getColumnIndex("intervalFrame"));
+            node.centerX = cursor.getInt(cursor.getColumnIndex("centerX"));
+            node.centerY = cursor.getInt(cursor.getColumnIndex("centerY"));
+
+        } while(cursor.moveToNext());
+    }
+
+    private static void setCollisionNode(EnemyData enemyData, Cursor cursor){
+
+        if(!cursor.moveToFirst()) return;
+
+        do{
+
+            CollisionRegion node = new CollisionRegion();
+            enemyData.collision.add(cursor.getInt(cursor.getColumnIndex("nodeIndex")), node);
+
+            node.centerX = cursor.getInt(cursor.getColumnIndex("centerX"));
+            node.centerY = cursor.getInt(cursor.getColumnIndex("centerY"));
+            node.size = cursor.getInt(cursor.getColumnIndex("size"));
+            int shapeID = cursor.getInt(cursor.getColumnIndex("collisionShape"));
+            node.collisionShape = CollisionRegion.CollisionShape.getFromID(shapeID);
 
         }while(cursor.moveToNext());
 
-        /*
-            enemyData.name = cursor.getString("name");
-            enemyData.isDerivativeType = resultSet.getBoolean("isDerivativeType");
-            enemyData.textureID = resultSet.getInt("textureID");
-            enemyData.hitPoints = resultSet.getInt("hitPoint");
-            enemyData.atackPoints = resultSet.getInt("atackPoint");
-            enemyData.startPosition.x = resultSet.getInt("startPosition_X");
-            enemyData.startPosition.y = resultSet.getInt("startPosition_Y");
-            enemyData.startPosAttrib.x = resultSet.getInt("startPosAttrib_X");
-            enemyData.startPosAttrib.y = resultSet.getInt("startPosAttrib_Y");
-
-        */
     }
 
-    private static void setMovingNode(EnemyData enemyData, ResultSet resultSet){
+    private static void setAnimationData(EnemyData enemyData, Cursor cursor){
 
-        try {
+        if(!cursor.moveToFirst()) return;
 
-            while(resultSet.next()){
+        do{
 
-                MovingNode node = new MovingNode();
-                enemyData.node.add(resultSet.getInt("nodeIndex"), node);
+            AnimationData data = new AnimationData();
+            AnimationSet.AnimeKind animeKind = AnimationSet.AnimeKind.getFromID(cursor.getInt(cursor.getColumnIndex("AnimationKind")));
+            int keyNode = cursor.getInt(cursor.getColumnIndex("keyNode"));
 
-                node.startVelocity.x = resultSet.getDouble("startVelocity_X");
-                node.startVelocity.y = resultSet.getDouble("startVelocity_Y");
-                node.startAcceleration.x = resultSet.getDouble("startAcceleration_X");
-                node.startAcceleration.y = resultSet.getDouble("startAcceleration_Y");
-                node.homingAcceleration.x = resultSet.getDouble("homingAcceleration_X");
-                node.homingAcceleration.y = resultSet.getDouble("homingAcceleration_Y");
-                node.nodeDurationFrame = resultSet.getInt("nodeDurationFrame");
-                node.startVelAttrib.x = resultSet.getInt("startVelAttrib_X");
-                node.startVelAttrib.y = resultSet.getInt("startVelAttrib_Y");
-                node.startAccAttrib.x = resultSet.getInt("startAccAttrib_X");
-                node.startAccAttrib.y = resultSet.getInt("startAccAttrib_Y");
+            switch(animeKind){
+
+                case NORMAL:
+                    enemyData.animationSet.normalAnime = data;
+                    break;
+                case EXPLOSION:
+                    enemyData.animationSet.explosionAnime = data;
+                    break;
+                case NODEACTION:
+                    enemyData.animationSet.nodeActionAnime.put(keyNode, data);
+                default:
             }
 
-        } catch (SQLException e) {
+            data.textureID = cursor.getInt(cursor.getColumnIndex("textureID"));
+            data.drawSize.x = cursor.getDouble(cursor.getColumnIndex("drawSize_X"));
+            data.drawSize.y = cursor.getDouble(cursor.getColumnIndex("drawSize_Y"));
+            data.repeatAttribute = AnimationData.RepeatAttribute.getFromID(cursor.getInt(cursor.getColumnIndex("RepeatAttribute")));
+            data.frameOffset = cursor.getInt(cursor.getColumnIndex("frameOffset"));
+            data.frameNumber= cursor.getInt(cursor.getColumnIndex("frameNumber"));
+            data.frameInterval= cursor.getInt(cursor.getColumnIndex("frameInterval"));
+            data.rotateAction = AnimationData.RotateAttribute.getFromID(cursor.getInt(cursor.getColumnIndex("RotateAttribute")));
+            data.rotateOffset= cursor.getInt(cursor.getColumnIndex("rotateOffset"));
+            data.angularVelocity= cursor.getDouble(cursor.getColumnIndex("angularVelocity"));
 
-            e.printStackTrace();
-        }
-    }
-
-    private static void setGeneratorNode(EnemyData enemyData, ResultSet resultSet){
-
-        try {
-
-            while(resultSet.next()){
-
-                GeneratingChild node = new GeneratingChild();
-                enemyData.generator.add(resultSet.getInt("nodeIndex"), node);
-
-                node.objectID = resultSet.getInt("objectID");
-                node.repeat = resultSet.getInt("repeat");
-                node.startFrame = resultSet.getInt("startFrame");
-                node.intervalFrame = resultSet.getInt("intervalFrame");
-                node.centerX = resultSet.getInt("centerX");
-                node.centerY = resultSet.getInt("centerY");
-            }
-
-        } catch (SQLException e) {
-
-            e.printStackTrace();
-        }
-    }
-
-    private static void setCollisionNode(EnemyData enemyData, ResultSet resultSet){
-
-        try {
-
-            while(resultSet.next()){
-
-                CollisionRegion node = new CollisionRegion();
-                enemyData.collision.add(resultSet.getInt("nodeIndex"), node);
-
-                node.centerX = resultSet.getInt("centerX");
-                node.centerY = resultSet.getInt("centerY");
-                node.size = resultSet.getInt("size");
-                int shapeID = resultSet.getInt("collisionShape");
-                node.collisionShape = CollisionRegion.CollisionShape.getFromID(shapeID);
-            }
-
-        } catch (SQLException e) {
-
-            e.printStackTrace();
-        }
-    }
-
-    private static void setAnimationData(EnemyData enemyData, ResultSet resultSet){
-
-        try {
-
-            while(resultSet.next()){
-
-                AnimationData data = new AnimationData();
-                AnimationSet.AnimeKind animeKind = AnimationSet.AnimeKind.getFromID(resultSet.getInt("AnimationKind"));
-                int keyNode = resultSet.getInt("keyNode");
-
-                switch(animeKind){
-
-                    case NORMAL:
-                        enemyData.animationSet.normalAnime = data;
-                        break;
-                    case EXPLOSION:
-                        enemyData.animationSet.explosionAnime = data;
-                        break;
-                    case NODEACTION:
-                        enemyData.animationSet.nodeActionAnime.put(keyNode, data);
-                    default:
-                }
-
-                data.textureID = resultSet.getInt("textureID");
-                data.drawSize.x = resultSet.getDouble("drawSize_X");
-                data.drawSize.y = resultSet.getDouble("drawSize_Y");
-                data.repeatAttribute = AnimationData.RepeatAttribute.getFromID(resultSet.getInt("RepeatAttribute"));
-                data.frameOffset = resultSet.getInt("frameOffset");
-                data.frameNumber= resultSet.getInt("frameNumber");
-                data.frameInterval= resultSet.getInt("frameInterval");
-                data.rotateAction = AnimationData.RotateAttribute.getFromID(resultSet.getInt("RotateAttribute"));
-                data.rotateOffset= resultSet.getInt("rotateOffset");
-                data.angularVelocity= resultSet.getDouble("angularVelocity");
-            }
-
-        } catch (SQLException e) {
-
-            e.printStackTrace();
-        }
+        }while (cursor.moveToNext());
     }
 }
