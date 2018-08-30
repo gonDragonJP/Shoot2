@@ -1,5 +1,10 @@
 package com.gondragon.shoot2.database;
 
+import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -8,61 +13,33 @@ import java.sql.Statement;
 
 public class SQLiteManager {
 
-    private static Connection connection;
-    private static Statement statement;
+    private static SQLiteDatabase database;
 
-    static String databasePath ="C:/Users/Takahiro/workspace/MySQLite/test.db";
+    public static void initDatabase(Context context, String databaseName, int databaseVersion){
 
-    public static void initDatabase(String databasePath){
+        DatabaseHelper helper = new DatabaseHelper(context, databaseName, null, databaseVersion);
 
         try {
 
-            Class.forName("org.sqlite.JDBC");
+            helper.createDatabaseFromAsset();
+            database = helper.getReadableDatabase();
 
-            connection = DriverManager.getConnection("jdbc:sqlite:" + databasePath);
-            statement = connection.createStatement();
+        } catch (IOException ioe) {
 
-        } catch (ClassNotFoundException | SQLException e) {
-
-            e.printStackTrace();
+            ioe.printStackTrace();
         }
+    }
+
+    public static Cursor getColumnValuesFromTable(String table, String column){
+
+        String[] columnArgs = new String[1];
+        columnArgs[0] = column;
+
+        return database.query(table, columnArgs, null,null,null,null,null);
     }
 
     public static void closeDatabase(){
 
-        try {
-
-            statement.close();
-            connection.close();
-
-        } catch (SQLException e) {
-
-            e.printStackTrace();
-        }
-    }
-
-    public static void update(String sql){
-
-        try {
-            statement.executeUpdate(sql);
-
-        } catch (SQLException e) {
-
-            e.printStackTrace();
-        }
-    }
-
-    public static ResultSet getResultSet(String sql){
-
-        ResultSet result = null;
-
-        try {
-            result = statement.executeQuery(sql);
-
-        } catch (SQLException e) {
-
-            e.printStackTrace();
-        }
-        return result;
+        database.close();
     }
 }

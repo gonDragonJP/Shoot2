@@ -6,6 +6,7 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
+import com.gondragon.shoot2.Global;
 import com.gondragon.shoot2.texture.TextureSheet;
 
 import java.io.BufferedInputStream;
@@ -20,15 +21,14 @@ public class AccessOfTextureData {
     //  テクスチャのデータベースアクセスおよび画像読み込みシングルトンクラス
     //  注意！　使用の前にコンテキストのセット(setContext)が必要です
 
-    private static Context context;
-
-    private static final String databaseAssetsDir = "database/";
-    private static final String databasePath = databaseAssetsDir + "texDB.db";
-    private static final String imageAssetsDir = "texImage/";
-
     private AccessOfTextureData(){
 
     }
+
+    private static Context context;
+    private static String databaseName = Global.textureDatabaseName;
+    private static int databaseVersion = Global.textureDB_Version;
+    private static final String imageAssetsDir = "texImage/";
 
     public static void setContext(Context arg){
 
@@ -37,7 +37,7 @@ public class AccessOfTextureData {
 
     public static void setTexDataList(List<TextureSheet> texSheetList, int stageNumber){
 
-        SQLiteManager.initDatabase(databasePath);
+        SQLiteManager.initDatabase(context, databaseName, databaseVersion);
 
         String sql;
         ResultSet resultSet;

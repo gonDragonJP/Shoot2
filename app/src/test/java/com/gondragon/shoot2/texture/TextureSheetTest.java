@@ -37,7 +37,7 @@ public class TextureSheetTest {
 
     private void readImage(String pictureName){
 
-        String filePath = AccessOfTextureData.getTexImageDir() + pictureName;
+        String filePath = pictureName;
         File imageFile = new File(filePath);
         try {
             InputStream stream = new FileInputStream(imageFile);

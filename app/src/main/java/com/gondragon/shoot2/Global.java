@@ -63,4 +63,9 @@ public class Global {
             this.width = width;
         }
     }
+
+    public static final String enemyAndEventDatabaseName = "test";
+    public static final int enemyAndEventDB_Version = 1;
+    public static final String textureDatabaseName ="texDB";
+    public static final int textureDB_Version = 1;
 }

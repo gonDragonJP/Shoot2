@@ -1,5 +1,8 @@
 package com.gondragon.shoot2.database;
 
+import android.content.Context;
+
+import com.gondragon.shoot2.Global;
 import com.gondragon.shoot2.stage.EventData;
 
 import java.sql.ResultSet;
@@ -8,11 +11,22 @@ import java.util.ArrayList;
 
 public class AccessOfEventData {
 
-    private static String databasePath ="C:/Users/Takahiro/workspace/MySQLite/test.db";
+    //  注意！　使用の前にコンテキストのセット(setContext)が必要です
+
+    private AccessOfEventData(){}
+
+    private static Context context;
+    private static String databaseName = Global.enemyAndEventDatabaseName;
+    private static int databaseVersion = Global.enemyAndEventDB_Version;
+
+    public static void setContext(Context arg){
+
+        context = arg;
+    }
 
     public static void setEventList(ArrayList<EventData> eventList){
 
-        SQLiteManager.initDatabase(databasePath);
+        SQLiteManager.initDatabase(context, databaseName, databaseVersion);
 
         String sql;
         ResultSet resultSet;
@@ -57,77 +71,5 @@ public class AccessOfEventData {
 
             e.printStackTrace();
         }
-
-    }
-
-    public static void addEventList(ArrayList<EventData> eventList){
-
-        SQLiteManager.initDatabase(databasePath);
-
-        for(EventData e: eventList){
-
-            add(e);
-        }
-
-        SQLiteManager.closeDatabase();
-    }
-
-    public static void addEventData(EventData eventData){
-
-        SQLiteManager.initDatabase(databasePath);
-
-        add(eventData);
-
-        SQLiteManager.closeDatabase();
-    }
-
-    private static void add(EventData eventData){
-
-        String sql = "insert into EventData values(";
-
-        sql += "NULL,";
-        sql += String.valueOf(eventData.scrollPoint) +",";
-        sql += String.valueOf(eventData.eventCategory.getID()) +",";
-        sql += String.valueOf(eventData.eventObjectID);
-
-        sql += ");";
-
-        System.out.println(sql);
-
-        SQLiteManager.update(sql);
-    }
-
-    public static void addNewEventData(){
-
-        SQLiteManager.initDatabase(databasePath);
-
-        add(generateNewEventData());
-
-        SQLiteManager.closeDatabase();
-    }
-
-    private static EventData generateNewEventData(){
-
-        EventData eventData = new EventData();
-        eventData.initialize();
-
-        return eventData;
-    }
-
-    public static void deleteEventData(EventData eventData){
-
-        SQLiteManager.initDatabase(databasePath);
-
-        String sql = "delete from EventData where ID=";
-
-        sql += String.valueOf(eventData.getDatabaseID());
-
-        sql += ";";
-
-        System.out.println(sql);
-
-        SQLiteManager.update(sql);
-
-        SQLiteManager.closeDatabase();
     }
 }
