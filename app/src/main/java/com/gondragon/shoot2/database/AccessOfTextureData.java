@@ -43,7 +43,7 @@ public class AccessOfTextureData {
         ResultSet resultSet;
 
         sql = "select * from TextureData order by textureID;";
-        resultSet = SQLiteManager.getResultSet(sql);
+        /*resultSet = SQLiteManager.getResultSet(sql);
 
         try {
             while(resultSet.next()){
@@ -54,7 +54,7 @@ public class AccessOfTextureData {
         } catch (SQLException e) {
 
             e.printStackTrace();
-        }
+        }*/
 
         SQLiteManager.closeDatabase();
     }

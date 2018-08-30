@@ -10,12 +10,11 @@ import com.gondragon.shoot2.enemy.CollisionRegion;
 import com.gondragon.shoot2.enemy.EnemyData;
 import com.gondragon.shoot2.enemy.GeneratingChild;
 import com.gondragon.shoot2.enemy.MovingNode;
-import com.gondragon.shoot2.stage.StageData;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Set;
+import java.util.logging.Logger;
 
 public class AccessOfEnemyData {
 
@@ -26,6 +25,8 @@ public class AccessOfEnemyData {
     private static Context context;
     private static String databaseName = Global.enemyAndEventDatabaseName;
     private static int databaseVersion = Global.enemyAndEventDB_Version;
+
+    private static Logger logger = Logger.getLogger("AccessOfEnemyData");
 
     public static void setContext(Context arg){
 
@@ -47,8 +48,10 @@ public class AccessOfEnemyData {
         Cursor cursor = SQLiteManager.getColumnValuesFromTable("BasicData", "objectID");
         cursor.moveToFirst();
 
+        logger.warning(String.valueOf(cursor.getCount()));
+
         do{
-            int objectID = cursor.getInt(1);
+            int objectID = cursor.getInt(0);
             stackList.add(objectID);
 
         }while(cursor.moveToNext());
@@ -107,6 +110,8 @@ public class AccessOfEnemyData {
         cursor.moveToFirst();
 
         do{
+
+            logger.warning(cursor.getString(0));
 
         }while(cursor.moveToNext());
 

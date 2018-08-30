@@ -32,7 +32,7 @@ public class AccessOfEventData {
         ResultSet resultSet;
 
         sql = "select * from EventData order by scrollPoint;";
-        resultSet = SQLiteManager.getResultSet(sql);
+        /*resultSet = SQLiteManager.getResultSet(sql);
 
         try {
             while(resultSet.next()){
@@ -43,7 +43,7 @@ public class AccessOfEventData {
         } catch (SQLException e) {
 
             e.printStackTrace();
-        }
+        }*/
 
         SQLiteManager.closeDatabase();
     }
