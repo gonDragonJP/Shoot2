@@ -38,6 +38,14 @@ public class SQLiteManager {
         return database.query(table, columnArgs, null,null,null,null,null);
     }
 
+    public static Cursor getRowValues(String table, String selection, String arg){
+
+        String[] selectionArgs = new String[1];
+        selectionArgs[0] = arg;
+
+        return database.query(table, null, selection+"=?", selectionArgs,null,null,null);
+    }
+
     public static void closeDatabase(){
 
         database.close();

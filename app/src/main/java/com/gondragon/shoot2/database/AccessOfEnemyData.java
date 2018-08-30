@@ -73,40 +73,45 @@ public class AccessOfEnemyData {
 
     private static void setEnemyData(EnemyData enemyData){
 
-        String sql;
-        ResultSet resultSet;
         String objectID =String.valueOf(enemyData.objectID);
+        Cursor cursor = SQLiteManager.getRowValues("BasicData", "objectID", objectID);
 
-        sql = "select * from BasicData where objectID="+objectID+";";
+        //sql = "select * from BasicData where objectID="+objectID+";";
         //resultSet = SQLiteManager.getResultSet(sql);
 
-        //setBasicData(enemyData, resultSet);
+        setBasicData(enemyData, cursor);
 
-        sql = "select * from MovingNode where parentID="+objectID+";";
+        //sql = "select * from MovingNode where parentID="+objectID+";";
         //resultSet = SQLiteManager.getResultSet(sql);
 
         //setMovingNode(enemyData, resultSet);
 
-        sql = "select * from GeneratorNode where parentID="+objectID+";";
+        //sql = "select * from GeneratorNode where parentID="+objectID+";";
         //resultSet = SQLiteManager.getResultSet(sql);
 
         //setGeneratorNode(enemyData, resultSet);
 
-        sql = "select * from CollisionNode where parentID="+objectID+";";
+        //sql = "select * from CollisionNode where parentID="+objectID+";";
         //resultSet = SQLiteManager.getResultSet(sql);
 
         //setCollisionNode(enemyData, resultSet);
 
-        sql = "select * from AnimationData where parentID="+objectID+";";
+        //sql = "select * from AnimationData where parentID="+objectID+";";
         //resultSet = SQLiteManager.getResultSet(sql);
 
         //setAnimationData(enemyData, resultSet);
     }
 
-    private static void setBasicData(EnemyData enemyData, ResultSet resultSet){
+    private static void setBasicData(EnemyData enemyData, Cursor cursor){
 
-        try {
-            enemyData.name = resultSet.getString("name");
+        cursor.moveToFirst();
+
+        do{
+
+        }while(cursor.moveToNext());
+
+        /*
+            enemyData.name = cursor.getString("name");
             enemyData.isDerivativeType = resultSet.getBoolean("isDerivativeType");
             enemyData.textureID = resultSet.getInt("textureID");
             enemyData.hitPoints = resultSet.getInt("hitPoint");
@@ -116,10 +121,7 @@ public class AccessOfEnemyData {
             enemyData.startPosAttrib.x = resultSet.getInt("startPosAttrib_X");
             enemyData.startPosAttrib.y = resultSet.getInt("startPosAttrib_Y");
 
-        } catch (SQLException e) {
-
-            e.printStackTrace();
-        }
+        */
     }
 
     private static void setMovingNode(EnemyData enemyData, ResultSet resultSet){
