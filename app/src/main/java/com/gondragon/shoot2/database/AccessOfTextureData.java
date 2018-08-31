@@ -3,6 +3,7 @@ package com.gondragon.shoot2.database;
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.content.res.Resources;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
@@ -39,49 +40,36 @@ public class AccessOfTextureData {
 
         SQLiteManager.initDatabase(context, databaseName, databaseVersion);
 
-        String sql;
-        ResultSet resultSet;
+        Cursor cursor = SQLiteManager.getRowValuesWithOrder("TextureData", "textureID");
+        //sql = "select * from TextureData order by textureID;";
+        cursor.moveToFirst();
 
-        sql = "select * from TextureData order by textureID;";
-        /*resultSet = SQLiteManager.getResultSet(sql);
+        do {
 
-        try {
-            while(resultSet.next()){
+                texSheetList.add(generateTexSheet(cursor));
 
-                texSheetList.add(generateTexSheet(resultSet));
-            }
-
-        } catch (SQLException e) {
-
-            e.printStackTrace();
-        }*/
-
+        } while(cursor.moveToNext());
+        
         SQLiteManager.closeDatabase();
     }
 
-    private static TextureSheet generateTexSheet(ResultSet resultSet){
+    private static TextureSheet generateTexSheet(Cursor cursor){
 
         TextureSheet textureSheet = new TextureSheet();
 
-        setFromDatabase(textureSheet, resultSet);
+        setFromDatabase(textureSheet, cursor);
 
         setImage(textureSheet);
 
         return textureSheet;
     }
 
-    private static void setFromDatabase(TextureSheet textureSheet, ResultSet resultSet){
+    private static void setFromDatabase(TextureSheet textureSheet, Cursor cursor){
 
-        try {
-            textureSheet.textureID = resultSet.getInt("textureID");
-            textureSheet.pictureName = resultSet.getString("pictureName");
-            textureSheet.gridSizeX = resultSet.getInt("gridSizeX");
-            textureSheet.gridSizeY = resultSet.getInt("gridSizeY");
-
-        } catch (SQLException e) {
-
-            e.printStackTrace();
-        }
+        textureSheet.textureID = cursor.getInt(cursor.getColumnIndex("textureID"));
+        textureSheet.pictureName = cursor.getString(cursor.getColumnIndex("pictureName"));
+        textureSheet.gridSizeX = cursor.getInt(cursor.getColumnIndex("gridSizeX"));
+        textureSheet.gridSizeY = cursor.getInt(cursor.getColumnIndex("gridSizeY"));
     }
 
     private static void setImage(TextureSheet textureSheet){

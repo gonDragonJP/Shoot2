@@ -1,7 +1,10 @@
 package com.gondragon.shoot2.stage;
 
+import android.content.Context;
+
 import com.gondragon.shoot2.database.AccessOfEnemyData;
 import com.gondragon.shoot2.database.AccessOfEventData;
+import com.gondragon.shoot2.database.AccessOfTextureData;
 import com.gondragon.shoot2.enemy.EnemyData;
 import com.gondragon.shoot2.enemy.derivativeType.DerivativeEnemyFactory;
 import com.gondragon.shoot2.texture.TextureInitializer;
@@ -11,13 +14,13 @@ import java.util.ArrayList;
 
 public class StageData {
 
+    private static Context context;
+
     private static final int stageLength[]
             = {8000,8000,8000,8000,8000};
 
     private static final boolean isStageShadowOn[]
             = {false,true,false,false,false};
-
-    private static FileAccess fileAccess = new FileAccess();
 
     public static int stage;
 
@@ -35,7 +38,14 @@ public class StageData {
 
     }
 
-    public static void initialize(int stageNumber){
+    public static void initialize(Context contextArg, int stageNumber){
+
+        context = contextArg;
+
+        //アセットにアクセスするクラスにはcontextが必要なのでセット
+        AccessOfEventData.setContext(context);
+        AccessOfEnemyData.setContext(context);
+        AccessOfTextureData.setContext(context);
 
         stage = stageNumber;
         isShadowOn = isStageShadowOn[stageNumber -1];
@@ -46,9 +56,6 @@ public class StageData {
 
         textureSheets
                 = TextureInitializer.getStageEnemyTexSheets(stageNumber);
-
-        //fileAccess.setEventList(eventList, stageNumber);
-        //fileAccess.setEnemyList(enemyList, stageNumber); //独自ファイルフォーマット読み込み用
 
         refreshEventListFromDB();
         refreshEnemyListFromDB();

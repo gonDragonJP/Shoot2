@@ -3,53 +3,33 @@ package com.gondragon.shoot2.database;
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
 
+import com.gondragon.shoot2.texture.TextureSheet;
+
+import org.junit.Before;
 import org.junit.Test;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.Assert.*;
 
 public class AccessOfTextureDataTest {
 
-    private static Context context;
+    @Before
+    public void setContext() {
 
-    private static final String databaseAssetsDir = "database/";
-    private static final String databaseUrl = "file:///android_asset/" + databaseAssetsDir + "texDB.db";
+        Context context = InstrumentationRegistry.getTargetContext();
+        AccessOfTextureData.setContext(context);
+    }
 
     @Test
     public void test() {
 
-        setContext();
-
-        initDatabase(databaseUrl);
+        List<TextureSheet>  textureSheetList = new ArrayList<TextureSheet>();
+        AccessOfTextureData.setTexDataList(textureSheetList,1);
     }
-
-    private void setContext() {
-
-        context = InstrumentationRegistry.getTargetContext();
-    }
-
-    private static Connection connection;
-    private static Statement statement;
-
-    public static void initDatabase(String databaseUrl){
-
-        try {
-
-            Class.forName("org.sqlite.JDBC");
-
-            connection = DriverManager.getConnection("jdbc:sqlite:" + databaseUrl);
-            statement = connection.createStatement();
-
-        } catch (ClassNotFoundException | SQLException e) {
-
-            e.printStackTrace();
-        }
-    }
-
-
-
 }

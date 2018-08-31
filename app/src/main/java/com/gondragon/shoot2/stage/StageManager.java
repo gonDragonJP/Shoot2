@@ -1,5 +1,7 @@
 package com.gondragon.shoot2.stage;
 
+import android.content.Context;
+
 import com.gondragon.shoot2.CallbackOfMyPlane;
 import com.gondragon.shoot2.Global;
 import com.gondragon.shoot2.animation.AnimationManager;
@@ -33,15 +35,18 @@ public class StageManager {
         }
     }
 
+    private Context context;
     private CallbackOfMyPlane cbOfMyPlane;
+
     private EnemiesManager enemiesManager;
     private AnimationManager animationManager;
     //private StageEffect stageEffect;
 
     private CurrentStageState stageState = new CurrentStageState();
 
-    public StageManager(CallbackOfMyPlane cbOfMyPlane){
+    public StageManager(Context context, CallbackOfMyPlane cbOfMyPlane){
 
+        this.context = context;
         this.cbOfMyPlane = cbOfMyPlane;
 
         initialize();
@@ -66,7 +71,7 @@ public class StageManager {
 
     public void setStage(int stageNumber){
 
-        StageData.initialize(stageNumber);
+        StageData.initialize(context, stageNumber);
         stageState.initialize();
 
         stageState.isPreparedStageData = true;

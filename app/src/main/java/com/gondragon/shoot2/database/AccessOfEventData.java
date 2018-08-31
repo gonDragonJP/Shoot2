@@ -1,6 +1,7 @@
 package com.gondragon.shoot2.database;
 
 import android.content.Context;
+import android.database.Cursor;
 
 import com.gondragon.shoot2.Global;
 import com.gondragon.shoot2.stage.EventData;
@@ -28,48 +29,34 @@ public class AccessOfEventData {
 
         SQLiteManager.initDatabase(context, databaseName, databaseVersion);
 
-        String sql;
-        ResultSet resultSet;
+        Cursor cursor = SQLiteManager.getRowValuesWithOrder("EventData","scrollPoint");
+        //sql = "select * from EventData order by scrollPoint;";
+        cursor.moveToFirst();
 
-        sql = "select * from EventData order by scrollPoint;";
-        /*resultSet = SQLiteManager.getResultSet(sql);
+        do{
+                eventList.add(generateEventData(cursor));
 
-        try {
-            while(resultSet.next()){
-
-                eventList.add(generateEventData(resultSet));
-            }
-
-        } catch (SQLException e) {
-
-            e.printStackTrace();
-        }*/
+        }while(cursor.moveToNext());
 
         SQLiteManager.closeDatabase();
     }
 
-    private static EventData generateEventData(ResultSet resultSet){
+    private static EventData generateEventData(Cursor cursor){
 
         EventData eventData = new EventData();
 
-        setEventData(eventData, resultSet);
+        setEventData(eventData, cursor);
 
         return eventData;
     }
 
-    private static void setEventData(EventData eventData, ResultSet resultSet){
+    private static void setEventData(EventData eventData, Cursor cursor){
 
-        try {
-            eventData.setDatabaseID(resultSet.getInt("ID"));
+        eventData.setDatabaseID(cursor.getInt(cursor.getColumnIndex("ID")));
 
-            eventData.scrollPoint = resultSet.getInt("scrollPoint");
-            eventData.eventCategory = EventData.EventCategory.getFromID
-                    (resultSet.getInt("EventCategory"));
-            eventData.eventObjectID = resultSet.getInt("eventObjectID");
-
-        } catch (SQLException e) {
-
-            e.printStackTrace();
-        }
+        eventData.scrollPoint = cursor.getInt(cursor.getColumnIndex("scrollPoint"));
+        eventData.eventCategory = EventData.EventCategory.getFromID
+                (cursor.getInt(cursor.getColumnIndex("EventCategory")));
+        eventData.eventObjectID = cursor.getInt(cursor.getColumnIndex("eventObjectID"));
     }
 }

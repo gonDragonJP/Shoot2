@@ -30,7 +30,7 @@ public class SQLiteManager {
         }
     }
 
-    public static Cursor getColumnValuesFromTable(String table, String column){
+    public static Cursor getTheColumnValues(String table, String column){
 
         String[] columnArgs = new String[1];
         columnArgs[0] = column;
@@ -38,12 +38,17 @@ public class SQLiteManager {
         return database.query(table, columnArgs, null,null,null,null,null);
     }
 
-    public static Cursor getRowValues(String table, String selection, String arg){
+    public static Cursor getRowValuesWithSelection(String table, String selection, String arg){
 
         String[] selectionArgs = new String[1];
         selectionArgs[0] = arg;
 
         return database.query(table, null, selection+"=?", selectionArgs,null,null,null);
+    }
+
+    public static Cursor getRowValuesWithOrder(String table, String orderArg){
+
+        return database.query(table, null, null, null,null,null,orderArg);
     }
 
     public static void closeDatabase(){

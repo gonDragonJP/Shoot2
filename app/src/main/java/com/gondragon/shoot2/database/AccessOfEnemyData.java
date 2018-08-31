@@ -39,7 +39,7 @@ public class AccessOfEnemyData {
         // cursorが単一オブジェクトの為、ネストでクエリ呼び出しすると正常に作動しない
         // ネストを避ける為、結果の一時退避用に使用しています
 
-        Cursor cursor = SQLiteManager.getColumnValuesFromTable("BasicData", "objectID");
+        Cursor cursor = SQLiteManager.getTheColumnValues("BasicData", "objectID");
         // sql = "select objectID from BasicData ;";
         cursor.moveToFirst();
 
@@ -72,23 +72,23 @@ public class AccessOfEnemyData {
         String objectID =String.valueOf(enemyData.objectID);
         Cursor cursor;
 
-        cursor = SQLiteManager.getRowValues("BasicData", "objectID", objectID);
+        cursor = SQLiteManager.getRowValuesWithSelection("BasicData", "objectID", objectID);
         //sql = "select * from BasicData where objectID="+objectID+";";
         setBasicData(enemyData, cursor);
 
-        cursor = SQLiteManager.getRowValues("MovingNode", "parentID", objectID);
+        cursor = SQLiteManager.getRowValuesWithSelection("MovingNode", "parentID", objectID);
         //sql = "select * from MovingNode where parentID="+objectID+";";
         setMovingNode(enemyData, cursor);
 
-        cursor = SQLiteManager.getRowValues("GeneratorNode", "parentID", objectID);
+        cursor = SQLiteManager.getRowValuesWithSelection("GeneratorNode", "parentID", objectID);
         //sql = "select * from GeneratorNode where parentID="+objectID+";";
         setGeneratorNode(enemyData, cursor);
 
-        cursor = SQLiteManager.getRowValues("CollisionNode", "parentID", objectID);
+        cursor = SQLiteManager.getRowValuesWithSelection("CollisionNode", "parentID", objectID);
         //sql = "select * from CollisionNode where parentID="+objectID+";";
         setCollisionNode(enemyData, cursor);
 
-        cursor = SQLiteManager.getRowValues("AnimationData", "parentID", objectID);
+        cursor = SQLiteManager.getRowValuesWithSelection("AnimationData", "parentID", objectID);
         //sql = "select * from AnimationData where parentID="+objectID+";";
         setAnimationData(enemyData, cursor);
     }
