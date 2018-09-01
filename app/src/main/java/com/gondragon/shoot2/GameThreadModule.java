@@ -151,7 +151,7 @@ public class GameThreadModule {
 
                     MyRenderable renderTask = new MyRenderable() {
                         @Override
-                        public void renderTask(GL10 gl) {
+                        public void render(GL10 gl) {
 
                             float y0= (float)Math.random()*300;
                             float y1= (float)Math.random()*300;

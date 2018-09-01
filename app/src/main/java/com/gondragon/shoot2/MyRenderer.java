@@ -88,7 +88,7 @@ public class MyRenderer implements GLSurfaceView.Renderer{
 
         for(MyRenderable e : renderingTaskList){
 
-            e.renderTask(gl);
+            e.render(gl);
         }
 
         renderingTaskList.clear();

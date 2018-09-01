@@ -4,5 +4,5 @@ import javax.microedition.khronos.opengles.GL10;
 
 public interface MyRenderable {
 
-    void renderTask(GL10 gl);
+    void render(GL10 gl);
 }
