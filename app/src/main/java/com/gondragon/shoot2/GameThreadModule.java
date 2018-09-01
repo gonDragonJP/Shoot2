@@ -1,6 +1,7 @@
 package com.gondragon.shoot2;
 
 import android.content.Context;
+import android.graphics.PointF;
 
 import com.gondragon.shoot2.enemy.EnemyData;
 import com.gondragon.shoot2.stage.StageData;
@@ -10,6 +11,8 @@ import com.gondragon.shoot2.vector.Int2Vector;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import javax.microedition.khronos.opengles.GL10;
+
 public class GameThreadModule {
 
     private Timer timer;
@@ -17,10 +20,11 @@ public class GameThreadModule {
     private boolean isTestMode;
 
     private StageManager stageManager;
+    private MyRenderer renderer;
 
     private GameThreadModule(){}; //デフォルトコンストラクタ無効
 
-    public GameThreadModule(Context context){
+    public GameThreadModule(Context context, MyRenderer renderer){
 
         stageManager = new StageManager(context,
 
@@ -38,14 +42,13 @@ public class GameThreadModule {
                     }
                 }
         );
+
+        this.renderer = renderer;
     }
 
-    public void setGameStage(int stageNumber){
+    public void setStage(int stageNumber){
 
         stageManager.setStage(stageNumber);
-
-        //AccessOfEventData.addEventList(StageData.eventList);
-        //AccessOfEnemyData.addEnemyList(StageData.enemyList); データベース製作用
     }
 
     public void refreshEventList(){
@@ -94,7 +97,7 @@ public class GameThreadModule {
         updateSlider();
     }
 
-    synchronized public void pushStartButton(){
+    synchronized public void startThread(){
 
         cancelTimer();
         timer = new Timer();
@@ -145,6 +148,21 @@ public class GameThreadModule {
                     }
                     slider.setValue(sliderValue);
                     drawModule.drawScreen();*/
+
+                    MyRenderable renderTask = new MyRenderable() {
+                        @Override
+                        public void render(GL10 gl) {
+
+                            float y0= (float)Math.random()*300;
+                            float y1= (float)Math.random()*300;
+
+                            PointF startPoint = new PointF(0,y0);
+                            PointF endPoint = new PointF(500,y1);
+
+                            UtilGL.drawLine(gl, startPoint, endPoint);
+                        }
+                    };
+                    renderer.addRenderingTask(renderTask);
                 }
 
                 //stageManager.periodicalProcess(sliderValue, isTestMode);
