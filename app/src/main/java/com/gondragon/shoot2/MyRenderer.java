@@ -4,10 +4,19 @@ import android.graphics.Color;
 import android.graphics.PointF;
 import android.opengl.GLSurfaceView;
 
+import java.util.ArrayList;
+
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
 public class MyRenderer implements GLSurfaceView.Renderer{
+
+    ArrayList<MyRenderable> renderingTaskList = new ArrayList<>();
+
+    public void addRenderingTask(MyRenderable task){
+
+        renderingTaskList.add(task);
+    }
 
     @Override
     public void onSurfaceCreated(GL10 gl, EGLConfig config) {
@@ -48,6 +57,9 @@ public class MyRenderer implements GLSurfaceView.Renderer{
 
         UtilGL.setColor(gl,Color.RED);
         UtilGL.drawLine(gl,new PointF(0,0),new PointF(200,200));
+
+        doAllRenderingTasks(gl);
+
         //UtilGL.enableDefaultBlend();
         //UtilGL.setTextureSTCoords(null);
         //UtilGL.changeTexColor(null);
@@ -70,6 +82,15 @@ public class MyRenderer implements GLSurfaceView.Renderer{
 
         //ScreenEffect.draw(gl);
         //drawFPS();
+    }
 
+    private void doAllRenderingTasks(GL10 gl){
+
+        for(MyRenderable e : renderingTaskList){
+
+            e.renderTask(gl);
+        }
+
+        renderingTaskList.clear();
     }
 }

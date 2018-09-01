@@ -1,30 +1,41 @@
 package com.gondragon.shoot2;
 
 import android.app.Activity;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
 
-import com.gondragon.shoot2.database.AccessOfTextureData;
-
 public class MainActivity extends Activity {
+
+    private MyRenderer renderer;
+    private GameThreadModule gameThread;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        initializeGame();
+
+        gameThread.setStage(1);
+        gameThread.startThread();
+    }
+
+    private void initializeGame(){
+
+        initializeScreen();
+        gameThread = new GameThreadModule(this, renderer);
+    }
+
+    private void initializeScreen(){
+
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
 
         MainGLSurface glSurface = new MainGLSurface(this);
-
-        glSurface.setRenderer(new MyRenderer());
+        renderer = new MyRenderer();
+        glSurface.setRenderer(renderer);
         setLayout(glSurface);
-
-        //リソース使用クラスにはコンテキストのセットが必要です
-        AccessOfTextureData.setContext(this);
     }
 
     private final int matchParent = LinearLayout.LayoutParams.MATCH_PARENT;
@@ -43,4 +54,6 @@ public class MainActivity extends Activity {
 
         return new LinearLayout.LayoutParams(arg0, arg1);
     }
+
+
 }
