@@ -51,7 +51,7 @@ public class DerivativeEnemyFactory {
         else{
 
             String className = nameToDEKindMap.get(enemyName).getClassName();
-            className = "shootingEditor.enemy.derivativeType." + className;
+            className = "com.gondragon.shoot2.enemy.derivativeType." + className;
             derivativeEnemy = generateEnemyByReflection(className);
 
         }

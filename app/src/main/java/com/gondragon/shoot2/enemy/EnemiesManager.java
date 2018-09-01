@@ -56,7 +56,7 @@ public class EnemiesManager {
 
         //System.out.println("List Size : " + String.valueOf(enemyList.size()));
 
-        EnemyDrawer.setContext(gl);
+        EnemyDrawer.setGl(gl);
         EnemyDrawer.setEnableTex(isEnableTex);
 
         for(Enemy e : enemyList){

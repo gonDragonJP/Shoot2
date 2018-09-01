@@ -22,6 +22,9 @@ public class GameThreadModule {
     private StageManager stageManager;
     private MyRenderer renderer;
 
+    private int scrollPoint =0;
+    private boolean isEnableTex = false;
+
     private GameThreadModule(){}; //デフォルトコンストラクタ無効
 
     public GameThreadModule(Context context, MyRenderer renderer){
@@ -77,9 +80,7 @@ public class GameThreadModule {
     public void refreshQueueOfEvent(){
         //slider操作時やtableによるpoint変更に伴い呼び出されイベント位置を再設定します
 
-       // double sliderValue = slider.getValue();
-
-       // stageManager.updateEventIndex(sliderValue);
+        stageManager.updateEventIndex(scrollPoint);
         stageManager.resetAllEnemies();
     }
 
@@ -93,7 +94,7 @@ public class GameThreadModule {
 
     synchronized public void pushResetButton(){
 
-       // slider.setValue(0);
+        scrollPoint =0;
         updateSlider();
     }
 
@@ -127,7 +128,6 @@ public class GameThreadModule {
 
         timerTask = new TimerTask(){
 
-            //double sliderValue = slider.getValue();
             int scrollMax = StageData.stageEndPoint;
 
             @Override
@@ -139,17 +139,17 @@ public class GameThreadModule {
                 }
                 else{
 
-                    //sliderValue += Global.scrollSpeedPerFrame;
+                    scrollPoint += Global.scrollSpeedPerFrame;
 
-                    /*if(sliderValue > scrollMax) {
+                    if(scrollPoint > scrollMax) {
 
-                        sliderValue = scrollMax;
+                        scrollPoint = scrollMax;
                         this.cancel();
                     }
-                    slider.setValue(sliderValue);
-                    drawModule.drawScreen();*/
 
-                    MyRenderable renderTask = new MyRenderable() {
+                    //drawModule.drawScreen();
+
+                    /*MyRenderable renderTask = new MyRenderable() {
                         @Override
                         public void render(GL10 gl) {
 
@@ -162,11 +162,19 @@ public class GameThreadModule {
                             UtilGL.drawLine(gl, startPoint, endPoint);
                         }
                     };
-                    renderer.addRenderingTask(renderTask);
+                    renderer.addRenderingTask(renderTask);*/
                 }
 
-                //stageManager.periodicalProcess(sliderValue, isTestMode);
-                //stageManager.drawEnemies(canvas, checkEnableTex.isSelected());
+                stageManager.periodicalProcess(scrollPoint, isTestMode);
+
+                MyRenderable renderTask = new MyRenderable() {
+                    @Override
+                    public void render(GL10 gl) {
+
+                        stageManager.drawEnemies(gl, isEnableTex);
+                    }
+                };
+                renderer.addRenderingTask(renderTask);
 
                 if(isTestMode){
 

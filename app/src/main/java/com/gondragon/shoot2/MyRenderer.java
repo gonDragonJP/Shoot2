@@ -1,8 +1,12 @@
 package com.gondragon.shoot2;
 
 import android.graphics.Color;
+import android.graphics.Point;
 import android.graphics.PointF;
 import android.opengl.GLSurfaceView;
+import android.util.Log;
+
+import com.gondragon.shoot2.vector.Int2Vector;
 
 import java.util.ArrayList;
 
@@ -11,11 +15,32 @@ import javax.microedition.khronos.opengles.GL10;
 
 public class MyRenderer implements GLSurfaceView.Renderer{
 
+    public static Int2Vector screenSize = new Int2Vector();
+    public static final float screenSlidingFactor = 4.0f;
+    //　screenSize : 設定アスペクト比で確保した実際画面の縦横サイズです
+    //  screenSlidingFactor : 自機が画面を動いた際に画面が横にずれるようにする為の係数です
+
+    public static void setScreenVal(int realWidth, int realHeight){
+
+        screenSize.x = realWidth;
+        screenSize.y = realHeight;
+    }
+
     ArrayList<MyRenderable> renderingTaskList = new ArrayList<>();
 
-    public void addRenderingTask(MyRenderable task){
+    synchronized public void addRenderingTask(MyRenderable task){
 
         renderingTaskList.add(task);
+    }
+
+    synchronized private void doAllRenderingTasks(GL10 gl){
+
+        for(MyRenderable e : renderingTaskList){
+
+            e.render(gl);
+        }
+
+        renderingTaskList.clear();
     }
 
     @Override
@@ -29,34 +54,30 @@ public class MyRenderer implements GLSurfaceView.Renderer{
         renderScreen(gl);
     }
 
-    @Override
-    public void onSurfaceChanged(GL10 gl, int width, int height) {
-
-
-    }
-
     private void renderScreen(GL10 gl){
 
-        float planeX=250, screenSizeX=500,screenSizeY=1000,screenProjectionLeft;
+        float virturalCenterX = Global.virtualScreenSize.x /2;
+        float planeX = virturalCenterX;
+        float sx = (planeX - virturalCenterX) / screenSlidingFactor;
 
         gl.glMatrixMode(GL10.GL_PROJECTION);
         gl.glLoadIdentity();
-        float sx = (planeX - screenSizeX / 2)/4;
-        screenProjectionLeft = sx;
         gl.glOrthof(
-                (int)sx, (int)(sx + screenSizeX),
-                (int)screenSizeY, 0,
+                (int)sx, (int)(sx + Global.virtualScreenSize.x),
+                (int)Global.virtualScreenSize.y, 0,
                 0.5f, -0.5f
         );
 
         gl.glMatrixMode(GL10.GL_MODELVIEW);
         gl.glLoadIdentity();
 
-        gl.glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
+        gl.glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
         gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 
         UtilGL.setColor(gl,Color.RED);
-        UtilGL.drawLine(gl,new PointF(0,0),new PointF(200,200));
+        UtilGL.drawLine(gl,new PointF(0,0),new PointF(Global.virtualScreenSize.x, Global.virtualScreenSize.y));
+        UtilGL.drawLine(gl,new PointF(Global.virtualScreenSize.x,0),new PointF(0, Global.virtualScreenSize.y));
+
 
         doAllRenderingTasks(gl);
 
@@ -84,13 +105,11 @@ public class MyRenderer implements GLSurfaceView.Renderer{
         //drawFPS();
     }
 
-    private void doAllRenderingTasks(GL10 gl){
+    @Override
+    public void onSurfaceChanged(GL10 gl, int width, int height) {
 
-        for(MyRenderable e : renderingTaskList){
+        Point size = UtilGL.setViewPortWithAspectRatio(gl, width, height, Global.aspectRatio);
 
-            e.render(gl);
-        }
-
-        renderingTaskList.clear();
+        setScreenVal(size.x, size.y);
     }
 }

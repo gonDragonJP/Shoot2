@@ -2,7 +2,9 @@ package com.gondragon.shoot2.enemy;
 
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.PointF;
 
+import com.gondragon.shoot2.UtilGL;
 import com.gondragon.shoot2.animation.AnimationData;
 import com.gondragon.shoot2.stage.StageData;
 import com.gondragon.shoot2.texture.TextureSheet;
@@ -18,12 +20,12 @@ public class EnemyDrawer {
     static private final int drawRadius = 5;
     static private final int drawAngleLineLength = 20;
 
-    static private GL10 context;
+    static private GL10 gl;
     static private boolean isEnableTex = false;
 
-    public static void setContext(GL10 gl){
+    public static void setGl(GL10 glArg){
 
-        context = gl;
+        gl = glArg;
     }
 
     public static void setEnableTex(boolean isEnable){
@@ -57,30 +59,33 @@ public class EnemyDrawer {
     }
 
     static void onDraw(Enemy enemy, int color){
-        /*
-        context.setFill(color);
-        context.fillOval
-                (enemy.x-drawRadius, enemy.y-drawRadius, drawRadius*2, drawRadius*2);
 
-        context.setStroke(color);
+        UtilGL.setColor(gl, color);
+        PointF center = new PointF(enemy.x, enemy.y);
+
+        UtilGL.drawStrokeCircle(gl, center, drawRadius, 10);
+
+        UtilGL.setColor(gl,Color.WHITE);
         drawCollisionRegions(enemy);
-
-        context.setStroke(Color.WHITE);
-        drawFaceOnLine(enemy);*/
+        drawFaceOnLine(enemy);
     }
 
     static void drawCollisionRegions(Enemy enemy){
 
         ArrayList<CollisionRegion> list = enemy.collisionRotated;
 
+        PointF center = new PointF();
+
         for(CollisionRegion e: list){
 
             int colX = enemy.x + e.centerX;
             int colY = enemy.y + e.centerY;
             int colRadius = e.size;
-/*
-            context.strokeOval
-                    (colX-colRadius, colY-colRadius, colRadius*2, colRadius*2);*/
+
+            center.set(colX, colY);
+
+            UtilGL.drawStrokeCircle
+                    (gl, center, colRadius, 20);
         }
     }
 
@@ -91,7 +96,10 @@ public class EnemyDrawer {
         int px = enemy.x + (int)(drawAngleLineLength *vec.x);
         int py = enemy.y + (int)(drawAngleLineLength *vec.y);
 
-       /* context.strokeLine(enemy.x, enemy.y, px, py);*/
+        PointF start = new PointF(enemy.x, enemy.y);
+        PointF end = new PointF(px, py);
+
+        UtilGL.drawLine(gl, start, end);
     }
 
     static boolean onDrawWithTex(Enemy enemy){
@@ -110,7 +118,7 @@ public class EnemyDrawer {
 
         setAffine(enemy.x, enemy.y, drawSizeX, drawSizeY, enemy.drawAngle);
 
-       /* context.drawImage(
+       /* gl.drawImage(
                 img, texRect.left, texRect.top, sheet.gridSizeX, sheet.gridSizeY,
                 0, 0, drawSizeX, drawSizeY
         );
@@ -128,12 +136,12 @@ public class EnemyDrawer {
         affine.appendRotation(angle);
         affine.appendTranslation(-sizeX/2, -sizeY/2);
 
-        context.setTransform(affine);*/
+        gl.setTransform(affine);*/
     }
 
     static void toIdentityAffine(){
 
         //affine.setToIdentity();
-        //context.setTransform(affine);
+        //gl.setTransform(affine);
     }
 }

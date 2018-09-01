@@ -41,7 +41,7 @@ public class DE_carrier_Boss extends DerivativeEnemy{
 		
 		int movingBackFrame = 50;
 		
-		double dstX = Global.screenCenter.x;
+		double dstX = Global.virtualScreenSize.x/2;
 		double dstY = Global.virtualScreenLimit.top + 150;
 		
 		double dx = (dstX - x) / movingBackFrame;
