@@ -23,7 +23,7 @@ public class GameThreadModule {
     private MyRenderer renderer;
 
     private int scrollPoint =0;
-    private boolean isEnableTex = false;
+    private boolean isEnableTex = true;
 
     private GameThreadModule(){}; //デフォルトコンストラクタ無効
 
@@ -52,6 +52,15 @@ public class GameThreadModule {
     public void setStage(int stageNumber){
 
         stageManager.setStage(stageNumber);
+
+        MyRenderable renderTask = new MyRenderable() {
+            @Override
+            public void render(GL10 gl) {
+
+                StageData.bindGLTextures(gl);
+            }
+        };
+        renderer.addRenderingTask(renderTask);
     }
 
     public void refreshEventList(){

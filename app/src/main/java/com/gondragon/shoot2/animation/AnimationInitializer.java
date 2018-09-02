@@ -2,14 +2,14 @@ package com.gondragon.shoot2.animation;
 
 public class AnimationInitializer {
 
-    public static TextureSheet planeTex;
-    public static TextureSheet effectTex0, effectTex1, effectTex2, effectTex3;
-    public static TextureSheet bulletTex1, bulletTex2;
-    public static TextureSheet itemTex;
+    public static GLTexSheet planeTex;
+    public static GLTexSheet effectTex0, effectTex1, effectTex2, effectTex3;
+    public static GLTexSheet bulletTex1, bulletTex2;
+    public static GLTexSheet itemTex;
 
     private static final int stageLimitedEnemyTexSheetNumber = 9;
     private static final int maxEnemyTexSheetNumber = 30;
-    public static TextureSheet[] enemyTex = new TextureSheet[maxEnemyTexSheetNumber];
+    public static GLTexSheet[] enemyTex = new GLTexSheet[maxEnemyTexSheetNumber];
 
     public static AnimationSet myPlaneSet = new AnimationSet();
     public static AnimationSet myConversionSet = new AnimationSet();
@@ -27,14 +27,14 @@ public class AnimationInitializer {
 
     static {
 		/*
-		planeTex = new TextureSheet(R.drawable.myplanesheet, 4, 4);
-		effectTex0 = new TextureSheet(R.drawable.effect_sheet000, 8, 8);
-		effectTex1 = new TextureSheet(R.drawable.effect_sheet001, 8, 8);
-		effectTex2 = new TextureSheet(R.drawable.effect_sheet002, 4, 4);
-		effectTex3 = new TextureSheet(R.drawable.effect_sheet003, 8, 8);
-		bulletTex1 = new TextureSheet(R.drawable.bullet_sheet000, 8, 8);
-		bulletTex2 = new TextureSheet(R.drawable.bullet_sheet001, 8, 8);
-		itemTex = new TextureSheet(R.drawable.item_sheet, 8, 8);
+		planeTex = new GLTexSheet(R.drawable.myplanesheet, 4, 4);
+		effectTex0 = new GLTexSheet(R.drawable.effect_sheet000, 8, 8);
+		effectTex1 = new GLTexSheet(R.drawable.effect_sheet001, 8, 8);
+		effectTex2 = new GLTexSheet(R.drawable.effect_sheet002, 4, 4);
+		effectTex3 = new GLTexSheet(R.drawable.effect_sheet003, 8, 8);
+		bulletTex1 = new GLTexSheet(R.drawable.bullet_sheet000, 8, 8);
+		bulletTex2 = new GLTexSheet(R.drawable.bullet_sheet001, 8, 8);
+		itemTex = new GLTexSheet(R.drawable.item_sheet, 8, 8);
 		*/
         initializeMyPlaneAnime();
         initializeMyBulletAnime();
@@ -55,25 +55,25 @@ public class AnimationInitializer {
 
             case 1:
 		/*
-			enemyTex[0]= new TextureSheet(R.drawable.enemy_sheet001, 8, 8);
-			enemyTex[1]= new TextureSheet(R.drawable.enemy_sheet000, 8, 8);
-			enemyTex[2]= new TextureSheet(R.drawable.enemy_sheet002, 8, 8);
-			enemyTex[3]= new TextureSheet(R.drawable.enemy_sheet003, 8, 8);
-			enemyTex[5]= new TextureSheet(R.drawable.midenemy_sheet000, 4, 2);
-			enemyTex[8]= new TextureSheet(R.drawable.boss01_sheet, 1, 1);
+			enemyTex[0]= new GLTexSheet(R.drawable.enemy_sheet001, 8, 8);
+			enemyTex[1]= new GLTexSheet(R.drawable.enemy_sheet000, 8, 8);
+			enemyTex[2]= new GLTexSheet(R.drawable.enemy_sheet002, 8, 8);
+			enemyTex[3]= new GLTexSheet(R.drawable.enemy_sheet003, 8, 8);
+			enemyTex[5]= new GLTexSheet(R.drawable.midenemy_sheet000, 4, 2);
+			enemyTex[8]= new GLTexSheet(R.drawable.boss01_sheet, 1, 1);
 		*/
                 break;
 
             case 2:
 		/*
-			enemyTex[0]= new TextureSheet(R.drawable.enemy_sheet001, 8, 8);
-			enemyTex[1]= new TextureSheet(R.drawable.enemy_sheet000, 8, 8);
-			enemyTex[2]= new TextureSheet(R.drawable.enemy_sheet002, 8, 8);
-			enemyTex[3]= new TextureSheet(R.drawable.enemy_sheet003, 8, 8);
-			enemyTex[4]= new TextureSheet(R.drawable.enemy_sheet004, 8, 8);
-			enemyTex[5]= new TextureSheet(R.drawable.midenemy_sheet000, 4, 2);
-			enemyTex[6]= new TextureSheet(R.drawable.midenemy_sheet001, 4, 4);
-			enemyTex[8]= new TextureSheet(R.drawable.boss01_sheet, 1, 1);
+			enemyTex[0]= new GLTexSheet(R.drawable.enemy_sheet001, 8, 8);
+			enemyTex[1]= new GLTexSheet(R.drawable.enemy_sheet000, 8, 8);
+			enemyTex[2]= new GLTexSheet(R.drawable.enemy_sheet002, 8, 8);
+			enemyTex[3]= new GLTexSheet(R.drawable.enemy_sheet003, 8, 8);
+			enemyTex[4]= new GLTexSheet(R.drawable.enemy_sheet004, 8, 8);
+			enemyTex[5]= new GLTexSheet(R.drawable.midenemy_sheet000, 4, 2);
+			enemyTex[6]= new GLTexSheet(R.drawable.midenemy_sheet001, 4, 4);
+			enemyTex[8]= new GLTexSheet(R.drawable.boss01_sheet, 1, 1);
 		*/
                 break;
         }

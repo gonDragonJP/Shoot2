@@ -1,5 +1,7 @@
 package com.gondragon.shoot2.texture;
 
+import android.util.Log;
+
 import com.gondragon.shoot2.database.AccessOfTextureData;
 
 import java.util.ArrayList;

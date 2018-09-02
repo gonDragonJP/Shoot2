@@ -9,7 +9,6 @@ import com.gondragon.shoot2.animation.AnimationData;
 import com.gondragon.shoot2.stage.StageData;
 import com.gondragon.shoot2.texture.TextureSheet;
 import com.gondragon.shoot2.vector.Double2Vector;
-import com.gondragon.shoot2.vector.IntRect;
 
 import java.util.ArrayList;
 
@@ -102,21 +101,40 @@ public class EnemyDrawer {
         UtilGL.drawLine(gl, start, end);
     }
 
+    private static PointF drawCenter = new PointF();
+    private static PointF drawSize = new PointF();
+
     static boolean onDrawWithTex(Enemy enemy){
 
         AnimationData anime  = enemy.getCurrentAnimeData();
         int textureID = anime.textureID;
         int frameIndex = anime.frameOffset + enemy.animeFrame;
-        double drawSizeX = anime.drawSize.x;
-        double drawSizeY = anime.drawSize.y;
+        drawSize.set((float)anime.drawSize.x, (float)anime.drawSize.y);
 
         TextureSheet sheet = StageData.textureSheets[textureID];
         if(sheet == null) return false;
         Bitmap img = sheet.texImage;
 
-        IntRect texRect = sheet.getTexRect(frameIndex); // テクスチャ座標取得
+        drawCenter.set(enemy.x, enemy.y);
 
-        setAffine(enemy.x, enemy.y, drawSizeX, drawSizeY, enemy.drawAngle);
+        gl.glMatrixMode(GL10.GL_MODELVIEW);
+
+        gl.glPushMatrix();
+        {
+            gl.glLoadIdentity();
+
+            gl.glTranslatef(drawCenter.x, drawCenter.y, 0);
+            gl.glRotatef((float)enemy.drawAngle, 0, 0, 1);
+
+            drawCenter.set(0, 0);
+            UtilGL.setTextureSTCoords(sheet.getSTRect(frameIndex));
+            UtilGL.drawTexture(gl, drawCenter, drawSize, sheet.GLtexID);
+        }
+        gl.glPopMatrix();
+
+        //IntRect texRect = sheet.getTexRect(frameIndex); // テクスチャ座標取得
+
+       // setAffine(enemy.x, enemy.y, drawSizeX, drawSizeY, enemy.drawAngle);
 
        /* gl.drawImage(
                 img, texRect.left, texRect.top, sheet.gridSizeX, sheet.gridSizeY,

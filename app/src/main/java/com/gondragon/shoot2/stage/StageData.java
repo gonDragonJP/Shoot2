@@ -1,6 +1,7 @@
 package com.gondragon.shoot2.stage;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.gondragon.shoot2.database.AccessOfEnemyData;
 import com.gondragon.shoot2.database.AccessOfEventData;
@@ -11,6 +12,8 @@ import com.gondragon.shoot2.texture.TextureInitializer;
 import com.gondragon.shoot2.texture.TextureSheet;
 
 import java.util.ArrayList;
+
+import javax.microedition.khronos.opengles.GL10;
 
 public class StageData {
 
@@ -61,6 +64,20 @@ public class StageData {
         refreshEnemyListFromDB();
 
         derivativeEnemyFactory = new DerivativeEnemyFactory(stageNumber);
+    }
+
+    public static void bindGLTextures(GL10 gl){
+        // glインターフェイスが必要なのでDB読み込みの直後、ゲームスレッドから呼ばれます
+
+        Log.e("@@@@@@@@@@@@@", String.valueOf(textureSheets.length));
+
+        for(TextureSheet sheet : textureSheets){
+
+            if(sheet!=null) {
+                sheet.bindGLTexture(gl);
+                Log.e("**********", sheet.pictureName);
+            }
+        }
     }
 
     public static void refreshEventListFromDB(){

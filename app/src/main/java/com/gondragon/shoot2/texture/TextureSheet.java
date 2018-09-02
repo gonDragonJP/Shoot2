@@ -3,8 +3,11 @@ package com.gondragon.shoot2.texture;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.RectF;
 
+import com.gondragon.shoot2.UtilGL;
 import com.gondragon.shoot2.database.AccessOfTextureData;
+import com.gondragon.shoot2.vector.DoubleRect;
 import com.gondragon.shoot2.vector.IntRect;
 
 import java.io.BufferedInputStream;
@@ -13,6 +16,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 
+import javax.microedition.khronos.opengles.GL10;
+
 public class TextureSheet{
 
     public String pictureName;
@@ -20,6 +25,8 @@ public class TextureSheet{
     public int frameNumberX, frameNumberY;
 
     public Bitmap texImage;
+
+    public int GLtexID=-1; // ダミーインデックスの為に生成される事があるので-1のままの時はGLtexture解放をスキップします
 
     public TextureSheet(){
 
@@ -58,5 +65,46 @@ public class TextureSheet{
         texRect.set(left, right, top, bottom);
 
         return texRect;
+    }
+
+    private RectF texSTRect = new RectF();
+
+    public RectF getSTRect(int frameIndex){
+
+        final float texFrameSizeX = 1.0f / frameNumberX;
+        final float texFrameSizeY = 1.0f / frameNumberY;
+
+        float left  = (frameIndex % frameNumberX) * texFrameSizeX;
+        float right = left + texFrameSizeX;
+        float top   = (frameIndex / frameNumberX) * texFrameSizeY;;
+        float bottom= top + texFrameSizeY;
+
+        texSTRect.set(left, top, right, bottom);
+
+        return texSTRect;
+    }
+
+    private GL10 gl;
+    private int[] GLtexIDarg= new int[1];
+
+    public void bindGLTexture(GL10 gl){
+
+        this.gl = gl;
+        GLtexID = UtilGL.setTexture(gl, texImage);
+    }
+
+    @Override
+    protected void finalize() throws Throwable {
+        try {
+            super.finalize();
+        } finally {
+            destruction();
+        }
+    }
+
+    private void destruction() {
+
+        GLtexIDarg[0] = GLtexID;
+        if(GLtexID !=-1) gl.glDeleteTextures(1, GLtexIDarg, 0);
     }
 }

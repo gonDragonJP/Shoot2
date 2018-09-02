@@ -2,13 +2,13 @@ package com.gondragon.shoot2.animation;
 
 import com.gondragon.shoot2.vector.DoubleRect;
 
-public class TextureSheet{
+public class GLTexSheet {
 
     int textureID, resourceID;
     int frameNumberX, frameNumberY;
     DoubleRect texRect = new DoubleRect();
 
-    public TextureSheet(int resourceID, int nx, int ny){
+    public GLTexSheet(int resourceID, int nx, int ny){
 
         //textureID = InitGL.loadTexture(context.getResources(), resourceID);
         this.resourceID = resourceID;
