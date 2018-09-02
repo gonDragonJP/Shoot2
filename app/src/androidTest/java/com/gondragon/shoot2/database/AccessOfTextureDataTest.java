@@ -1,7 +1,9 @@
 package com.gondragon.shoot2.database;
 
 import android.content.Context;
+import android.graphics.Point;
 import android.support.test.InstrumentationRegistry;
+import android.util.Log;
 
 import com.gondragon.shoot2.texture.TextureSheet;
 
@@ -31,5 +33,9 @@ public class AccessOfTextureDataTest {
 
         List<TextureSheet>  textureSheetList = new ArrayList<TextureSheet>();
         AccessOfTextureData.setTexDataList(textureSheetList,1);
+
+        TextureSheet testSheet = textureSheetList.get(0);
+        Log.e("width----------------",String.valueOf(testSheet.texImage.getWidth()));
+        Log.e("height----------------",String.valueOf(testSheet.texImage.getHeight()));
     }
 }
