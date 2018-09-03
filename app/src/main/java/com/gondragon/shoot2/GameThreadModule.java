@@ -55,7 +55,7 @@ public class GameThreadModule {
 
         stageManager.setStage(stageNumber);
 
-        MyRenderable renderTask = new MyRenderable() {
+        MyRenderer.Renderable renderTask = new MyRenderer.Renderable() {
             @Override
             public void render(GL10 gl) {
 
@@ -161,7 +161,7 @@ public class GameThreadModule {
 
                     //drawModule.drawScreen();
 
-                    /*MyRenderable renderTask = new MyRenderable() {
+                    /*MyRenderer.Renderable renderTask = new MyRenderer.Renderable() {
                         @Override
                         public void render(GL10 gl) {
 
@@ -179,7 +179,7 @@ public class GameThreadModule {
 
                 stageManager.periodicalProcess(scrollPoint, isTestMode);
 
-                MyRenderable renderTask = new MyRenderable() {
+                MyRenderer.Renderable renderTask = new MyRenderer.Renderable() {
                     @Override
                     public void render(GL10 gl) {
 

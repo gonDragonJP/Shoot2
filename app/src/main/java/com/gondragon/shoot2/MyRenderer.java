@@ -15,10 +15,12 @@ import javax.microedition.khronos.opengles.GL10;
 
 public class MyRenderer implements GLSurfaceView.Renderer{
 
+    public interface Renderable{
+
+        void render(GL10 gl);
+    }
+
     public static Int2Vector screenSize = new Int2Vector();
-    public static final float screenSlidingFactor = 4.0f;
-    //　screenSize : 設定アスペクト比で確保した実際画面の縦横サイズです
-    //  screenSlidingFactor : 自機が画面を動いた際に画面が横にずれるようにする為の係数です
 
     public static void setScreenVal(int realWidth, int realHeight){
 
@@ -26,16 +28,28 @@ public class MyRenderer implements GLSurfaceView.Renderer{
         screenSize.y = realHeight;
     }
 
-    ArrayList<MyRenderable> renderingTaskList = new ArrayList<>();
+    public static final float screenSlidingFactor = 4.0f;
+    //　screenSize : 設定アスペクト比で確保した実際画面の縦横サイズです
+    //  screenSlidingFactor : 自機が画面を動いた際に画面が横にずれるようにする為の係数です
 
-    synchronized public void addRenderingTask(MyRenderable task){
+    public boolean isDrawableGraphicPad = false; //操作パッドの描画が必要かどうかのスイッチ
+    private GraphicPad graphicPad;
+
+    public void setGraphicPad(GraphicPad pad){
+
+        graphicPad = pad;
+    }
+
+    ArrayList<MyRenderer.Renderable> renderingTaskList = new ArrayList<>();
+
+    synchronized public void addRenderingTask(MyRenderer.Renderable task){
 
         renderingTaskList.add(task);
     }
 
     synchronized private void doAllRenderingTasks(GL10 gl){
 
-        for(MyRenderable e : renderingTaskList){
+        for(MyRenderer.Renderable e : renderingTaskList){
 
             e.render(gl);
         }
@@ -83,6 +97,15 @@ public class MyRenderer implements GLSurfaceView.Renderer{
         UtilGL.changeTexColor(gl, null);
 
         doAllRenderingTasks(gl);
+
+        gl.glMatrixMode(GL10.GL_PROJECTION);
+        gl.glLoadIdentity();
+        gl.glOrthof(
+                0, 1,
+                1, 0,
+                0.5f, -0.5f
+        );
+        if(isDrawableGraphicPad) graphicPad.onDraw(gl);
 
         //ScreenEffect.preDraw(gl);
 
