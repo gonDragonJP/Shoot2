@@ -7,7 +7,7 @@ public class Global {
 
     public static final double radian = 3.14159/180;
 
-    public static final int frameIntervalTime = 1000 /40;
+    public static final int frameIntervalTime = 1000 /50;
 
     public static final float scrollSpeedPerFrame = 1.0f;
 
