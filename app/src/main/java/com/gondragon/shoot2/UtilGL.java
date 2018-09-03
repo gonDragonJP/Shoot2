@@ -227,10 +227,14 @@ public class UtilGL {
 
         if(rect==null) rect = new RectF(0, 0, 1, 1);
 
-        textureSTCoords[0]=rect.left;	textureSTCoords[1]=rect.top;
-        textureSTCoords[2]=rect.left;	textureSTCoords[3]=rect.bottom;
-        textureSTCoords[4]=rect.right;	textureSTCoords[5]=rect.top;
-        textureSTCoords[6]=rect.right;	textureSTCoords[7]=rect.bottom;
+        //[0,1]左下　[2,3]左上　[4,5]右下　[6,7]右上
+        //ST座標は左下(0,0)の座標系なのでRect.topが底辺になりますが
+        //BMPバッファが上下逆さまなのでtopを上頂点に割り当てます
+
+        textureSTCoords[0]=rect.left;	textureSTCoords[1]=rect.bottom;
+        textureSTCoords[2]=rect.left;	textureSTCoords[3]=rect.top;
+        textureSTCoords[4]=rect.right;	textureSTCoords[5]=rect.bottom;
+        textureSTCoords[6]=rect.right;	textureSTCoords[7]=rect.top;
     }
 
     public static float[] vertices = new float [8];

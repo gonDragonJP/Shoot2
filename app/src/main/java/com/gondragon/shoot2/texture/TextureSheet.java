@@ -76,8 +76,10 @@ public class TextureSheet{
 
         float left  = (frameIndex % frameNumberX) * texFrameSizeX;
         float right = left + texFrameSizeX;
-        float top   = (frameIndex / frameNumberX) * texFrameSizeY;;
-        float bottom= top + texFrameSizeY;
+        float top  = (frameIndex / frameNumberX) * texFrameSizeY;;
+        float bottom = top + texFrameSizeY;
+
+        //BMPは画像が逆さまに入っている?
 
         texSTRect.set(left, top, right, bottom);
 

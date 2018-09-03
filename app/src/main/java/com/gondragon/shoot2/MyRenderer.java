@@ -63,8 +63,8 @@ public class MyRenderer implements GLSurfaceView.Renderer{
         gl.glMatrixMode(GL10.GL_PROJECTION);
         gl.glLoadIdentity();
         gl.glOrthof(
-                (int)sx, (int)(sx + Global.virtualScreenSize.x),
-                (int)Global.virtualScreenSize.y, 0,
+                sx, sx + Global.virtualScreenSize.x,
+                Global.virtualScreenSize.y, 0,
                 0.5f, -0.5f
         );
 
@@ -78,12 +78,11 @@ public class MyRenderer implements GLSurfaceView.Renderer{
         UtilGL.drawLine(gl,new PointF(0,0),new PointF(Global.virtualScreenSize.x, Global.virtualScreenSize.y));
         UtilGL.drawLine(gl,new PointF(Global.virtualScreenSize.x,0),new PointF(0, Global.virtualScreenSize.y));
 
+        UtilGL.enableDefaultBlend(gl);
+        UtilGL.setTextureSTCoords(null);
+        UtilGL.changeTexColor(gl, null);
 
         doAllRenderingTasks(gl);
-
-        //UtilGL.enableDefaultBlend();
-        //UtilGL.setTextureSTCoords(null);
-        //UtilGL.changeTexColor(null);
 
         //ScreenEffect.preDraw(gl);
 
