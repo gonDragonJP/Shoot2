@@ -2,10 +2,12 @@ package com.gondragon.shoot2;
 
 import android.content.Context;
 import android.graphics.PointF;
+import android.util.Log;
 
 import com.gondragon.shoot2.enemy.EnemyData;
 import com.gondragon.shoot2.stage.StageData;
 import com.gondragon.shoot2.stage.StageManager;
+import com.gondragon.shoot2.texture.TextureSheet;
 import com.gondragon.shoot2.vector.Int2Vector;
 
 import java.util.Timer;
@@ -115,6 +117,7 @@ public class GameThreadModule {
 
         isTestMode = false;
         timer.schedule(timerTask, 0, Global.frameIntervalTime);
+        
     }
 
     synchronized public void pushStopButton(){

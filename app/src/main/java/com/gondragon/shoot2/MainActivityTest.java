@@ -1,12 +1,39 @@
 package com.gondragon.shoot2;
 
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
 
+import com.gondragon.shoot2.stage.StageData;
+
 public class MainActivityTest extends AppCompatActivity {
+
+    private class testView extends View {
+
+        public testView(Context context) {
+            super(context);
+        }
+
+        @Override
+        protected void onDraw(Canvas canvas){
+
+            Paint paint = new Paint();
+            paint.setStyle(Paint.Style.FILL);
+            paint.setColor(Color.RED);
+            canvas.drawCircle(200,200,200, paint);
+
+            Bitmap bitmap = StageData.textureSheets[0].texImage;
+            canvas.drawBitmap(bitmap,0,0,null);
+        }
+    }
 
     private MyRenderer renderer;
     private GameThreadModule gameThread;
@@ -21,7 +48,7 @@ public class MainActivityTest extends AppCompatActivity {
         gameThread.setStage(1);
         gameThread.startThread();
 
-        setContentView(R.layout.activity_main_test);
+        setContentView(new testView(this));
     }
 
     private void initializeGame(){

@@ -19,6 +19,8 @@ public class MainActivity extends Activity {
 
         gameThread.setStage(1);
         gameThread.startThread();
+
+        //実際にレンダリングが始まるのはこれの後だと思われる
     }
 
     private void initializeGame(){

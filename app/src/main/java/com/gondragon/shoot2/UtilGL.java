@@ -8,6 +8,7 @@ import android.graphics.Point;
 import android.graphics.PointF;
 import android.graphics.RectF;
 import android.opengl.GLUtils;
+import android.util.Log;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -162,6 +163,9 @@ public class UtilGL {
 
         int[] textures = new int[1];
         gl.glGenTextures(1, textures, 0);
+
+
+        Log.e("fdfdfd", bitmap.getConfig().toString());
 
         gl.glBindTexture(GL10.GL_TEXTURE_2D, textures[0]);
         GLUtils.texImage2D(GL10.GL_TEXTURE_2D, 0, bitmap, 0);
