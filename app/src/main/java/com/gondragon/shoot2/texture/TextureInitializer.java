@@ -1,13 +1,53 @@
 package com.gondragon.shoot2.texture;
 
-import android.util.Log;
-
 import com.gondragon.shoot2.database.AccessOfTextureData;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class TextureInitializer {
+
+    private enum EnumTexture {
+
+        MyPlane(0,"myplanesheet.png",4,4),
+        Effect_0(1,"effect_sheet000.png",8,8),
+        Effect_1(2,"effect_sheet001.png",8,8),
+        Effect_2(3,"effect_sheet002.png",4,4),
+        Effect_3(4,"effect_sheet003.png",8,8),
+        Bullet_0(5,"bullet_sheet000.png",8,8),
+        Bullet_1(6,"bullet_sheet001.png",8,8),
+        Item(7,"item_sheet.png",8,8);
+
+        int textureId, frameX, frameY;
+        String pictureName;
+
+        EnumTexture(int id, String name, int xc, int yc)
+            { textureId = id; pictureName = name; frameX = xc; frameY = yc;};
+
+        public TextureSheet getSheet(){
+
+            TextureSheet sheet = new TextureSheet();
+
+            sheet.textureID = textureId;
+            sheet.frameNumberX = frameX;
+            sheet.frameNumberY = frameY;
+            sheet.pictureName = pictureName;
+
+            return sheet;
+        }
+    }
+
+    public static TextureSheet[] getEnumTexSheets(){
+
+        TextureSheet[] sheets = new TextureSheet[EnumTexture.values().length];
+
+        for(EnumTexture e : EnumTexture.values()) {
+
+            sheets[e.textureId] = e.getSheet();
+            AccessOfTextureData.setAssetImage(sheets[e.textureId]);
+        }
+        return sheets;
+    }
 
     public static TextureSheet[] getStageEnemyTexSheets(int stageNumber){
 

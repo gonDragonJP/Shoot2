@@ -1,5 +1,6 @@
 package com.gondragon.shoot2.enemy;
 
+import com.gondragon.shoot2.myplane.CallbackOfMyPlane;
 import com.gondragon.shoot2.myplane.MyPlane;
 import com.gondragon.shoot2.enemy.derivativeType.DerivativeEnemyFactory;
 import com.gondragon.shoot2.vector.Int2Vector;
@@ -11,14 +12,14 @@ import javax.microedition.khronos.opengles.GL10;
 public class EnemiesManager {
 
     private DerivativeEnemyFactory derivativeEnemyFactory;
-    private MyPlane.CallbackOfMyPlane cbOfMyPlanePos;
+    private CallbackOfMyPlane cbOfMyPlanePos;
 
     ArrayList<EnemyData> enemyDataList;
     ArrayList<Enemy> enemyList = new ArrayList<Enemy>();
 
     public EnemiesManager(
 
-            MyPlane.CallbackOfMyPlane cbOfMyPlanePos,
+            CallbackOfMyPlane cbOfMyPlanePos,
             ArrayList<EnemyData> enemyDataList,
             DerivativeEnemyFactory derivativeEnemyFactory
     ){
