@@ -55,12 +55,12 @@ public class GraphicPad {
 
         if(isSetLeftPadCenter) {
             setPadCenter(leftPadCenter);
-            UtilGL.drawStrokeCircle(gl, padCenter, 0.1f,20);
+            UtilGL.drawStrokeCircle(gl, padCenter, padRadius,20);
         }
 
         if(isSetRightPadCenter) {
             setPadCenter(rightPadCenter);
-            UtilGL.drawStrokeCircle(gl, padCenter, 0.1f, 20);
+            UtilGL.drawStrokeCircle(gl, padCenter, padRadius, 20);
         }
     }
 
