@@ -1,8 +1,7 @@
 package com.gondragon.shoot2.enemy;
 
-import com.gondragon.shoot2.CallbackOfMyPlane;
 import com.gondragon.shoot2.Global;
-import com.gondragon.shoot2.MyPlane;
+import com.gondragon.shoot2.myplane.MyPlane;
 import com.gondragon.shoot2.animation.AnimationData;
 import com.gondragon.shoot2.animation.AnimationManager;
 import com.gondragon.shoot2.animation.AnimationSet;
@@ -14,7 +13,7 @@ import java.util.ArrayList;
 public class Enemy extends ProtoEnemy{
 
     //private ItemGenerator itemGenerator;
-    protected CallbackOfMyPlane cbOfMyPlane;
+    protected MyPlane.CallbackOfMyPlane cbOfMyPlane;
     protected CallbackOfGeneratingChild cbOfGeneratingChild;
 
     protected CalcParam calcParam;

@@ -2,9 +2,8 @@ package com.gondragon.shoot2.stage;
 
 import android.content.Context;
 
-import com.gondragon.shoot2.CallbackOfMyPlane;
 import com.gondragon.shoot2.Global;
-import com.gondragon.shoot2.MyPlane;
+import com.gondragon.shoot2.myplane.MyPlane;
 import com.gondragon.shoot2.animation.AnimationManager;
 import com.gondragon.shoot2.enemy.EnemiesManager;
 import com.gondragon.shoot2.enemy.EnemyData;

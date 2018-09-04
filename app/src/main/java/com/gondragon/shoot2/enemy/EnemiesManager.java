@@ -1,7 +1,6 @@
 package com.gondragon.shoot2.enemy;
 
-import com.gondragon.shoot2.CallbackOfMyPlane;
-import com.gondragon.shoot2.MyPlane;
+import com.gondragon.shoot2.myplane.MyPlane;
 import com.gondragon.shoot2.enemy.derivativeType.DerivativeEnemyFactory;
 import com.gondragon.shoot2.vector.Int2Vector;
 

@@ -1,6 +1,6 @@
 package com.gondragon.shoot2.enemy.derivativeType;
 
-import com.gondragon.shoot2.CallbackOfMyPlane;
+import com.gondragon.shoot2.myplane.MyPlane;
 import com.gondragon.shoot2.enemy.CallbackOfGeneratingChild;
 import com.gondragon.shoot2.enemy.Enemy;
 import com.gondragon.shoot2.enemy.EnemyData;
@@ -37,7 +37,7 @@ public class DerivativeEnemyFactory {
     public Enemy getDerivativeEnemy(
 
             String enemyName, EnemyData.EnemyCategory category,
-            CallbackOfMyPlane cbOfMyPlanePos,
+            MyPlane.CallbackOfMyPlane cbOfMyPlanePos,
             CallbackOfGeneratingChild cbOfGeneratingChild
     ){
 
