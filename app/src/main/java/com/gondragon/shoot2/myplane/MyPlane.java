@@ -4,92 +4,110 @@ import android.graphics.PointF;
 
 import com.gondragon.shoot2.Global;
 import com.gondragon.shoot2.GraphicPad;
+import com.gondragon.shoot2.vector.Double2Vector;
 import com.gondragon.shoot2.vector.Int2Vector;
 
 import javax.microedition.khronos.opengles.GL10;
 
-public class MyPlane {
+public class MyPlane implements CallbackOfMyPlane{
 
-    public interface CallbackOfMyPlane {
+    @Override
+    public Int2Vector getMyPlanePos() {
 
-        Int2Vector getMyPlanePos();
-        void setMyPlanePos(Int2Vector planePos);
+        return new Int2Vector(x, y);
     }
 
+    @Override
+    public void setMyPlanePos(Int2Vector planePos) {
 
-    final int collisionRadius = 16;
-    ;
+        x = planePos.x;
+        y = planePos.y;
+    }
 
+    public PlaneState state;
 
-    private GraphicPad pad;
+    public class PlaneState {
 
-    public int x, y;
+        public boolean isNowCharging, isAlreadyCharged;
+        public boolean isShielding;
+        public boolean isNowConversion;
+        public boolean isBurnerOn;
+        public boolean isAutoCruisingMode;
+
+        public PlaneState(){
+
+        }
+
+        public void reset(){
+
+            isNowCharging = false;
+            isAlreadyCharged = false;
+            isShielding = false;
+            isNowConversion = false;
+            isBurnerOn = false;
+            isAutoCruisingMode = false;
+        }
+
+        public void setChargeFinish(){
+
+            isNowCharging = false;
+            isAlreadyCharged = true;
+        }
+    }
+
     public static final float maxHP = 500;
     public int hitPoints = (int)maxHP;
-    public boolean isNowCharging, isAlreadyCharged;
-    public boolean isShielding = false;
-    public boolean isNowConversion;
-    public boolean isBurnerOn=false;
 
-    private boolean isAutoCruisingMode = false;
+    final int collisionRadius = 16;
+
+    public final int maxSpeed = 6;
+
+    public int x, y;
+    public Double2Vector velocity;
+
     private CruisingProgram cruisingProgram;
+    private MyPlaneDrawer drawer;
 
-    public Double2Vector velocity = new Double2Vector();
-    private int maxSpeed = 6;
-    private double animeDivSpeed = maxSpeed * 2 / 5d;
+    public MyPlane(MyPlaneDrawer drawer){
 
+        state = new PlaneState();
+        velocity = new Double2Vector();
 
-    public MyPlane(){
+        this.drawer = drawer;
+        initialize();
     }
 
-    public void initialize(ObjectsContainer objectsContainer){
-
-        animationManager = objectsContainer.animationManager;
-        pad = objectsContainer.pad;
-
-        setStartingState();
-    }
-
-    public void setStartingState(){
+    public void initialize(){
 
         x = Global.virtualScreenSize.x / 2;
         y = Global.virtualScreenSize.y / 4 * 3;
-
-        resetState();
     }
 
-    private void resetState(){
+    public void burnerOn(){
 
-        isNowCharging = isAlreadyCharged = isShielding = isNowConversion = false;
-
-        moveAnimeFrameIndex = 2;
-        chargeBallAnimeFrameIndex = chargeAnimeFrame = 0;
-        conversionAnimeFrameIndex = conversionAnimeFrame = 0;
-        shieldAnimeFrameIndex = shieldAnimeFrame = 0;
+        state.isBurnerOn = true;
     }
 
-    final float[] shadowColor = {0, 0, 0, 0};
+    synchronized public void periodicalProcess(GraphicPad pad){
 
-    synchronized public void periodicalProcess(){
+        if(state.isAutoCruisingMode)
+            state.isAutoCruisingMode = cruisingProgram.crusing();
 
-        if(isAutoCruisingMode)
-            isAutoCruisingMode = cruisingProgram.crusing();
-        else getPadInput();
+        else getPadInput(pad);
 
-        changeAnimeFrame();
+        drawer.changeAnimeFrame(this);
     }
 
     public void setDamaged(int enemyAtackPoint){
 
-        if(!isShielding){
+        if(!state.isShielding){
 
             hitPoints -= enemyAtackPoint;
 
-            isShielding = true;
-            shieldAnimeFrameIndex = 0;
-            shieldAnimeFrame = 0;
+            state.isShielding = true;
+            drawer.setShildOn();
 
-            SoundEffect.play(SoundKind.SHIELDING);
+            //SoundEffect.play(SoundKind.SHIELDING);
         }
 
         if(hitPoints<0){
@@ -113,18 +131,18 @@ public class MyPlane {
 
     public void resetCharging(){
 
-        isAlreadyCharged = false;
-        isNowCharging = false;
-        chargeAnimeFrame = 0;
+        state.isAlreadyCharged = false;
+        state.isNowCharging = false;
+        drawer.resetCharge();
     }
 
-    public void setConversion(boolean isNowConversion){
+    public void setConversion(boolean sw){
 
-        if((isNowConversion)&&(hitPoints>1)) this.isNowConversion = true;
+        if(sw && (hitPoints>1)) state.isNowConversion = true;
+
         else {
-            this.isNowConversion = false;
-            conversionAnimeFrameIndex = 0;
-            conversionAnimeFrame = 0;
+            state.isNowConversion = false;
+            drawer.resetConversion();
         }
     }
 
@@ -142,17 +160,18 @@ public class MyPlane {
     public void setAutoCruising(CruisingProgram program){
 
         if(program==null){
-            isAutoCruisingMode = false;
+            state.isAutoCruisingMode = false;
             return;
         }
 
+        drawer.resetAnimeState();
+        state.isAutoCruisingMode = true;
+
         cruisingProgram = program;
-        resetAnimeState();
-        isAutoCruisingMode = true;
         cruisingProgram.initialize();
     }
 
-    private void getPadInput(){
+    private void getPadInput(GraphicPad pad){
 
         if(pad==null || pad.isSetLeftPadCenter==false){
 
@@ -166,15 +185,6 @@ public class MyPlane {
         x += velocity.x;
         y += velocity.y;
 
-        limitPosition();
+        drawer.limitPosition(this);
     }
-
-    private void limitPosition(){
-
-        if(x<0) x=0;
-        if(y<0) y=0;
-        if(x>screenX) x=screenX;
-        if(y>screenBottomLimit) y=screenBottomLimit;
-    }
-
 }

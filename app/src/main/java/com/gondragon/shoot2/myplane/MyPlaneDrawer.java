@@ -4,6 +4,7 @@ import android.graphics.PointF;
 
 import com.gondragon.shoot2.Global;
 import com.gondragon.shoot2.animation.AnimationManager;
+import com.gondragon.shoot2.animation.AnimationSet;
 
 import javax.microedition.khronos.opengles.GL10;
 
@@ -14,7 +15,7 @@ public class MyPlaneDrawer {
     final PointF size = new PointF(drawSize, drawSize)
 
     private AnimationManager animationManager;
-    private AnimationManager.AnimationSet
+    private AnimationSet
             animeSet, chargingBallAnimeSet, chargedBallAnimeSet, conversionAnimeSet,
             shieldAnimeSet, burnerAnimeSet;
 
@@ -24,6 +25,8 @@ public class MyPlaneDrawer {
     private int shieldAnimeFrameIndex, shieldAnimeFrame;
     private int burnerAnimeFrameIndex, burnerAnimeFrame;
     private PointF drawCenter = new PointF();
+
+    final float[] shadowColor = {0, 0, 0, 0};
 
     public MyPlaneDrawer(){
 
@@ -35,33 +38,56 @@ public class MyPlaneDrawer {
 
     public void initialize(){
 
-        animeSet = animationManager.getAnimationSet
-                (AnimationManager.AnimeObject.MYPLANE, 0);
+        animeSet = AnimationManager.AnimeObject.getAnimeSet
+                (AnimationManager.AnimeObject.MYPLANE);
 
-        chargingBallAnimeSet = animationManager.getAnimationSet
-                (AnimationManager.AnimeObject.MYCHARGINGBALL, 0);
+        chargingBallAnimeSet = AnimationManager.AnimeObject.getAnimeSet
+                (AnimationManager.AnimeObject.MYCHARGINGBALL);
 
-        chargedBallAnimeSet = animationManager.getAnimationSet
-                (AnimationManager.AnimeObject.MYCHARGEDBALL, 0);
+        chargedBallAnimeSet = AnimationManager.AnimeObject.getAnimeSet
+                (AnimationManager.AnimeObject.MYCHARGEDBALL);
 
-        conversionAnimeSet = animationManager.getAnimationSet
-                (AnimationManager.AnimeObject.MYCONVERSION, 0);
+        conversionAnimeSet = AnimationManager.AnimeObject.getAnimeSet
+                (AnimationManager.AnimeObject.MYCONVERSION);
 
-        shieldAnimeSet = animationManager.getAnimationSet
-                (AnimationManager.AnimeObject.MYSHIELD, 0);
+        shieldAnimeSet = AnimationManager.AnimeObject.getAnimeSet
+                (AnimationManager.AnimeObject.MYSHIELD);
 
-        burnerAnimeSet = animationManager.getAnimationSet
-                (AnimationManager.AnimeObject.MYBURNER, 0);
+        burnerAnimeSet = AnimationManager.AnimeObject.getAnimeSet
+                (AnimationManager.AnimeObject.MYBURNER);
     }
 
     public void resetAnimeState(){
-
-        isNowCharging = isAlreadyCharged = isShielding = isNowConversion = false;
 
         moveAnimeFrameIndex = 2;
         chargeBallAnimeFrameIndex = chargeAnimeFrame = 0;
         conversionAnimeFrameIndex = conversionAnimeFrame = 0;
         shieldAnimeFrameIndex = shieldAnimeFrame = 0;
+    }
+
+    public void setShildOn(){
+
+        shieldAnimeFrameIndex = 0;
+        shieldAnimeFrame = 0;
+    }
+
+    public void resetCharge(){
+
+        chargeAnimeFrame = 0;
+    }
+
+    public void resetConversion(){
+
+        conversionAnimeFrameIndex = 0;
+        conversionAnimeFrame = 0;
+    }
+
+    public void limitPosition(MyPlane plane){
+
+        if(plane.x <0) plane.x=0;
+        if(plane.y <0) plane.y=0;
+        if(plane.x > screenX) plane.x = screenX;
+        if(plane.y > screenBottomLimit) plane.y=screenBottomLimit;
     }
 
     synchronized public void onDrawShadow(GL10 gl){
@@ -141,18 +167,23 @@ public class MyPlaneDrawer {
         }
     }
 
-    private void changeAnimeFrame(){
+    public void changeAnimeFrame(MyPlane plane){
 
-        moveAnimeFrameIndex = (int)((velocity.x + maxSpeed) / animeDivSpeed);
+        double divideSpeed = plane.maxSpeed * 2 / 5d; // 全速の2倍を５フレームに割り当てindexを求めます
+
+        moveAnimeFrameIndex = (int)((plane.velocity.x + plane.maxSpeed) / divideSpeed);
         moveAnimeFrameIndex = moveAnimeFrameIndex > 4 ? 4 : moveAnimeFrameIndex;
 
-        if(isNowCharging){
+        MyPlane.PlaneState state = plane.state;
+
+        if(state.isNowCharging){
 
             chargeBallAnimeFrameIndex = animationManager.checkAnimeLimit
-                    (chargingBallAnimeSet.getData(AnimeKind.NORMAL, 0), ++chargeAnimeFrame);
+                    (chargingBallAnimeSet.getAnime(AnimationSet.AnimeKind.NORMAL, 0), ++chargeAnimeFrame);
+
             if(chargeBallAnimeFrameIndex == -1) {
-                isNowCharging = false;
-                isAlreadyCharged = true;
+
+                state.setChargeFinish();
                 chargeAnimeFrame = 0;
             }
         }
