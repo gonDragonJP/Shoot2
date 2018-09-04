@@ -1,7 +1,8 @@
 package com.gondragon.shoot2.enemy;
 
-import com.gondragon.shoot2.CallbackOfMyPlane;
 import com.gondragon.shoot2.Global;
+import com.gondragon.shoot2.myplane.CallbackOfMyPlane;
+import com.gondragon.shoot2.myplane.MyPlane;
 import com.gondragon.shoot2.animation.AnimationData;
 import com.gondragon.shoot2.animation.AnimationManager;
 import com.gondragon.shoot2.animation.AnimationSet;

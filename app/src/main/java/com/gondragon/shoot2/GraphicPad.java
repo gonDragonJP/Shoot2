@@ -43,10 +43,10 @@ public class GraphicPad {
 
     private void setPadCenter(Point realPos){
 
-        float x = realPos.x / (float)MyRenderer.screenSize.x ;
-        float y = realPos.y / (float)MyRenderer.screenSize.y ;
+        float p = (realPos.x - MyRenderer.surfaceRect.left) / (float)MyRenderer.surfaceRect.width();
+        float q = (realPos.y - MyRenderer.surfaceRect.top) / (float)MyRenderer.surfaceRect.height();
 
-        padCenter.set(x, y);
+        padCenter.set(Global.virtualScreenSize.x * p, Global.virtualScreenSize.y * q);
     }
 
     public void onDraw(GL10 gl){
@@ -55,12 +55,12 @@ public class GraphicPad {
 
         if(isSetLeftPadCenter) {
             setPadCenter(leftPadCenter);
-            UtilGL.drawStrokeCircle(gl, padCenter, 0.1f,20);
+            UtilGL.drawStrokeCircle(gl, padCenter, padRadius,20);
         }
 
         if(isSetRightPadCenter) {
             setPadCenter(rightPadCenter);
-            UtilGL.drawStrokeCircle(gl, padCenter, 0.1f, 20);
+            UtilGL.drawStrokeCircle(gl, padCenter, padRadius, 20);
         }
     }
 
@@ -77,7 +77,7 @@ public class GraphicPad {
             int touchX = (int)event.getX(actionIndex);
             int touchY = (int)event.getY(actionIndex);
 
-            if(touchX *2 < MyRenderer.screenSize.x){
+            if(touchX *2 < MyRenderer.surfaceRect.width()){
 
                 setLeftPadCenter(actionID, touchX, touchY);
             }

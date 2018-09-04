@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.PointF;
+import android.graphics.Rect;
 import android.graphics.RectF;
 import android.opengl.GLUtils;
 import android.util.Log;
@@ -32,7 +33,7 @@ public class UtilGL {
         return fb;
     }
 
-    public static Point setViewPortWithAspectRatio
+    public static Rect setViewPortWithAspectRatio
             (GL10 gl, int width, int height, double aspect){
 
         int dstWidth, dstHeight;
@@ -53,7 +54,7 @@ public class UtilGL {
 
         gl.glViewport(offsetX, offsetY, dstWidth, dstHeight);
 
-        return new Point(dstWidth, dstHeight);
+        return new Rect(offsetX, offsetY, offsetX + dstWidth, offsetY + dstHeight);
     }
 
     public static void setColor(GL10 gl, int color){

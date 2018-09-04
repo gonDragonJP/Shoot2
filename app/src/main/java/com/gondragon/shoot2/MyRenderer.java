@@ -1,10 +1,9 @@
 package com.gondragon.shoot2;
 
 import android.graphics.Color;
-import android.graphics.Point;
 import android.graphics.PointF;
+import android.graphics.Rect;
 import android.opengl.GLSurfaceView;
-import android.util.Log;
 
 import com.gondragon.shoot2.vector.Int2Vector;
 
@@ -20,16 +19,15 @@ public class MyRenderer implements GLSurfaceView.Renderer{
         void render(GL10 gl);
     }
 
-    public static Int2Vector screenSize = new Int2Vector();
+    public static Rect surfaceRect = new Rect();
+    //　surfaceRect : 設定アスペクト比で確保した実際画面におけるゲーム画面座標です
 
-    public static void setScreenVal(int realWidth, int realHeight){
+    public static void setSurfaceRect(Rect rect){
 
-        screenSize.x = realWidth;
-        screenSize.y = realHeight;
+        surfaceRect.set(rect);
     }
 
     public static final float screenSlidingFactor = 4.0f;
-    //　screenSize : 設定アスペクト比で確保した実際画面の縦横サイズです
     //  screenSlidingFactor : 自機が画面を動いた際に画面が横にずれるようにする為の係数です
 
     public boolean isDrawableGraphicPad = false; //操作パッドの描画が必要かどうかのスイッチ
@@ -70,6 +68,7 @@ public class MyRenderer implements GLSurfaceView.Renderer{
 
     private void renderScreen(GL10 gl){
 
+        //自機に伴う視点の移動
         float virturalCenterX = Global.virtualScreenSize.x /2;
         float planeX = virturalCenterX;
         float sx = (planeX - virturalCenterX) / screenSlidingFactor;
@@ -98,11 +97,12 @@ public class MyRenderer implements GLSurfaceView.Renderer{
 
         doAllRenderingTasks(gl);
 
+        //画面定位置のオブジェクト描出
         gl.glMatrixMode(GL10.GL_PROJECTION);
         gl.glLoadIdentity();
         gl.glOrthof(
-                0, 1,
-                1, 0,
+                0, Global.virtualScreenSize.x,
+                Global.virtualScreenSize.y, 0,
                 0.5f, -0.5f
         );
         if(isDrawableGraphicPad) graphicPad.onDraw(gl);
@@ -130,8 +130,6 @@ public class MyRenderer implements GLSurfaceView.Renderer{
     @Override
     public void onSurfaceChanged(GL10 gl, int width, int height) {
 
-        Point size = UtilGL.setViewPortWithAspectRatio(gl, width, height, Global.aspectRatio);
-
-        setScreenVal(size.x, size.y);
+        setSurfaceRect(UtilGL.setViewPortWithAspectRatio(gl, width, height, Global.aspectRatio));
     }
 }
