@@ -31,7 +31,7 @@ public class MyRenderer implements GLSurfaceView.Renderer{
     //  screenSlidingFactor : 自機が画面を動いた際に画面が横にずれるようにする為の係数です
 
     public boolean isDrawableGraphicPad = false; //操作パッドの描画が必要かどうかのスイッチ
-    private GraphicPad graphicPad;
+    public GraphicPad graphicPad;
 
     public void setGraphicPad(GraphicPad pad){
 

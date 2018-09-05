@@ -33,15 +33,14 @@ public class MyPlaneDrawer {
 
     public MyPlaneDrawer(){
 
-        screenX = (int)Global.virtualScreenSize.x;
-        screenY = (int)Global.virtualScreenSize.y;
-
-        screenBottomLimit = screenY - planeSize;
-
         initialize();
     }
 
     public void initialize(){
+
+        screenX = (int)Global.virtualScreenSize.x;
+        screenY = (int)Global.virtualScreenSize.y;
+        screenBottomLimit = screenY - planeSize;
 
         textureSheets = TextureInitializer.getEnumTexSheets();
 
@@ -62,6 +61,8 @@ public class MyPlaneDrawer {
 
         burnerAnimeSet = AnimationManager.AnimeObject.getAnimeSet
                 (AnimationManager.AnimeObject.MYBURNER);
+
+        resetAnimeState();
     }
 
     public void resetAnimeState(){
