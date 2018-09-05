@@ -98,4 +98,14 @@ public class AccessOfTextureData {
 
         return texImage;
     }
+
+    public static void setAssetImage(TextureSheet sheet){
+        //イニシャライザーで列挙定義されたシートに画像を読み込む為のメソッドです
+        //ToDo)いずれデータベース化してこのメソッドは破棄する
+
+        sheet.texImage = getTexImage(sheet.pictureName);
+
+        sheet.gridSizeX = sheet.texImage.getWidth() / sheet.frameNumberX;
+        sheet.gridSizeY = sheet.texImage.getHeight() / sheet.frameNumberY;
+    }
 }

@@ -95,10 +95,12 @@ public class AnimationInitializer {
 
         myPlaneSet.normalAnime.drawSize.set(64, 64);
         //myPlaneSet.normalAnime.textureSheet = planeTex;
+        myPlaneSet.normalAnime.textureID = 0;
         myPlaneSet.normalAnime.frameOffset = 0;
 
         myShieldSet.normalAnime.drawSize.set(64, 64);
         //myShieldSet.normalAnime.textureSheet = effectTex0;
+        myShieldSet.normalAnime.textureID = 1;
         myShieldSet.normalAnime.frameOffset = 48;
         myShieldSet.normalAnime.frameNumber = 12;
         myShieldSet.normalAnime.frameInterval = 3;
@@ -106,6 +108,7 @@ public class AnimationInitializer {
 
         myConversionSet.normalAnime.drawSize.set(64, 64);
         //myConversionSet.normalAnime.textureSheet = effectTex0;
+        myConversionSet.normalAnime.textureID = 1;
         myConversionSet.normalAnime.frameOffset = 20;
         myConversionSet.normalAnime.frameNumber = 20;
         myConversionSet.normalAnime.frameInterval = 1;
@@ -113,6 +116,7 @@ public class AnimationInitializer {
 
         myBurnerSet.normalAnime.drawSize.set(32, 64);
         //myBurnerSet.normalAnime.textureSheet = effectTex3;
+        myBurnerSet.normalAnime.textureID = 4;
         myBurnerSet.normalAnime.frameOffset = 0;
         myBurnerSet.normalAnime.frameNumber = 15;
         myBurnerSet.normalAnime.frameInterval = 1;
@@ -123,6 +127,7 @@ public class AnimationInitializer {
 
         myBulletSet.normalAnime.drawSize.set(16, 16);
         //myBulletSet.normalAnime.textureSheet = bulletTex1;
+        myBurnerSet.normalAnime.textureID = 5;
         myBulletSet.normalAnime.frameOffset = 16;
         myBulletSet.normalAnime.frameNumber = 4;
         myBulletSet.normalAnime.frameInterval = 1;
@@ -130,6 +135,7 @@ public class AnimationInitializer {
 
         myBulletSet.explosionAnime.drawSize.set(16, 16);
         //myBulletSet.explosionAnime.textureSheet = bulletTex1;
+        myBulletSet.explosionAnime.textureID = 5;
         myBulletSet.explosionAnime.frameOffset = 8;
         myBulletSet.explosionAnime.frameNumber = 4;
         myBulletSet.explosionAnime.frameInterval = 3;
@@ -137,6 +143,7 @@ public class AnimationInitializer {
 
         myLaserSet.normalAnime.drawSize.set(32, 32);
         //myLaserSet.normalAnime.textureSheet = bulletTex2;
+        myLaserSet.normalAnime.textureID = 6;
         myLaserSet.normalAnime.frameOffset = 0;
         myLaserSet.normalAnime.frameNumber = 1;
         myLaserSet.normalAnime.frameInterval = 1;
@@ -144,6 +151,7 @@ public class AnimationInitializer {
 
         myLaserSet.explosionAnime.drawSize.set(64, 64);
         //myLaserSet.explosionAnime.textureSheet = effectTex0;
+        myLaserSet.explosionAnime.textureID = 1;
         myLaserSet.explosionAnime.frameOffset = 40;
         myLaserSet.explosionAnime.frameNumber = 8;
         myLaserSet.explosionAnime.frameInterval = 2;
@@ -154,6 +162,7 @@ public class AnimationInitializer {
 
         myChargingBallSet.normalAnime.drawSize.set(64, 64);
         //myChargingBallSet.normalAnime.textureSheet = effectTex0;
+        myChargingBallSet.normalAnime.textureID = 1;
         myChargingBallSet.normalAnime.frameOffset = 0;
         myChargingBallSet.normalAnime.frameNumber = 10;
         myChargingBallSet.normalAnime.frameInterval = 6;
@@ -161,6 +170,7 @@ public class AnimationInitializer {
 
         myChargedBallSet.normalAnime.drawSize.set(64, 64);
         //myChargedBallSet.normalAnime.textureSheet = effectTex0;
+        myChargedBallSet.normalAnime.textureID = 1;
         myChargedBallSet.normalAnime.frameOffset = 10;
         myChargedBallSet.normalAnime.frameNumber = 10;
         myChargedBallSet.normalAnime.frameInterval = 3;
@@ -171,6 +181,7 @@ public class AnimationInitializer {
 
         shieldEnergySet.normalAnime.drawSize.set(32, 32);
         //shieldEnergySet.normalAnime.textureSheet = itemTex;
+        shieldEnergySet.normalAnime.textureID = 7;
         shieldEnergySet.normalAnime.frameOffset = 0;
         shieldEnergySet.normalAnime.frameNumber = 15;
         shieldEnergySet.normalAnime.frameInterval = 4;
@@ -178,6 +189,7 @@ public class AnimationInitializer {
 
         weaponEnergySet.normalAnime.drawSize.set(32, 32);
         //weaponEnergySet.normalAnime.textureSheet = itemTex;
+        weaponEnergySet.normalAnime.textureID = 7;
         weaponEnergySet.normalAnime.frameOffset = 16;
         weaponEnergySet.normalAnime.frameNumber = 15;
         weaponEnergySet.normalAnime.frameInterval = 4;

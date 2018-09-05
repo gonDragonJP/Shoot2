@@ -2,7 +2,11 @@ package com.gondragon.shoot2;
 
 import android.content.Context;
 
+import com.gondragon.shoot2.database.AccessOfEnemyData;
+import com.gondragon.shoot2.database.AccessOfEventData;
+import com.gondragon.shoot2.database.AccessOfTextureData;
 import com.gondragon.shoot2.enemy.EnemyData;
+import com.gondragon.shoot2.myplane.CallbackOfMyPlane;
 import com.gondragon.shoot2.myplane.MyPlane;
 import com.gondragon.shoot2.stage.StageData;
 import com.gondragon.shoot2.stage.StageManager;
@@ -19,6 +23,7 @@ public class GameThreadModule {
     private TimerTask timerTask;
     private boolean isTestMode;
 
+    private MyPlane myPlane;
     private StageManager stageManager;
     private MyRenderer renderer;
 
@@ -29,22 +34,14 @@ public class GameThreadModule {
 
     public GameThreadModule(Context context, MyRenderer renderer){
 
-        stageManager = new StageManager(context,
+        //アセットにアクセスするクラスにはcontextが必要なのでセット
+        AccessOfEventData.setContext(context);
+        AccessOfEnemyData.setContext(context);
+        AccessOfTextureData.setContext(context);
 
-                new MyPlane.CallbackOfMyPlane(){
+        myPlane = new MyPlane();
 
-                    @Override
-                    public Int2Vector getMyPlanePos() {
-
-                        return new Int2Vector(160,400);
-                    }
-
-                    @Override
-                    public void setMyPlanePos(Int2Vector requestPos) {
-
-                    }
-                }
-        );
+        stageManager = new StageManager(context, myPlane);
 
         this.renderer = renderer;
     }
@@ -53,11 +50,14 @@ public class GameThreadModule {
 
         stageManager.setStage(stageNumber);
 
+        //テクスチャをGLインターフェイスにバインドします
+
         MyRenderer.Renderable renderTask = new MyRenderer.Renderable() {
             @Override
             public void render(GL10 gl) {
 
                 StageData.bindGLTextures(gl);
+                myPlane.drawer.bindGLTextures(gl);
             }
         };
         renderer.addRenderingTask(renderTask);
@@ -182,6 +182,7 @@ public class GameThreadModule {
                     public void render(GL10 gl) {
 
                         stageManager.drawEnemies(gl, isEnableTex);
+                        myPlane.drawer.onDraw(gl,myPlane);
                     }
                 };
                 renderer.addRenderingTask(renderTask);

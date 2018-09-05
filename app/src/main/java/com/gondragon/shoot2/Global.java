@@ -8,17 +8,11 @@ public class Global {
     public static final double radian = 3.14159/180;
 
     public static final int frameIntervalTime = 1000 /50;
-
     public static final float scrollSpeedPerFrame = 1.0f;
 
     public static final float virtualScreenWideRate = 1.25f;
     public static final Int2Vector virtualScreenSize = new Int2Vector(320, 480);
     public static final double aspectRatio = (double)virtualScreenSize.x / virtualScreenSize.y;
-
-    public static final int shadowDeflectionX = 16;
-    public static final int shadowDeflectionY = -16;
-    public static final float shadowScaleX = 0.75f;
-    public static final float shadowScaleY = 0.75f;
 
     static public IntRect virtualScreenLimit = new IntRect();
 

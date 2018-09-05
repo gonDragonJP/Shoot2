@@ -1,18 +1,22 @@
 package com.gondragon.shoot2.myplane;
 
 import android.graphics.PointF;
+import android.util.Log;
 
 import com.gondragon.shoot2.Global;
+import com.gondragon.shoot2.UtilGL;
+import com.gondragon.shoot2.animation.AnimationData;
 import com.gondragon.shoot2.animation.AnimationManager;
 import com.gondragon.shoot2.animation.AnimationSet;
+import com.gondragon.shoot2.texture.TextureInitializer;
+import com.gondragon.shoot2.texture.TextureSheet;
 
 import javax.microedition.khronos.opengles.GL10;
 
 public class MyPlaneDrawer {
 
     private int screenX, screenY, screenBottomLimit;
-    final int drawSize = 64;
-    final PointF size = new PointF(drawSize, drawSize)
+
 
     private AnimationManager animationManager;
     private AnimationSet
@@ -24,19 +28,22 @@ public class MyPlaneDrawer {
     private int conversionAnimeFrameIndex, conversionAnimeFrame;
     private int shieldAnimeFrameIndex, shieldAnimeFrame;
     private int burnerAnimeFrameIndex, burnerAnimeFrame;
-    private PointF drawCenter = new PointF();
 
-    final float[] shadowColor = {0, 0, 0, 0};
+    private TextureSheet[] textureSheets;
 
     public MyPlaneDrawer(){
 
         screenX = (int)Global.virtualScreenSize.x;
         screenY = (int)Global.virtualScreenSize.y;
 
-        screenBottomLimit = screenY - drawSize;
+        screenBottomLimit = screenY - planeSize;
+
+        initialize();
     }
 
     public void initialize(){
+
+        textureSheets = TextureInitializer.getEnumTexSheets();
 
         animeSet = AnimationManager.AnimeObject.getAnimeSet
                 (AnimationManager.AnimeObject.MYPLANE);
@@ -90,80 +97,122 @@ public class MyPlaneDrawer {
         if(plane.y > screenBottomLimit) plane.y=screenBottomLimit;
     }
 
-    synchronized public void onDrawShadow(GL10 gl){
+    public void bindGLTextures(GL10 gl){
+        // glインターフェイスが必要なのでDB読み込みの直後、ゲームスレッドから呼ばれます
 
-        InitGL.changeTexColor(shadowColor);
+        Log.e("@@@@@@@@@@@@@", String.valueOf(textureSheets.length));
 
-        drawCenter.set(x+Global.shadowDeflectionX, y+Global.shadowDeflectionY);
+        for(TextureSheet sheet : textureSheets){
 
-        animationManager.setFrame(
-                animeSet.getData(AnimationManager.AnimeKind.NORMAL,0),
-                moveAnimeFrameIndex
-        );
-        animationManager.drawScaledFrame
-                (drawCenter, Global.shadowScaleX, Global.shadowScaleY);
-
-        InitGL.changeTexColor(null);
+            if(sheet!=null) {
+                sheet.bindGLTexture(gl);
+                Log.e("**********", sheet.pictureName);
+                Log.e("---------", String.valueOf(sheet.GLtexID));
+            }
+        }
     }
 
-    synchronized public void onDraw(GL10 gl){
+    private static final int planeSize =64;
+    private static PointF drawCenter = new PointF();
+    private static PointF drawSize = new PointF(planeSize, planeSize);
+    private static TextureSheet drawSheet;
 
-        drawCenter.set(x, y);
+    private void setFrame(AnimationData animeData, int currentIndex){
 
-        animationManager.setFrame(
-                animeSet.getData(AnimationManager.AnimeKind.NORMAL,0),
+        int frameIndex = animeData.frameOffset + currentIndex;
+        int textureID = animeData.textureID;
+        drawSheet = textureSheets[textureID];
+
+        UtilGL.setTextureSTCoords(drawSheet.getSTRect(frameIndex));
+    }
+
+    private void drawFrame(GL10 gl){
+
+        gl.glMatrixMode(GL10.GL_MODELVIEW);
+
+        gl.glPushMatrix();
+        {
+            gl.glLoadIdentity();
+
+            gl.glTranslatef(drawCenter.x, drawCenter.y, 0);
+            drawCenter.set(0, 0);
+            UtilGL.drawTexture(gl, drawCenter, drawSize, drawSheet.GLtexID);
+        }
+        gl.glPopMatrix();
+    }
+
+    private static final float[] shadowColor = {0, 0, 0, 0};
+    private static final int shadowDeflectionX = 16;
+    private static final int shadowDeflectionY = -16;
+    private static final float shadowScaleX = 0.75f;
+    private static final float shadowScaleY = 0.75f;
+
+    synchronized public void drawShadow(GL10 gl, MyPlane plane){
+
+        UtilGL.changeTexColor(gl, shadowColor);
+
+        drawCenter.set(plane.x+shadowDeflectionX, plane.y+shadowDeflectionY);
+
+        setFrame(
+                animeSet.getAnime(AnimationSet.AnimeKind.NORMAL,0),
                 moveAnimeFrameIndex
         );
-        animationManager.drawFrame(drawCenter);
 
-        if(isNowCharging){
-            drawCenter.set(x, y-32);
+        drawSize.set(planeSize*shadowScaleX, planeSize*shadowScaleY);
+        drawFrame(gl);
 
-            animationManager.setFrame(
-                    chargingBallAnimeSet.getData(AnimationManager.AnimeKind.NORMAL,0),
+        drawSize.set(planeSize, planeSize);
+        UtilGL.changeTexColor(gl,null);
+    }
+
+    synchronized public void onDraw(GL10 gl, MyPlane plane){
+
+        drawCenter.set(plane.x, plane.y);
+
+        setFrame(
+                animeSet.getAnime(AnimationSet.AnimeKind.NORMAL,0),
+                moveAnimeFrameIndex
+        );
+        drawFrame(gl);
+
+        if(plane.state.isNowCharging||plane.state.isAlreadyCharged){
+            drawCenter.set(plane.x, plane.y-32);
+
+            setFrame(
+                    chargingBallAnimeSet.getAnime(AnimationSet.AnimeKind.NORMAL,0),
                     chargeBallAnimeFrameIndex
             );
-            animationManager.drawFrame(drawCenter);
+            drawFrame(gl);
         }
 
-        if(isAlreadyCharged){
-            drawCenter.set(x, y-32);
+        if(plane.state.isNowConversion){
+            drawCenter.set(plane.x, plane.y);
 
-            animationManager.setFrame(
-                    chargedBallAnimeSet.getData(AnimationManager.AnimeKind.NORMAL,0),
-                    chargeBallAnimeFrameIndex
-            );
-            animationManager.drawFrame(drawCenter);
-        }
-
-        if(isNowConversion){
-            drawCenter.set(x, y);
-
-            animationManager.setFrame(
-                    conversionAnimeSet.getData(AnimationManager.AnimeKind.NORMAL,0),
+            setFrame(
+                    conversionAnimeSet.getAnime(AnimationSet.AnimeKind.NORMAL,0),
                     conversionAnimeFrameIndex
             );
-            animationManager.drawFrame(drawCenter);
+            drawFrame(gl);
         }
 
-        if(isShielding){
-            drawCenter.set(x, y);
+        if(plane.state.isShielding){
+            drawCenter.set(plane.x, plane.y);
 
-            animationManager.setFrame(
-                    shieldAnimeSet.getData(AnimationManager.AnimeKind.NORMAL,0),
+            setFrame(
+                    shieldAnimeSet.getAnime(AnimationSet.AnimeKind.NORMAL,0),
                     shieldAnimeFrameIndex
             );
-            animationManager.drawFrame(drawCenter);
+            drawFrame(gl);
         }
 
-        if(isBurnerOn){
-            drawCenter.set(x, y+60);
+        if(plane.state.isBurnerOn){
+            drawCenter.set(plane.x, plane.y+60);
 
-            animationManager.setFrame(
-                    burnerAnimeSet.getData(AnimationManager.AnimeKind.NORMAL,0),
+            setFrame(
+                    burnerAnimeSet.getAnime(AnimationSet.AnimeKind.NORMAL,0),
                     burnerAnimeFrameIndex
             );
-            animationManager.drawFrame(drawCenter);
+            drawFrame(gl);
         }
     }
 
@@ -174,47 +223,46 @@ public class MyPlaneDrawer {
         moveAnimeFrameIndex = (int)((plane.velocity.x + plane.maxSpeed) / divideSpeed);
         moveAnimeFrameIndex = moveAnimeFrameIndex > 4 ? 4 : moveAnimeFrameIndex;
 
-        MyPlane.PlaneState state = plane.state;
 
-        if(state.isNowCharging){
+        if(plane.state.isNowCharging){
 
             chargeBallAnimeFrameIndex = animationManager.checkAnimeLimit
                     (chargingBallAnimeSet.getAnime(AnimationSet.AnimeKind.NORMAL, 0), ++chargeAnimeFrame);
 
             if(chargeBallAnimeFrameIndex == -1) {
 
-                state.setChargeFinish();
+                plane.state.setChargeFinish();
                 chargeAnimeFrame = 0;
             }
         }
 
-        if(isAlreadyCharged){
+        if(plane.state.isAlreadyCharged){
 
             chargeBallAnimeFrameIndex = animationManager.checkAnimeLimit
-                    (chargedBallAnimeSet.getData(AnimeKind.NORMAL,0), ++chargeAnimeFrame);
+                    (chargedBallAnimeSet.getAnime(AnimationSet.AnimeKind.NORMAL,0), ++chargeAnimeFrame);
         }
 
-        if(isNowConversion){
+        if(plane.state.isNowConversion){
 
             conversionAnimeFrameIndex = animationManager.checkAnimeLimit
-                    (conversionAnimeSet.getData(AnimeKind.NORMAL,0),++conversionAnimeFrame);
+                    (conversionAnimeSet.getAnime(AnimationSet.AnimeKind.NORMAL,0),++conversionAnimeFrame);
         }
 
-        if(isShielding){
+        if(plane.state.isShielding){
 
             shieldAnimeFrameIndex = animationManager.checkAnimeLimit
-                    (shieldAnimeSet.getData(AnimeKind.NORMAL,0),++shieldAnimeFrame);
+                    (shieldAnimeSet.getAnime(AnimationSet.AnimeKind.NORMAL,0),++shieldAnimeFrame);
 
             if(shieldAnimeFrameIndex == -1){
 
-                isShielding = false;
+                plane.state.isShielding = false;
             }
         }
 
-        if(isBurnerOn){
+        if(plane.state.isBurnerOn){
 
             burnerAnimeFrameIndex = animationManager.checkAnimeLimit
-                    (burnerAnimeSet.getData(AnimeKind.NORMAL,0), ++burnerAnimeFrame);
+                    (burnerAnimeSet.getAnime(AnimationSet.AnimeKind.NORMAL,0), ++burnerAnimeFrame);
         }
     }
 }

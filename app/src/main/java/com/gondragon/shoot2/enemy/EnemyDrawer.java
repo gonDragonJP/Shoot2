@@ -113,7 +113,6 @@ public class EnemyDrawer {
 
         TextureSheet sheet = StageData.textureSheets[textureID];
         if(sheet == null) return false;
-        Bitmap img = sheet.texImage;
 
         drawCenter.set(enemy.x, enemy.y);
 

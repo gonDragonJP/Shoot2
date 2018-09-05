@@ -41,21 +41,11 @@ public class StageData {
 
     }
 
-    public static void initialize(Context contextArg, int stageNumber){
-
-        context = contextArg;
-
-        //アセットにアクセスするクラスにはcontextが必要なのでセット
-        AccessOfEventData.setContext(context);
-        AccessOfEnemyData.setContext(context);
-        AccessOfTextureData.setContext(context);
+    public static void setStage(int stageNumber){
 
         stage = stageNumber;
         isShadowOn = isStageShadowOn[stageNumber -1];
         stageEndPoint = stageLength [stageNumber -1];
-
-        //AnimationInitializer.setStageEnemyTexSheet(stageNumber);
-        //ToDo) dbにテクスチャマッピングテーブルを作りイニシャライザからは切り離して自身でマップすること！ →　(Done
 
         textureSheets
                 = TextureInitializer.getStageEnemyTexSheets(stageNumber);

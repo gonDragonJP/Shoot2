@@ -66,14 +66,14 @@ public class MyPlane implements CallbackOfMyPlane{
     public Double2Vector velocity;
 
     private CruisingProgram cruisingProgram;
-    private MyPlaneDrawer drawer;
+    public MyPlaneDrawer drawer;
 
-    public MyPlane(MyPlaneDrawer drawer){
+    public MyPlane(){
 
         state = new PlaneState();
         velocity = new Double2Vector();
+        drawer = new MyPlaneDrawer();
 
-        this.drawer = drawer;
         initialize();
     }
 
