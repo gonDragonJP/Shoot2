@@ -156,26 +156,10 @@ public class GameThreadModule {
                         scrollPoint = scrollMax;
                         this.cancel();
                     }
-
-                    //drawModule.drawScreen();
-
-                    /*MyRenderer.Renderable renderTask = new MyRenderer.Renderable() {
-                        @Override
-                        public void render(GL10 gl) {
-
-                            float y0= (float)Math.random()*300;
-                            float y1= (float)Math.random()*300;
-
-                            PointF startPoint = new PointF(0,y0);
-                            PointF endPoint = new PointF(500,y1);
-
-                            UtilGL.drawLine(gl, startPoint, endPoint);
-                        }
-                    };
-                    renderer.addRenderingTask(renderTask);*/
                 }
 
                 stageManager.periodicalProcess(scrollPoint, isTestMode);
+                myPlane.periodicalProcess(renderer.graphicPad);
 
                 MyRenderer.Renderable renderTask = new MyRenderer.Renderable() {
                     @Override
