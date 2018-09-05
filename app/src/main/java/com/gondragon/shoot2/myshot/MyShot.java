@@ -9,7 +9,6 @@ public class MyShot {
 
     public int x, y;
     public Double2Vector velocity = new Double2Vector();
-    public float angle;
 
     public boolean isInScreen;
     public boolean isInExplosion;
@@ -21,7 +20,7 @@ public class MyShot {
 
     public MyShot(){
 
-        drawer = new MyShotDrawer();
+        drawer = new MyShotDrawer(this);
 
         initialize();
     }
@@ -39,7 +38,7 @@ public class MyShot {
 
         this.velocity.copy(velocity);
 
-        angle = 90+(float)(Math.atan2(velocity.y, velocity.x) / Global.radian);
+
     }
 
     public void setExplosion(){

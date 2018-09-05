@@ -4,6 +4,7 @@ import android.graphics.PointF;
 
 import com.gondragon.shoot2.Global;
 import com.gondragon.shoot2.GraphicPad;
+import com.gondragon.shoot2.myshot.ShotGenerator;
 import com.gondragon.shoot2.vector.Double2Vector;
 import com.gondragon.shoot2.vector.Int2Vector;
 
@@ -65,6 +66,7 @@ public class MyPlane implements CallbackOfMyPlane{
     public int x, y;
     public Double2Vector velocity;
 
+    public ShotGenerator shotGenerator;
     private CruisingProgram cruisingProgram;
     public MyPlaneDrawer drawer;
 
@@ -72,7 +74,8 @@ public class MyPlane implements CallbackOfMyPlane{
 
         state = new PlaneState();
         velocity = new Double2Vector();
-        drawer = new MyPlaneDrawer();
+        shotGenerator = new ShotGenerator(this);
+        drawer = new MyPlaneDrawer(this);
 
         initialize();
     }
@@ -88,14 +91,16 @@ public class MyPlane implements CallbackOfMyPlane{
         state.isBurnerOn = true;
     }
 
-    synchronized public void periodicalProcess(GraphicPad pad){
+    public void periodicalProcess(GraphicPad pad){
 
         if(state.isAutoCruisingMode)
             state.isAutoCruisingMode = cruisingProgram.crusing();
 
         else getPadInput(pad);
 
-        drawer.changeAnimeFrame(this);
+        drawer.changeAnimeFrame();
+
+        shotGenerator.periodicalProcess(pad);
     }
 
     public void setDamaged(int enemyAtackPoint){
@@ -146,7 +151,7 @@ public class MyPlane implements CallbackOfMyPlane{
         }
     }
 
-    public boolean requestConversion(){
+    public boolean executeConversionDamege(){
 
         if(hitPoints>1){
 

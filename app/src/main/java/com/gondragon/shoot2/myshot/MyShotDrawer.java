@@ -11,26 +11,30 @@ import com.gondragon.shoot2.animation.AnimationManager;
 import com.gondragon.shoot2.animation.AnimationSet;
 import com.gondragon.shoot2.myplane.MyPlane;
 import com.gondragon.shoot2.myplane.MyPlaneDrawer;
+import com.gondragon.shoot2.texture.TextureInitializer;
 import com.gondragon.shoot2.texture.TextureSheet;
 
 import javax.microedition.khronos.opengles.GL10;
 
 public class MyShotDrawer {
 
-    protected MyPlane plane;
-    private MyShotGenerator shotGenerator;
+    private int totalAnimeFrame;
+    private int animeFrame;
+    private AnimationSet animeSet;
+    private AnimationSet.AnimeKind animeKind = AnimationSet.AnimeKind.NORMAL;
 
-    protected int totalAnimeFrame;
-    protected int animeFrame;
-    protected AnimationSet animeSet;
-    protected AnimationSet.AnimeKind animeKind = AnimationSet.AnimeKind.NORMAL;
-
-    public MyShotDrawer(){
-
-        initialize();
-    }
-
+    private static TextureSheet[] textureSheets;
     private static Rect screenLimit = new Rect();
+    private static boolean isInitialized = false;
+
+    private MyShot myShot;
+
+    public MyShotDrawer(MyShot myShot){
+
+        this.myShot = myShot;
+
+        if(!isInitialized) initialize(); // static field を最初の一回だけ初期化します
+    }
 
     private void initialize(){
 
@@ -38,32 +42,36 @@ public class MyShotDrawer {
         screenLimit.right = (int)Global.virtualScreenLimit.right;
         screenLimit.top   = (int)Global.virtualScreenLimit.top;
         screenLimit.bottom= (int)Global.virtualScreenLimit.bottom;
+
+        textureSheets = TextureInitializer.getEnumTexSheets();
+
+        isInitialized = true;
+    }
+
+    public static boolean checkScreenLimit(int x, int y){
+
+        return !(x<screenLimit.left || y<screenLimit.top || x>screenLimit.right || y>screenLimit.bottom);
     }
 
     public void setShape(boolean isLaser){
 
         if(isLaser){
             animeSet = AnimationManager.AnimeObject.getAnimeSet
-                    (AnimationManager.AnimeObject.MYLASER, 0);
+                    (AnimationManager.AnimeObject.MYLASER);
         }
         else{
             animeSet = AnimationManager.AnimeObject.getAnimeSet
-                    (AnimationManager.AnimeObject.MYBULLET, 0);
+                    (AnimationManager.AnimeObject.MYBULLET);
         }
     }
 
-    public  void setExplosion(){
+    public void setExplosion(){
 
         animeKind = AnimationSet.AnimeKind.EXPLOSION;
         totalAnimeFrame = 0;
     }
 
-    public boolean checkScreenLimit(int x, int y){
-
-         return !(x<screenLimit.left || y<screenLimit.top || x>screenLimit.right || y>screenLimit.bottom);
-    }
-
-    protected boolean animate(){
+    public boolean animate(){
 
         animeFrame = AnimationManager.checkAnimeLimit
                 (animeSet.getAnime(animeKind, 0), ++totalAnimeFrame);
@@ -73,17 +81,16 @@ public class MyShotDrawer {
         return true;
     }
 
-    protected PointF drawCenter = new PointF();
-    private float drawAngle;
-    private static PointF drawSize = new PointF(planeSize, planeSize);
+    private static PointF drawCenter = new PointF();
+    private static PointF drawSize = new PointF();
+    private static float drawAngle;
     private static TextureSheet drawSheet;
-
-
 
     private void setFrame(AnimationData animeData, int currentIndex){
 
         int frameIndex = animeData.frameOffset + currentIndex;
         int textureID = animeData.textureID;
+        drawSize.set((float)animeData.drawSize.x, (float)animeData.drawSize.y);
         drawSheet = textureSheets[textureID];
 
         UtilGL.setTextureSTCoords(drawSheet.getSTRect(frameIndex));
@@ -105,9 +112,7 @@ public class MyShotDrawer {
         gl.glPopMatrix();
     }
 
-    public void onDraw(GL10 gl, MyShot myShot){
-
-        drawCenter.set(myShot.x, myShot.y);
+    public void onDraw(GL10 gl){
 
         if(!myShot.isInExplosion){
 
@@ -125,6 +130,8 @@ public class MyShotDrawer {
             );
         }
 
+        drawCenter.set(myShot.x, myShot.y);
+        drawAngle = 90+(float)(Math.atan2(myShot.velocity.y, myShot.velocity.x) / Global.radian);
         drawFrame(gl);
     }
 }
