@@ -1,7 +1,6 @@
 package com.gondragon.shoot2.myshot;
 
 import android.graphics.Point;
-import android.util.Log;
 
 import com.gondragon.shoot2.Global;
 import com.gondragon.shoot2.GraphicPad;
@@ -13,29 +12,19 @@ import javax.microedition.khronos.opengles.GL10;
 
 public class ShotGenerator {
 
-    final int laserNumber = 25;
 
-
-
-    Point startPos = new Point();
-    Double2Vector velocity = new Double2Vector();
 
     float maxWeaponEnergy = 500;
-    int weaponEnergy = 0;
+    int weaponEnergy = 500;
     int weaponLevel;
 
-    boolean isLaser;
-    int shotPower;
 
-    int laserCount;
-    //MyLaser previousLaser;
-
-    Long currentTime=0l, shotTime=0l, shotTime2=0l, shotTime3=0l, shotTime4=0l;
-    Long chargeSEStartTime=0l;
-    int sprayAngle;
 
     private static final int maxShot = 200;
     private static MyShot[] shotList = new MyShot[maxShot];
+
+    private static Point startPos = new Point();
+    private static Double2Vector velocity = new Double2Vector();
 
     private MyPlane plane;
 
@@ -67,7 +56,7 @@ public class ShotGenerator {
 
     public void periodicalProcess(GraphicPad pad){
 
-        if(!checkLaser()){
+        if(!checkLaserNow()){
 
             padProcess(pad);
         }
@@ -89,15 +78,17 @@ public class ShotGenerator {
 
         checkPositionLimit();
     }
+    
+    boolean isLaser;
+    int shotPower;
 
-    private boolean checkLaser(){
+    final int laserNumber = 25;
+    int laserCount;
+    //MyLaser previousLaser;
 
-        if(laserCount==0) return false;
-
-        if(addLaserShot()) laserCount--;
-
-        return true;
-    }
+    Long currentTime=0l, chargeSEStartTime=0l;
+    Long shotTime=0l, shotTime2=0l, shotTime3=0l, shotTime4=0l;
+    int sprayAngle;
 
     private void soundChargingSE(){
 
@@ -113,7 +104,8 @@ public class ShotGenerator {
     private void padProcess(GraphicPad pad){
 
         if(!pad.isSetRightPadCenter) {
-            checkStartLaser();
+            if(plane.state.isAlreadyCharged) startLaser();
+            plane.resetCharging();
             plane.resetConversion();
             return;
         }
@@ -132,8 +124,9 @@ public class ShotGenerator {
             return;
         }
 
-        checkStartLaser();
         checkWeaponLevel();
+
+        currentTime = System.currentTimeMillis();
 
         switch(weaponLevel){
 
@@ -142,19 +135,6 @@ public class ShotGenerator {
             case 1: addDualShots();
             default: addSingleShot();
         }
-    }
-
-    private void checkStartLaser(){
-
-        if(plane.state.isAlreadyCharged){
-
-            laserCount = laserNumber;
-            //previousLaser = null;
-
-            //SoundEffect.play(SoundKind.MYLASER);
-        }
-
-        //plane.resetCharging();
     }
 
     private void conversion(){
@@ -168,22 +148,29 @@ public class ShotGenerator {
         else if(plane.executeConversionDamege()) weaponEnergy +=1;
     }
 
-    private void checkWeaponLevel(){
-
-        if(weaponEnergy<0) {weaponEnergy=0; weaponLevel=0;}
-
-        int currentLevel = (int)(weaponEnergy / maxWeaponEnergy * 3);
-
-        if(currentLevel>=weaponLevel) weaponLevel = currentLevel;
-        if(currentLevel<(weaponLevel-1)) weaponLevel--;
-    }
-
     private void checkPositionLimit(){
 
         for(int i=maxShot-1; i>=0; i--){
 
             if(shotList[i].isInScreen == false) shotList[i].isNowUsed = false;
         }
+    }
+
+    private boolean checkLaserNow(){
+
+        if(laserCount==0) return false;
+
+        if(addLaserShot()) laserCount--;
+
+        return true;
+    }
+
+    private void startLaser(){
+
+        laserCount = laserNumber;
+        //previousLaser = null;
+
+        //SoundEffect.play(SoundKind.MYLASER);
     }
 
     private boolean addLaserShot(){
@@ -218,6 +205,16 @@ public class ShotGenerator {
         shotList.add(newShot);
         previousLaser = newShot;*/
         return true;
+    }
+
+    private void checkWeaponLevel(){
+
+        if(weaponEnergy<0) {weaponEnergy=0; weaponLevel=0;}
+
+        int currentLevel = (int)(weaponEnergy / maxWeaponEnergy * 3);
+
+        if(currentLevel>=weaponLevel) weaponLevel = currentLevel;
+        if(currentLevel<(weaponLevel-1)) weaponLevel--;
     }
 
     private void addAShot(){
