@@ -9,8 +9,6 @@ import com.gondragon.shoot2.myplane.MyPlane;
 import com.gondragon.shoot2.myplane.MyPlaneDrawer;
 import com.gondragon.shoot2.vector.Double2Vector;
 
-import java.util.ArrayList;
-
 import javax.microedition.khronos.opengles.GL10;
 
 public class ShotGenerator {
@@ -69,10 +67,9 @@ public class ShotGenerator {
 
     public void periodicalProcess(GraphicPad pad){
 
-        if(!shotLaser()){
+        if(!checkLaser()){
 
-            getPadInput(pad);
-            checkConversion();
+            padProcess(pad);
         }
 
         int count =0;
@@ -88,12 +85,12 @@ public class ShotGenerator {
             }
         }
 
-        Log.e("...............", String.valueOf(count));
+        //Log.e("...............", String.valueOf(count));
 
         checkPositionLimit();
     }
 
-    private boolean shotLaser(){
+    private boolean checkLaser(){
 
         if(laserCount==0) return false;
 
@@ -102,44 +99,41 @@ public class ShotGenerator {
         return true;
     }
 
-    private void getPadInput(GraphicPad pad){
+    private void soundChargingSE(){
 
         currentTime = System.currentTimeMillis();
 
+        if(currentTime> chargeSEStartTime + 500){
+
+            //SoundEffect.play(SoundKind.CHARGE);
+            chargeSEStartTime = currentTime;
+        }
+    }
+
+    private void padProcess(GraphicPad pad){
+
         if(!pad.isSetRightPadCenter) {
             checkStartLaser();
-            plane.setConversion(false);
+            plane.resetConversion();
+            return;
+        }
+
+        if(pad.rightPadDirVector.y<-10){
+
+            soundChargingSE();
+            conversion();
             return;
         }
 
         if(pad.rightPadDirVector.y>10){
 
-            if(currentTime> chargeSEStartTime + 500){
-
-                //SoundEffect.play(SoundKind.CHARGE);
-                chargeSEStartTime = currentTime;
-            }
-
+            soundChargingSE();
             plane.state.isNowCharging = plane.state.isAlreadyCharged ? false : true;
-
             return;
         }
-        else checkStartLaser();
 
+        checkStartLaser();
         checkWeaponLevel();
-
-        if(pad.rightPadDirVector.y<-10){
-
-            if(currentTime> chargeSEStartTime + 500){
-
-                //SoundEffect.play(SoundKind.CHARGE);
-                chargeSEStartTime = currentTime;
-            }
-
-            plane.setConversion(true);
-            return;
-        }
-        else plane.setConversion(false);
 
         switch(weaponLevel){
 
@@ -160,7 +154,18 @@ public class ShotGenerator {
             //SoundEffect.play(SoundKind.MYLASER);
         }
 
-        plane.resetCharging();
+        //plane.resetCharging();
+    }
+
+    private void conversion(){
+
+        plane.setConversion();
+
+        if(weaponEnergy == (int)maxWeaponEnergy){
+
+            plane.resetConversion();
+        }
+        else if(plane.executeConversionDamege()) weaponEnergy +=1;
     }
 
     private void checkWeaponLevel(){
@@ -171,19 +176,6 @@ public class ShotGenerator {
 
         if(currentLevel>=weaponLevel) weaponLevel = currentLevel;
         if(currentLevel<(weaponLevel-1)) weaponLevel--;
-    }
-
-    private void checkConversion(){
-
-        if(plane.state.isNowConversion){
-
-            if(weaponEnergy == (int)maxWeaponEnergy){
-
-                plane.setConversion(false);
-                return;
-            }
-            if(plane.executeConversionDamege()) weaponEnergy +=1;
-        }
     }
 
     private void checkPositionLimit(){

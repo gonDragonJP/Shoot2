@@ -85,7 +85,7 @@ public class MyPlaneDrawer {
         chargeAnimeFrame = 0;
     }
 
-    public void resetConversion(){
+    public void resetConversionAnime(){
 
         conversionAnimeFrameIndex = 0;
         conversionAnimeFrame = 0;
@@ -221,7 +221,7 @@ public class MyPlaneDrawer {
 
             if(chargeBallAnimeFrameIndex == -1) {
 
-                plane.state.setChargeFinish();
+                plane.setAlreadyCharged();
                 chargeAnimeFrame = 0;
             }
         }

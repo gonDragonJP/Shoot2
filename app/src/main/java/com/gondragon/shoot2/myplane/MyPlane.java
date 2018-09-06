@@ -1,14 +1,12 @@
 package com.gondragon.shoot2.myplane;
 
-import android.graphics.PointF;
+import android.util.Log;
 
 import com.gondragon.shoot2.Global;
 import com.gondragon.shoot2.GraphicPad;
 import com.gondragon.shoot2.myshot.ShotGenerator;
 import com.gondragon.shoot2.vector.Double2Vector;
 import com.gondragon.shoot2.vector.Int2Vector;
-
-import javax.microedition.khronos.opengles.GL10;
 
 public class MyPlane implements CallbackOfMyPlane{
 
@@ -47,12 +45,6 @@ public class MyPlane implements CallbackOfMyPlane{
             isNowConversion = false;
             isBurnerOn = false;
             isAutoCruisingMode = false;
-        }
-
-        public void setChargeFinish(){
-
-            isNowCharging = false;
-            isAlreadyCharged = true;
         }
     }
 
@@ -103,6 +95,12 @@ public class MyPlane implements CallbackOfMyPlane{
         shotGenerator.periodicalProcess(pad);
     }
 
+    public void setAlreadyCharged(){
+
+        state.isAlreadyCharged = true;
+        state.isNowCharging = false;
+    }
+
     public void setDamaged(int enemyAtackPoint){
 
         if(!state.isShielding){
@@ -141,14 +139,15 @@ public class MyPlane implements CallbackOfMyPlane{
         drawer.resetCharge();
     }
 
-    public void setConversion(boolean sw){
+    public void setConversion(){
 
-        if(sw && (hitPoints>1)) state.isNowConversion = true;
+        if(hitPoints>1) state.isNowConversion = true;
+    }
 
-        else {
-            state.isNowConversion = false;
-            drawer.resetConversion();
-        }
+    public void resetConversion(){
+
+        state.isNowConversion = false;
+        drawer.resetConversionAnime();
     }
 
     public boolean executeConversionDamege(){
