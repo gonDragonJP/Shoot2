@@ -127,7 +127,7 @@ public class AnimationInitializer {
 
         myBulletSet.normalAnime.drawSize.set(16, 16);
         //myBulletSet.normalAnime.textureSheet = bulletTex1;
-        myBurnerSet.normalAnime.textureID = 5;
+        myBulletSet.normalAnime.textureID = 5;
         myBulletSet.normalAnime.frameOffset = 16;
         myBulletSet.normalAnime.frameNumber = 4;
         myBulletSet.normalAnime.frameInterval = 1;

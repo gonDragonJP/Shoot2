@@ -8,6 +8,7 @@ import com.gondragon.shoot2.UtilGL;
 import com.gondragon.shoot2.animation.AnimationData;
 import com.gondragon.shoot2.animation.AnimationManager;
 import com.gondragon.shoot2.animation.AnimationSet;
+import com.gondragon.shoot2.stage.StageData;
 import com.gondragon.shoot2.texture.TextureInitializer;
 import com.gondragon.shoot2.texture.TextureSheet;
 
@@ -29,8 +30,6 @@ public class MyPlaneDrawer {
     private int shieldAnimeFrameIndex, shieldAnimeFrame;
     private int burnerAnimeFrameIndex, burnerAnimeFrame;
 
-    private TextureSheet[] textureSheets;
-
     private MyPlane plane;
 
     public MyPlaneDrawer(MyPlane myPlane){
@@ -45,8 +44,6 @@ public class MyPlaneDrawer {
         screenX = (int)Global.virtualScreenSize.x;
         screenY = (int)Global.virtualScreenSize.y;
         screenBottomLimit = screenY - planeSize;
-
-        textureSheets = TextureInitializer.getEnumTexSheets();
 
         animeSet = AnimationManager.AnimeObject.getAnimeSet
                 (AnimationManager.AnimeObject.MYPLANE);
@@ -102,21 +99,6 @@ public class MyPlaneDrawer {
         if(plane.y > screenBottomLimit) plane.y=screenBottomLimit;
     }
 
-    public void bindGLTextures(GL10 gl){
-        // glインターフェイスが必要なのでDB読み込みの直後、ゲームスレッドから呼ばれます
-
-        Log.e("@@@@@@@@@@@@@", String.valueOf(textureSheets.length));
-
-        for(TextureSheet sheet : textureSheets){
-
-            if(sheet!=null) {
-                sheet.bindGLTexture(gl);
-                Log.e("**********", sheet.pictureName);
-                Log.e("---------", String.valueOf(sheet.GLtexID));
-            }
-        }
-    }
-
     public static final int planeSize =64;
     private static PointF drawCenter = new PointF();
     private static PointF drawSize = new PointF();
@@ -127,7 +109,7 @@ public class MyPlaneDrawer {
         int frameIndex = animeData.frameOffset + currentIndex;
         int textureID = animeData.textureID;
         drawSize.set((float)animeData.drawSize.x, (float)animeData.drawSize.y);
-        drawSheet = textureSheets[textureID];
+        drawSheet = StageData.enumTexSheets[textureID];
 
         UtilGL.setTextureSTCoords(drawSheet.getSTRect(frameIndex));
     }

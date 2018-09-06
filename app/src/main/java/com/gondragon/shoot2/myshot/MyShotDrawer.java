@@ -11,6 +11,7 @@ import com.gondragon.shoot2.animation.AnimationManager;
 import com.gondragon.shoot2.animation.AnimationSet;
 import com.gondragon.shoot2.myplane.MyPlane;
 import com.gondragon.shoot2.myplane.MyPlaneDrawer;
+import com.gondragon.shoot2.stage.StageData;
 import com.gondragon.shoot2.texture.TextureInitializer;
 import com.gondragon.shoot2.texture.TextureSheet;
 
@@ -23,7 +24,6 @@ public class MyShotDrawer {
     private AnimationSet animeSet;
     private AnimationSet.AnimeKind animeKind = AnimationSet.AnimeKind.NORMAL;
 
-    private static TextureSheet[] textureSheets;
     private static Rect screenLimit = new Rect();
     private static boolean isInitialized = false;
 
@@ -32,6 +32,9 @@ public class MyShotDrawer {
     public MyShotDrawer(MyShot myShot){
 
         this.myShot = myShot;
+
+        animeSet = AnimationManager.AnimeObject.getAnimeSet
+                (AnimationManager.AnimeObject.MYBULLET);
 
         if(!isInitialized) initialize(); // static field を最初の一回だけ初期化します
     }
@@ -42,8 +45,6 @@ public class MyShotDrawer {
         screenLimit.right = (int)Global.virtualScreenLimit.right;
         screenLimit.top   = (int)Global.virtualScreenLimit.top;
         screenLimit.bottom= (int)Global.virtualScreenLimit.bottom;
-
-        textureSheets = TextureInitializer.getEnumTexSheets();
 
         isInitialized = true;
     }
@@ -60,8 +61,8 @@ public class MyShotDrawer {
                     (AnimationManager.AnimeObject.MYLASER);
         }
         else{
-            animeSet = AnimationManager.AnimeObject.getAnimeSet
-                    (AnimationManager.AnimeObject.MYBULLET);
+            //animeSet = AnimationManager.AnimeObject.getAnimeSet
+             //       (AnimationManager.AnimeObject.MYBULLET);
         }
     }
 
@@ -91,7 +92,7 @@ public class MyShotDrawer {
         int frameIndex = animeData.frameOffset + currentIndex;
         int textureID = animeData.textureID;
         drawSize.set((float)animeData.drawSize.x, (float)animeData.drawSize.y);
-        drawSheet = textureSheets[textureID];
+        drawSheet = StageData.enumTexSheets[textureID];
 
         UtilGL.setTextureSTCoords(drawSheet.getSTRect(frameIndex));
     }

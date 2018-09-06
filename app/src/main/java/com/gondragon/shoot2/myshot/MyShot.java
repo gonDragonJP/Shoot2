@@ -7,6 +7,9 @@ import com.gondragon.shoot2.vector.Double2Vector;
 
 public class MyShot {
 
+    //GC抑制の為、弾オブジェクトは使いまわします。isNowUsedは現在使用されているかどうかの判断フラグです。
+    public boolean isNowUsed;
+
     public int x, y;
     public Double2Vector velocity = new Double2Vector();
 
@@ -20,13 +23,13 @@ public class MyShot {
 
     public MyShot(){
 
+        isNowUsed = false; //作成直後は使用されていない
         drawer = new MyShotDrawer(this);
-
-        initialize();
     }
 
-    private void initialize(){
+    public void initialize(){//弾オブジェクトとして使用開始される時に呼び出されます
 
+        isNowUsed = true;
         isInScreen = true;
         isInExplosion = false;
     }

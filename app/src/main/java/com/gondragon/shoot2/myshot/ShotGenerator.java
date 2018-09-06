@@ -16,7 +16,7 @@ public class ShotGenerator {
 
     final int laserNumber = 25;
 
-    ArrayList<MyShot> shotList = new ArrayList<MyShot>();
+
 
     Point startPos = new Point();
     Double2Vector velocity = new Double2Vector();
@@ -35,16 +35,19 @@ public class ShotGenerator {
     Long chargeSEStartTime=0l;
     int sprayAngle;
 
+    private static final int maxShot = 200;
+    private static MyShot[] shotList = new MyShot[maxShot];
+
     private MyPlane plane;
 
     public ShotGenerator(MyPlane plane){
 
         this.plane = plane;
-    }
 
-    public void resetAllShots(){
+        for(int i=0; i<maxShot; i++){
 
-        shotList.clear();
+            shotList[i] = new MyShot();
+        }
     }
 
     public void getWeaponEnergy(int energy){
@@ -55,11 +58,11 @@ public class ShotGenerator {
 
     public void onDraw(GL10 gl){
 
+        for(int i=0; i<maxShot; i++){
 
-        int j = shotList.size();
-        for(int i=0; i<j; i++){
+            MyShot shot = shotList[i];
 
-            shotList.get(i).drawer.onDraw(gl);
+            if(shot.isNowUsed) shot.drawer.onDraw(gl);
         }
     }
 
@@ -71,9 +74,11 @@ public class ShotGenerator {
             checkConversion();
         }
 
-        for(MyShot shot : shotList){
+        for(int i=0; i<maxShot; i++){
 
-            shot.periodicalProcess();
+            MyShot shot = shotList[i];
+
+            if(shot.isNowUsed) shot.periodicalProcess();
         }
 
         checkPositionLimit();
@@ -174,11 +179,9 @@ public class ShotGenerator {
 
     private void checkPositionLimit(){
 
-        int j= shotList.size()-1;
-        for(int i=j; i>=0; i--){
+        for(int i=maxShot-1; i>=0; i--){
 
-            MyShot shot = shotList.get(i);
-            if(shot.isInScreen == false) shotList.remove(i);
+            if(shotList[i].isInScreen == false) shotList[i].isNowUsed = false;
         }
     }
 
@@ -220,12 +223,28 @@ public class ShotGenerator {
 
         isLaser = false;
 
-        MyShot newShot = new MyShot();
+        MyShot newShot = getShot();
+        if(newShot == null) return;
+
         newShot.drawer.setShape(isLaser);
         newShot.setVectors(startPos, velocity);
         newShot.shotPower = shotPower;
         newShot.shotRadius = 12;
-        shotList.add(newShot);
+    }
+
+    private MyShot getShot(){
+
+        for(int i=0; i<maxShot; i++){
+
+            MyShot shot = shotList[i];
+
+            if(!shot.isNowUsed){
+
+                shot.initialize();
+                return shot;
+            }
+        }
+        return null;
     }
 
     private void addSingleShot(){

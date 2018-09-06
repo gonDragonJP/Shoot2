@@ -58,7 +58,6 @@ public class GameThreadModule {
             public void render(GL10 gl) {
 
                 StageData.bindGLTextures(gl);
-                myPlane.drawer.bindGLTextures(gl);
             }
         };
         renderer.addRenderingTask(renderTask);
