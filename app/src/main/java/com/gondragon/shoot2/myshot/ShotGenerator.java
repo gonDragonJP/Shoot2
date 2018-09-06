@@ -1,6 +1,7 @@
 package com.gondragon.shoot2.myshot;
 
 import android.graphics.Point;
+import android.util.Log;
 
 import com.gondragon.shoot2.Global;
 import com.gondragon.shoot2.GraphicPad;
@@ -74,12 +75,20 @@ public class ShotGenerator {
             checkConversion();
         }
 
+        int count =0;
+
         for(int i=0; i<maxShot; i++){
 
             MyShot shot = shotList[i];
 
-            if(shot.isNowUsed) shot.periodicalProcess();
+
+            if(shot.isNowUsed) {
+                shot.periodicalProcess();
+                count++;
+            }
         }
+
+        Log.e("...............", String.valueOf(count));
 
         checkPositionLimit();
     }

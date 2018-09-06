@@ -33,9 +33,6 @@ public class MyShotDrawer {
 
         this.myShot = myShot;
 
-        animeSet = AnimationManager.AnimeObject.getAnimeSet
-                (AnimationManager.AnimeObject.MYBULLET);
-
         if(!isInitialized) initialize(); // static field を最初の一回だけ初期化します
     }
 
@@ -61,8 +58,8 @@ public class MyShotDrawer {
                     (AnimationManager.AnimeObject.MYLASER);
         }
         else{
-            //animeSet = AnimationManager.AnimeObject.getAnimeSet
-             //       (AnimationManager.AnimeObject.MYBULLET);
+            animeSet = AnimationManager.AnimeObject.getAnimeSet
+                    (AnimationManager.AnimeObject.MYBULLET);
         }
     }
 

@@ -52,8 +52,7 @@ public class MyShot {
     public void periodicalProcess(){
 
         flyAhead();
-        isInScreen = drawer.checkScreenLimit(x, y);
-        isInScreen = drawer.animate();
+        isInScreen = drawer.checkScreenLimit(x, y) && drawer.animate();
     }
 
     private void flyAhead(){
