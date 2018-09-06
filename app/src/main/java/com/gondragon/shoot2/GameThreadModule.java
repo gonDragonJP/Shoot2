@@ -8,6 +8,7 @@ import com.gondragon.shoot2.database.AccessOfTextureData;
 import com.gondragon.shoot2.enemy.EnemyData;
 import com.gondragon.shoot2.myplane.CallbackOfMyPlane;
 import com.gondragon.shoot2.myplane.MyPlane;
+import com.gondragon.shoot2.myshot.ShotGenerator;
 import com.gondragon.shoot2.stage.StageData;
 import com.gondragon.shoot2.stage.StageManager;
 import com.gondragon.shoot2.vector.Int2Vector;
@@ -57,7 +58,6 @@ public class GameThreadModule {
             public void render(GL10 gl) {
 
                 StageData.bindGLTextures(gl);
-                myPlane.drawer.bindGLTextures(gl);
             }
         };
         renderer.addRenderingTask(renderTask);
@@ -166,7 +166,8 @@ public class GameThreadModule {
                     public void render(GL10 gl) {
 
                         stageManager.drawEnemies(gl, isEnableTex);
-                        myPlane.drawer.onDraw(gl,myPlane);
+                        myPlane.drawer.onDraw(gl);
+                        myPlane.shotGenerator.onDraw(gl);
                     }
                 };
                 renderer.addRenderingTask(renderTask);

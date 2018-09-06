@@ -1,13 +1,12 @@
 package com.gondragon.shoot2.myplane;
 
-import android.graphics.PointF;
+import android.util.Log;
 
 import com.gondragon.shoot2.Global;
 import com.gondragon.shoot2.GraphicPad;
+import com.gondragon.shoot2.myshot.ShotGenerator;
 import com.gondragon.shoot2.vector.Double2Vector;
 import com.gondragon.shoot2.vector.Int2Vector;
-
-import javax.microedition.khronos.opengles.GL10;
 
 public class MyPlane implements CallbackOfMyPlane{
 
@@ -47,12 +46,6 @@ public class MyPlane implements CallbackOfMyPlane{
             isBurnerOn = false;
             isAutoCruisingMode = false;
         }
-
-        public void setChargeFinish(){
-
-            isNowCharging = false;
-            isAlreadyCharged = true;
-        }
     }
 
     public static final float maxHP = 500;
@@ -65,6 +58,7 @@ public class MyPlane implements CallbackOfMyPlane{
     public int x, y;
     public Double2Vector velocity;
 
+    public ShotGenerator shotGenerator;
     private CruisingProgram cruisingProgram;
     public MyPlaneDrawer drawer;
 
@@ -72,7 +66,8 @@ public class MyPlane implements CallbackOfMyPlane{
 
         state = new PlaneState();
         velocity = new Double2Vector();
-        drawer = new MyPlaneDrawer();
+        shotGenerator = new ShotGenerator(this);
+        drawer = new MyPlaneDrawer(this);
 
         initialize();
     }
@@ -88,14 +83,22 @@ public class MyPlane implements CallbackOfMyPlane{
         state.isBurnerOn = true;
     }
 
-    synchronized public void periodicalProcess(GraphicPad pad){
+    public void periodicalProcess(GraphicPad pad){
 
         if(state.isAutoCruisingMode)
             state.isAutoCruisingMode = cruisingProgram.crusing();
 
         else getPadInput(pad);
 
-        drawer.changeAnimeFrame(this);
+        drawer.changeAnimeFrame();
+
+        shotGenerator.periodicalProcess(pad);
+    }
+
+    public void setAlreadyCharged(){
+
+        state.isAlreadyCharged = true;
+        state.isNowCharging = false;
     }
 
     public void setDamaged(int enemyAtackPoint){
@@ -136,17 +139,18 @@ public class MyPlane implements CallbackOfMyPlane{
         drawer.resetCharge();
     }
 
-    public void setConversion(boolean sw){
+    public void setConversion(){
 
-        if(sw && (hitPoints>1)) state.isNowConversion = true;
-
-        else {
-            state.isNowConversion = false;
-            drawer.resetConversion();
-        }
+        if(hitPoints>1) state.isNowConversion = true;
     }
 
-    public boolean requestConversion(){
+    public void resetConversion(){
+
+        state.isNowConversion = false;
+        drawer.resetConversionAnime();
+    }
+
+    public boolean executeConversionDamege(){
 
         if(hitPoints>1){
 

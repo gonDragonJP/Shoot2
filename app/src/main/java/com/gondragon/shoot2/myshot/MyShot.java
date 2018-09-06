@@ -7,9 +7,11 @@ import com.gondragon.shoot2.vector.Double2Vector;
 
 public class MyShot {
 
+    //GC抑制の為、弾オブジェクトは使いまわします。isNowUsedは現在使用されているかどうかの判断フラグです。
+    public boolean isNowUsed;
+
     public int x, y;
     public Double2Vector velocity = new Double2Vector();
-    public float angle;
 
     public boolean isInScreen;
     public boolean isInExplosion;
@@ -21,13 +23,13 @@ public class MyShot {
 
     public MyShot(){
 
-        drawer = new MyShotDrawer();
-
-        initialize();
+        isNowUsed = false; //作成直後は使用されていない
+        drawer = new MyShotDrawer(this);
     }
 
-    private void initialize(){
+    public void initialize(){//弾オブジェクトとして使用開始される時に呼び出されます
 
+        isNowUsed = true;
         isInScreen = true;
         isInExplosion = false;
     }
@@ -39,7 +41,7 @@ public class MyShot {
 
         this.velocity.copy(velocity);
 
-        angle = 90+(float)(Math.atan2(velocity.y, velocity.x) / Global.radian);
+
     }
 
     public void setExplosion(){
@@ -50,8 +52,7 @@ public class MyShot {
     public void periodicalProcess(){
 
         flyAhead();
-        isInScreen = drawer.checkScreenLimit(x, y);
-        isInScreen = drawer.animate();
+        isInScreen = drawer.checkScreenLimit(x, y) && drawer.animate();
     }
 
     private void flyAhead(){
