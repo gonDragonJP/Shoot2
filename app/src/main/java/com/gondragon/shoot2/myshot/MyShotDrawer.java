@@ -19,6 +19,8 @@ import javax.microedition.khronos.opengles.GL10;
 
 public class MyShotDrawer {
 
+    public enum Shape{BULLET, LASER};
+
     private int totalAnimeFrame;
     private int animeFrame;
     private AnimationSet animeSet;
@@ -51,15 +53,18 @@ public class MyShotDrawer {
         return !(x<screenLimit.left || y<screenLimit.top || x>screenLimit.right || y>screenLimit.bottom);
     }
 
-    public void setShape(boolean isLaser){
+    public void setShape(Shape shape){
 
-        if(isLaser){
-            animeSet = AnimationManager.AnimeObject.getAnimeSet
+        switch(shape){
+            case BULLET:
+                animeSet = AnimationManager.AnimeObject.getAnimeSet
+                        (AnimationManager.AnimeObject.MYBULLET);
+                break;
+
+            case LASER:
+                animeSet = AnimationManager.AnimeObject.getAnimeSet
                     (AnimationManager.AnimeObject.MYLASER);
-        }
-        else{
-            animeSet = AnimationManager.AnimeObject.getAnimeSet
-                    (AnimationManager.AnimeObject.MYBULLET);
+                break;
         }
     }
 
@@ -77,6 +82,12 @@ public class MyShotDrawer {
         if (animeFrame == -1) return false;
 
         return true;
+    }
+
+    public void setAnimeFrame(int frame){
+        //強制的にアニメフレームを指定します。レーザーの頭尾フレーム指定の為にしか使っていません
+
+        animeFrame = frame;
     }
 
     private static PointF drawCenter = new PointF();
