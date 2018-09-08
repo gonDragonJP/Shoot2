@@ -7,9 +7,9 @@ import javax.microedition.khronos.opengles.GL10;
 
 public abstract class BasicEffect implements ScreenEffectable{
 
-    boolean isActive = true;
-    boolean isStarted = false;
-    boolean isFinished = false;
+    public boolean isActive = true;
+    public boolean isStarted = false;
+    public boolean isFinished = false;
 
     public int preWaitingFrame, processFrame, durationFrame;
     public int preWaitingFrameCount, processFrameCount, durationFrameCount;
@@ -21,6 +21,18 @@ public abstract class BasicEffect implements ScreenEffectable{
         preWaitingFrame = preWaitingMsec / frameMsec;
         processFrame = processMsec / frameMsec;
         durationFrame = durationMsec / frameMsec;
+    }
+
+    @Override
+    public boolean isActive(){
+
+        return isActive;
+    }
+
+    @Override
+    public boolean isFinished(){
+
+        return isFinished;
     }
 
     @Override
