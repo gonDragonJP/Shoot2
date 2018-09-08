@@ -15,11 +15,10 @@ public class MyShot {
 
     public boolean isInScreen;
     public boolean isInExplosion;
-    public boolean isLaser;
 
     public int shotPower, shotRadius;
 
-    MyShotDrawer drawer;
+    public MyShotDrawer drawer;
 
     public MyShot(){
 
@@ -34,14 +33,17 @@ public class MyShot {
         isInExplosion = false;
     }
 
+    public void setShape(MyShotDrawer.Shape shape){
+
+        drawer.setShape(shape);
+    }
+
     public void setVectors(Point startPos, Double2Vector velocity){
 
         this.x = startPos.x;
         this.y = startPos.y;
 
         this.velocity.copy(velocity);
-
-
     }
 
     public void setExplosion(){
@@ -55,7 +57,7 @@ public class MyShot {
         isInScreen = drawer.checkScreenLimit(x, y) && drawer.animate();
     }
 
-    private void flyAhead(){
+    public void flyAhead(){
 
         x += velocity.x;
         y += velocity.y;

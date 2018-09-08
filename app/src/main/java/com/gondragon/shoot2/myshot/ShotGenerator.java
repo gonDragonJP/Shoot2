@@ -13,29 +13,14 @@ import javax.microedition.khronos.opengles.GL10;
 
 public class ShotGenerator {
 
-    final int laserNumber = 25;
-
-
-
-    Point startPos = new Point();
-    Double2Vector velocity = new Double2Vector();
-
-    float maxWeaponEnergy = 500;
-    int weaponEnergy = 0;
-    int weaponLevel;
-
-    boolean isLaser;
-    int shotPower;
-
-    int laserCount;
-    //MyLaser previousLaser;
-
-    Long currentTime=0l, shotTime=0l, shotTime2=0l, shotTime3=0l, shotTime4=0l;
-    Long chargeSEStartTime=0l;
-    int sprayAngle;
-
     private static final int maxShot = 200;
     private static MyShot[] shotList = new MyShot[maxShot];
+
+    private static final int maxLaser = 30;
+    private static MyLaser[] laserList = new MyLaser[maxLaser];
+
+    private static Point startPos = new Point();
+    private static Double2Vector velocity = new Double2Vector();
 
     private MyPlane plane;
 
@@ -47,6 +32,11 @@ public class ShotGenerator {
 
             shotList[i] = new MyShot();
         }
+
+        for(int i=0; i<maxLaser; i++){
+
+            laserList[i] = new MyLaser();
+        }
     }
 
     public void getWeaponEnergy(int energy){
@@ -57,47 +47,48 @@ public class ShotGenerator {
 
     public void onDraw(GL10 gl){
 
-        for(int i=0; i<maxShot; i++){
+        for(MyShot e: shotList){
 
-            MyShot shot = shotList[i];
+            if(e.isNowUsed) e.drawer.onDraw(gl);
+        }
 
-            if(shot.isNowUsed) shot.drawer.onDraw(gl);
+        for(MyLaser e : laserList){
+
+            if(e.isNowUsed) e.drawer.onDraw(gl);
         }
     }
 
     public void periodicalProcess(GraphicPad pad){
 
-        if(!checkLaser()){
+        if(!checkLaserNow()){
 
             padProcess(pad);
         }
 
-        int count =0;
+        int count=0;
 
-        for(int i=0; i<maxShot; i++){
+        for(MyShot e: shotList){
 
-            MyShot shot = shotList[i];
-
-
-            if(shot.isNowUsed) {
-                shot.periodicalProcess();
-                count++;
+            if(e.isNowUsed) { count++;
+                e.periodicalProcess();
             }
         }
 
-        //Log.e("...............", String.valueOf(count));
+        for(MyLaser e: laserList){
+
+            if(e.isNowUsed) { count++;
+                e.periodicalProcess();
+            }
+        }
+
+        //Log.e("shot & laser count : ", String.valueOf(count));
 
         checkPositionLimit();
     }
 
-    private boolean checkLaser(){
-
-        if(laserCount==0) return false;
-
-        if(addLaserShot()) laserCount--;
-
-        return true;
-    }
+    Long currentTime=0l, chargeSEStartTime= 0l;
+    Long shotTime=0l, shotTime2=0l, shotTime3=0l, shotTime4=0l;
+    int sprayAngle;
 
     private void soundChargingSE(){
 
@@ -113,7 +104,8 @@ public class ShotGenerator {
     private void padProcess(GraphicPad pad){
 
         if(!pad.isSetRightPadCenter) {
-            checkStartLaser();
+            if(plane.state.isAlreadyCharged) startLaser();
+            plane.resetCharging();
             plane.resetConversion();
             return;
         }
@@ -132,8 +124,9 @@ public class ShotGenerator {
             return;
         }
 
-        checkStartLaser();
         checkWeaponLevel();
+
+        currentTime = System.currentTimeMillis();
 
         switch(weaponLevel){
 
@@ -142,19 +135,6 @@ public class ShotGenerator {
             case 1: addDualShots();
             default: addSingleShot();
         }
-    }
-
-    private void checkStartLaser(){
-
-        if(plane.state.isAlreadyCharged){
-
-            laserCount = laserNumber;
-            //previousLaser = null;
-
-            //SoundEffect.play(SoundKind.MYLASER);
-        }
-
-        //plane.resetCharging();
     }
 
     private void conversion(){
@@ -168,66 +148,25 @@ public class ShotGenerator {
         else if(plane.executeConversionDamege()) weaponEnergy +=1;
     }
 
-    private void checkWeaponLevel(){
-
-        if(weaponEnergy<0) {weaponEnergy=0; weaponLevel=0;}
-
-        int currentLevel = (int)(weaponEnergy / maxWeaponEnergy * 3);
-
-        if(currentLevel>=weaponLevel) weaponLevel = currentLevel;
-        if(currentLevel<(weaponLevel-1)) weaponLevel--;
-    }
-
     private void checkPositionLimit(){
 
-        for(int i=maxShot-1; i>=0; i--){
+        for(MyShot e: shotList){
 
-            if(shotList[i].isInScreen == false) shotList[i].isNowUsed = false;
+            if(!e.isInScreen) e.isNowUsed = false;
+        }
+
+        for(MyLaser e: laserList){
+
+            if(!e.isInScreen) e.isNowUsed = false;
         }
     }
 
-    private boolean addLaserShot(){
-
-        isLaser = true;
-
-        startPos.set(plane.x, plane.y - MyPlaneDrawer.planeSize / 2);
-        velocity.set(0, -16);
-        /*
-        MyLaser newShot = new MyLaser(objectsContainer);
-
-        switch(laserCount){
-
-            case 1:
-                newShot.normalFrameIndex = 2;
-                break;
-
-            case laserNumber:
-                newShot.normalFrameIndex = 0;
-                break;
-
-            default:
-                newShot.normalFrameIndex = 1;
-        }
-
-        newShot.setShape(isLaser);
-        newShot.setVectors(startPos, velocity);
-        newShot.shotPower = 100;
-        newShot.shotRadius = 16;
-        newShot.setFromPreviousLaser(previousLaser);
-
-        shotList.add(newShot);
-        previousLaser = newShot;*/
-        return true;
-    }
-
-    private void addAShot(){
-
-        isLaser = false;
+    private void addAShot(int shotPower){
 
         MyShot newShot = getShot();
         if(newShot == null) return;
 
-        newShot.drawer.setShape(isLaser);
+        newShot.setShape(MyShotDrawer.Shape.BULLET);
         newShot.setVectors(startPos, velocity);
         newShot.shotPower = shotPower;
         newShot.shotRadius = 12;
@@ -248,14 +187,88 @@ public class ShotGenerator {
         return null;
     }
 
+    private static int laserCount;
+    private static MyLaser previousLaser;
+
+    private boolean checkLaserNow(){
+
+        if(laserCount==0) return false;
+
+        if(addLaserShot()) laserCount--;
+
+        return true;
+    }
+
+    private void startLaser(){
+
+        laserCount = maxLaser;
+        previousLaser = null;
+
+        //SoundEffect.play(SoundKind.MYLASER);
+    }
+
+    private boolean addLaserShot(){
+
+        MyLaser newLaser = getLaser();
+
+        int fixAnimeFrame;
+
+        switch(laserCount){
+            case 1:
+                fixAnimeFrame = 2;
+                break;
+
+            case maxLaser:
+                fixAnimeFrame = 0;
+                break;
+
+            default:
+                fixAnimeFrame = 1;
+        }
+
+        newLaser.setShape(MyShotDrawer.Shape.LASER, fixAnimeFrame);
+
+        startPos.set(plane.x, plane.y - MyPlaneDrawer.planeSize / 2);
+        velocity.set(0, -16);
+        newLaser.setVectors(startPos, velocity);
+        newLaser.shotPower = 100;
+        newLaser.shotRadius = 16;
+        newLaser.setPreviousLaser(previousLaser);
+
+        previousLaser = newLaser;
+        return true;
+    }
+
+    private MyLaser getLaser(){
+
+        MyLaser laser = laserList[laserCount-1];
+        laser.initialize();
+
+        return laser;
+    }
+
+    final float maxWeaponEnergy = 500;
+    int weaponEnergy = 500;
+    int weaponLevel;
+
+    private void checkWeaponLevel(){
+
+        if(weaponEnergy<0) {weaponEnergy=0; weaponLevel=0;}
+
+        int currentLevel = (int)(weaponEnergy / maxWeaponEnergy * 3);
+
+        if(currentLevel>=weaponLevel) weaponLevel = currentLevel;
+        if(currentLevel<(weaponLevel-1)) weaponLevel--;
+    }
+
     private void addSingleShot(){
 
         if(currentTime< shotTime+150) return;
 
+        int shotPower = 70;
         startPos.set(plane.x, plane.y - MyPlaneDrawer.planeSize / 3);
         velocity.set(0, -10);
-        shotPower = 100;
-        addAShot();
+        addAShot(shotPower);
 
         shotTime = currentTime;
 
@@ -266,15 +279,14 @@ public class ShotGenerator {
 
         if(currentTime< shotTime2+200) return;
 
-        shotPower = 50;
-
+        int shotPower = 50;
         startPos.set(plane.x + 5, plane.y - MyPlaneDrawer.planeSize / 3);
         velocity.set(2, -8);
-        addAShot();
+        addAShot(shotPower);
 
         startPos.set(plane.x - 5, plane.y - MyPlaneDrawer.planeSize / 3);
         velocity.set(-2, -8);
-        addAShot();
+        addAShot(shotPower);
 
         shotTime2 = currentTime;
         weaponEnergy -= 3;
@@ -284,15 +296,15 @@ public class ShotGenerator {
 
         if(currentTime< shotTime3+500) return;
 
-        shotPower = 50;
+        int shotPower = 50;
 
         startPos.set(plane.x + 5, plane.y - MyPlaneDrawer.planeSize / 5);
         velocity.set(4, -4);
-        addAShot();
+        addAShot(shotPower);
 
         startPos.set(plane.x - 5, plane.y - MyPlaneDrawer.planeSize / 5);
         velocity.set(-4, -4);
-        addAShot();
+        addAShot(shotPower);
 
         shotTime3 = currentTime;
         weaponEnergy -= 4;
@@ -302,7 +314,7 @@ public class ShotGenerator {
 
         if(currentTime< shotTime4+20) return;
 
-        shotPower = 50;
+        int shotPower = 100;
 
         startPos.set(plane.x, plane.y - MyPlaneDrawer.planeSize / 3);
         sprayAngle = (sprayAngle + 15) % 360;
@@ -310,7 +322,7 @@ public class ShotGenerator {
         double vx = Math.cos(angle) * 10;
         double vy = Math.sin(angle) * 10;
         velocity.set(vx, vy);
-        addAShot();
+        addAShot(shotPower);
 
         shotTime4 = currentTime;
         weaponEnergy -= 5;
