@@ -48,6 +48,8 @@ public class MyPlane implements CallbackOfMyPlane{
         }
     }
 
+    public static double padSensitivity =20d; //大きいほど自機のpad反応が鈍くなる
+
     public static final float maxHP = 500;
     public int hitPoints = (int)maxHP;
 
@@ -183,7 +185,8 @@ public class MyPlane implements CallbackOfMyPlane{
             return;
         }
 
-        velocity.set(pad.leftPadDirVector.x, pad.leftPadDirVector.y);
+        velocity.set
+                (pad.leftPadDirVector.x/padSensitivity, pad.leftPadDirVector.y/padSensitivity);
         velocity.limit(maxSpeed);
 
         x += velocity.x;
