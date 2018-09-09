@@ -44,6 +44,5 @@ public class WorkThread extends Thread {
                 if (drawEffect.isFinished()) isActive = false;
             }
         }
-        Logger.getLogger("TestEffect").warning("finished");
     }
 }

@@ -37,6 +37,8 @@ public class StageData {
     public static TextureSheet[] enemyTexSheets;
     public static TextureSheet[] enumTexSheets;
 
+    public static boolean isGLTexBinded;
+
     private StageData(){
 
     }
@@ -56,10 +58,15 @@ public class StageData {
         refreshEnemyListFromDB();
 
         derivativeEnemyFactory = new DerivativeEnemyFactory(stageNumber);
+
+        isGLTexBinded = false; // glインターフェイスへのテクスチャバインドはまだ行われていません
     }
 
     public static void bindGLTextures(GL10 gl){
         // glインターフェイスが必要なのでDB読み込みの直後、ゲームスレッドから呼ばれます
+
+        if(isGLTexBinded) return;
+            //スレッドから何度も呼ばれるとバインドが上手くいかないので既に呼ばれていたら何もしません
 
         for(TextureSheet sheet : enemyTexSheets){
 
@@ -78,6 +85,8 @@ public class StageData {
                 //Log.e("---------", String.valueOf(sheet.GLtexID));
             }
         }
+
+        isGLTexBinded = true;
     }
 
     public static void refreshEventListFromDB(){
