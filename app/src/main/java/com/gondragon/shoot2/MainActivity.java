@@ -7,6 +7,7 @@ import android.view.WindowManager;
 import android.widget.LinearLayout;
 
 import com.gondragon.shoot2.effect.ScreenEffect;
+import com.gondragon.shoot2.effect.StageEffect;
 
 public class MainActivity extends Activity {
 
@@ -18,9 +19,6 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
 
         initializeGame();
-
-        gameThread.setStage(1);
-        gameThread.startThread();
 
         //実際にレンダリングが始まるのはこれの後だと思われる
     }
@@ -61,5 +59,13 @@ public class MainActivity extends Activity {
         return new LinearLayout.LayoutParams(arg0, arg1);
     }
 
+    @Override
+    protected void onStart() {
+
+        super.onStart();
+
+        gameThread.setStage(1);
+        gameThread.startThread();
+    }
 
 }

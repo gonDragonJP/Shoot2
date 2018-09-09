@@ -6,6 +6,8 @@ import com.gondragon.shoot2.Global;
 import com.gondragon.shoot2.MyRenderer;
 import com.gondragon.shoot2.effect.effectable.Cutin;
 import com.gondragon.shoot2.effect.effectable.TurningColor;
+import com.gondragon.shoot2.effect.effectable.TypeOut;
+import com.gondragon.shoot2.effect.effectable.WipeScreen;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,33 +52,27 @@ public class ScreenEffect {
 
         return tColor;
     }
-    /*
+
     public static void typeOutText(
             RectF drawRect, String string, int typeIntervalSec,
             int preWaitingSec, int processSec, int durationSec,
-            turningColor turningColor){
+            TurningColor turningColor){
 
-        TypeOut typeOut = new ScreenEffect().new TypeOut
-                (Effectable Kind.TYPEOUT, preWaitingSec, processSec, durationSec);
+        TypeOut typeOut = new TypeOut(preWaitingSec, processSec, durationSec);
 
         typeOut.setParam(drawRect, string, typeIntervalSec, turningColor);
 
-        workThread.addEffectable(typeOut);
+        new WorkThread(renderer).startEffectablePreDraw(typeOut);
     }
 
-    public enum WipeKind{ HOLEWIPE, REEDSCREENWIPE};
-
     public static void wipeScreen(
-            RectF wipeRect, WipeKind wipeKind, int wipeAngle,  boolean isWipeIn,
+            RectF wipeRect, WipeScreen.WipeKind wipeKind, int wipeAngle, boolean isWipeIn,
             int preWaitingSec, int processSec, int durationSec){
 
-        WipeScreen wScreen = new ScreenEffect().new WipeScreen
-                (Effectable Kind.WIPESCREEN, preWaitingSec, processSec, durationSec);
+        WipeScreen wScreen = new WipeScreen(preWaitingSec, processSec, durationSec);
 
-        wScreen.setParam(wipeRect, wipeKind, wipeAngle, isWipeIn);
+        wScreen.setParam(wipeRect, wipeKind , wipeAngle, isWipeIn);
 
-        workThread.addEffectable PreDraw(wScreen);
-        //workThread.addEffectable
-        //(wScreen);
-    }*/
+        new WorkThread(renderer).startEffectableAfterDraw(wScreen);
+    }
 }

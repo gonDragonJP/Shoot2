@@ -5,6 +5,7 @@ import android.content.Context;
 import com.gondragon.shoot2.database.AccessOfEnemyData;
 import com.gondragon.shoot2.database.AccessOfEventData;
 import com.gondragon.shoot2.database.AccessOfTextureData;
+import com.gondragon.shoot2.effect.StageEffect;
 import com.gondragon.shoot2.enemy.EnemyData;
 import com.gondragon.shoot2.myplane.CallbackOfMyPlane;
 import com.gondragon.shoot2.myplane.MyPlane;
@@ -114,11 +115,13 @@ public class GameThreadModule {
         makeTimerTask();
 
         isTestMode = false;
-        timer.schedule(timerTask, 500, Global.frameIntervalTime);
+        timer.schedule(timerTask, 1000, Global.frameIntervalTime);
         // ステージのセット時にレンダリングフレームからテクスチャのバインドを行う為、
         // レンダリングスレッドを少し待つ必要のでdelayを置いています
         // ※ここで作ったゲームスレッドはステージセット後すぐに呼び出されると
         //　 ステージセット時のバインド操作を実行前に消去してしまいます！
+
+        StageEffect.startStageEffect();
     }
 
     synchronized public void pushStopButton(){

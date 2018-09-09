@@ -3,49 +3,46 @@ package com.gondragon.shoot2.effect;
 import android.graphics.Color;
 import android.graphics.RectF;
 
+import com.gondragon.shoot2.Global;
+import com.gondragon.shoot2.effect.effectable.WipeScreen;
+import com.gondragon.shoot2.myplane.MyPlane;
+
 public class StageEffect {
 
-    StageManager parent;
-    private float screenX, screenY, screenCenterX, screenCenterY;
+
     private MyPlane plane;
 
-    public StageEffect(StageManager parent){
+    public StageEffect(){
 
-        this.parent = parent;
     }
 
-    public void initialize(ObjectsContainer container){
+    public void initialize(MyPlane plane){
 
-        plane = container.plane;
-        setScreenSize();
+        this.plane = plane;
     }
 
-    private void setScreenSize(){
+    public static void startStageEffect(){
 
-        screenX = Global.virtualScreenSize.x;
-        screenY = Global.virtualScreenSize.y;
-        screenCenterX = screenX / 2;
-        screenCenterY = screenY / 2;
-    }
+        float sx = Global.virtualScreenSize.x;
+        float sy = Global.virtualScreenSize.y;
+        float sxc= sx/2;
+        float syc= sy/2;
 
-    public void startStageEffect(){
+        float edgeLength = (float)((sx + sy) / Math.sqrt(2));
+        float elh = edgeLength/2;
 
-        float edgeLength = (float)((screenX + screenY) / Math.sqrt(2));
-        RectF wipeRect = new RectF(
-                screenCenterX - edgeLength, screenCenterY - edgeLength,
-                screenCenterX + edgeLength, screenCenterY + edgeLength);
+        RectF wipeRect = new RectF(sxc - elh, syc - elh, sxc + elh, syc + elh);
         ScreenEffect.wipeScreen(wipeRect,
-                ScreenEffect.WipeKind.REEDSCREENWIPE, 45, true,
+                WipeScreen.WipeKind.REEDSCREENWIPE, 45, true,
                 0, 3000, 0);
-
+/*
         ScreenEffect.cutinText(
                 new RectF(0,0,0,0),
-                new RectF(screenCenterX - 100, screenCenterY + 25,
-                        screenCenterX + 100, screenCenterY - 25),
-                "Stage "+ parent.currentPlace.stage,
-                2000, 1000, 2000, 0, 720, null);
+                new RectF(sxc - 100, syc + 25, sxc + 100, syc - 25),
+                "Stage 1",
+                2000, 1000, 2000, 0, 720, null);*/
     }
-
+/*
     public void briefing(int eventObjectID){
 
         ScreenEffect.ChangingColor changingColor
@@ -153,5 +150,5 @@ public class StageEffect {
     public void stageEndPlaneCruising(){
 
         plane.setAutoCruising(new CruisingProgram());
-    }
+    }*/
 }

@@ -8,7 +8,7 @@ import com.gondragon.shoot2.effect.ScreenEffect;
 
 import javax.microedition.khronos.opengles.GL10;
 
-public class TypeOur extends BasicEffect {
+public class TypeOut extends BasicEffect {
 
     String string;
     int typeIntervalFrame;
@@ -25,7 +25,7 @@ public class TypeOur extends BasicEffect {
 
     TurningColor turningColor;
 
-    public TypeOur(int preWaitingMsec, int processMsec, int durationMsec) {
+    public TypeOut(int preWaitingMsec, int processMsec, int durationMsec) {
 
         super(preWaitingMsec, processMsec, durationMsec);
     }
