@@ -12,6 +12,7 @@ public class MainGLSurface extends GLSurfaceView{
     public MainGLSurface(Context context){
 
         super(context);
+        //this.setEGLConfigChooser(8,8,8,8,16,8);//ステンシルを有効にするのに必要ですが非推奨
     }
 
     public void setRenderer(GLSurfaceView.Renderer renderer){

@@ -45,7 +45,9 @@ public class TypeOut extends BasicEffect {
     }
 
     @Override
-    protected void _draw(GL10 gl) {
+    public void render(GL10 gl) {
+
+        super.render(gl);
 
         if(turningColor !=null)
             UtilGL.changeTexColor(gl, turningColor.matrix);
@@ -72,7 +74,7 @@ public class TypeOut extends BasicEffect {
     }
 
     @Override
-    protected void _periodicalProcess() {
+    public void effectProcess() {
 
         if(promptIntervalFrameCount++ > promptIntervalFrame){
 

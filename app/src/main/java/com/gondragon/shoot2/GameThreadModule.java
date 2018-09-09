@@ -5,6 +5,7 @@ import android.content.Context;
 import com.gondragon.shoot2.database.AccessOfEnemyData;
 import com.gondragon.shoot2.database.AccessOfEventData;
 import com.gondragon.shoot2.database.AccessOfTextureData;
+import com.gondragon.shoot2.effect.ScreenEffect;
 import com.gondragon.shoot2.effect.StageEffect;
 import com.gondragon.shoot2.enemy.EnemyData;
 import com.gondragon.shoot2.myplane.MyPlane;
@@ -50,7 +51,6 @@ public class GameThreadModule {
         stageManager.setStage(stageNumber);
 
         //テクスチャをGLインターフェイスにバインドします
-
         MyRenderer.Renderable renderTask = new MyRenderer.Renderable() {
 
             @Override
@@ -170,6 +170,7 @@ public class GameThreadModule {
 
                 stageManager.periodicalProcess(scrollPoint, isTestMode);
                 myPlane.periodicalProcess(renderer.graphicPad);
+                ScreenEffect.periodicalProcess();
 
                 renderer.setScreenSlidingX(myPlane.x);
 
@@ -191,6 +192,7 @@ public class GameThreadModule {
 
                 renderer.deleteRenderingTask(MyRenderer.Renderable.Timing.ONDRAW);
                 renderer.addRenderingTask(renderTask);
+                ScreenEffect.renderAllLists();
 
                 if(isTestMode){
 
