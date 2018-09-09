@@ -73,6 +73,6 @@ public class ScreenEffect {
 
         wScreen.setParam(wipeRect, wipeKind , wipeAngle, isWipeIn);
 
-        new WorkThread(renderer).startEffectableAfterDraw(wScreen);
+        new WorkThread(renderer).startEffectablePreDraw(wScreen);
     }
 }

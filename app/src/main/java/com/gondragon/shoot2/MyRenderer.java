@@ -5,10 +5,8 @@ import android.graphics.PointF;
 import android.graphics.Rect;
 import android.opengl.GLSurfaceView;
 
-import com.gondragon.shoot2.vector.Int2Vector;
-
 import java.util.ArrayList;
-import java.util.logging.Logger;
+import java.util.Iterator;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
@@ -16,6 +14,10 @@ import javax.microedition.khronos.opengles.GL10;
 public class MyRenderer implements GLSurfaceView.Renderer{
 
     public interface Renderable{
+
+        public enum Timing {PREDRAW, ONDRAW, AFTERDRAW};
+
+        Timing getTiming();
 
         void render(GL10 gl);
     }
@@ -53,9 +55,16 @@ public class MyRenderer implements GLSurfaceView.Renderer{
         renderingTaskList.add(task);
     }
 
-    synchronized public void resetRenderingTask(){
+    synchronized public void deleteRenderingTask(Renderable.Timing timing){
 
-        renderingTaskList.clear();
+        Iterator<Renderable> it = renderingTaskList.iterator();
+
+        while(it.hasNext()){
+
+            Renderable e = it.next();
+
+            if(e.getTiming() == timing) it.remove();
+        }
     }
 
     @Override
@@ -94,7 +103,8 @@ public class MyRenderer implements GLSurfaceView.Renderer{
         UtilGL.setTextureSTCoords(null);
         UtilGL.changeTexColor(gl, null);
 
-        doAllRenderingTasks(gl);
+        doAllRenderingTasks(gl, Renderable.Timing.PREDRAW);
+        doAllRenderingTasks(gl, Renderable.Timing.ONDRAW);
 
         //画面定位置のオブジェクト描出
         gl.glMatrixMode(GL10.GL_PROJECTION);
@@ -105,6 +115,8 @@ public class MyRenderer implements GLSurfaceView.Renderer{
                 0.5f, -0.5f
         );
         if(isDrawableGraphicPad) graphicPad.onDraw(gl);
+
+        //doAllRenderingTasks(gl, Renderable.Timing.AFTERDRAW);
 
         //ScreenEffect.preDraw(gl);
 
@@ -126,11 +138,11 @@ public class MyRenderer implements GLSurfaceView.Renderer{
         //drawFPS();
     }
 
-    synchronized private void doAllRenderingTasks(GL10 gl) {
+    synchronized private void doAllRenderingTasks(GL10 gl, Renderable.Timing timing) {
 
         for (MyRenderer.Renderable e : renderingTaskList) {
 
-            e.render(gl);
+            if(e.getTiming() == timing) e.render(gl);
         }
     }
 

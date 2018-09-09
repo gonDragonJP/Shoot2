@@ -7,12 +7,9 @@ import com.gondragon.shoot2.database.AccessOfEventData;
 import com.gondragon.shoot2.database.AccessOfTextureData;
 import com.gondragon.shoot2.effect.StageEffect;
 import com.gondragon.shoot2.enemy.EnemyData;
-import com.gondragon.shoot2.myplane.CallbackOfMyPlane;
 import com.gondragon.shoot2.myplane.MyPlane;
-import com.gondragon.shoot2.myshot.ShotGenerator;
 import com.gondragon.shoot2.stage.StageData;
 import com.gondragon.shoot2.stage.StageManager;
-import com.gondragon.shoot2.vector.Int2Vector;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -55,6 +52,13 @@ public class GameThreadModule {
         //テクスチャをGLインターフェイスにバインドします
 
         MyRenderer.Renderable renderTask = new MyRenderer.Renderable() {
+
+            @Override
+            public Timing getTiming() {
+
+                return Timing.ONDRAW;
+            }
+
             @Override
             public void render(GL10 gl) {
 
@@ -171,6 +175,12 @@ public class GameThreadModule {
 
                 MyRenderer.Renderable renderTask = new MyRenderer.Renderable() {
                     @Override
+                    public Timing getTiming() {
+
+                        return Timing.ONDRAW;
+                    }
+
+                    @Override
                     public void render(GL10 gl) {
 
                         stageManager.drawEnemies(gl, isEnableTex);
@@ -179,7 +189,7 @@ public class GameThreadModule {
                     }
                 };
 
-                renderer.resetRenderingTask();
+                renderer.deleteRenderingTask(MyRenderer.Renderable.Timing.ONDRAW);
                 renderer.addRenderingTask(renderTask);
 
                 if(isTestMode){

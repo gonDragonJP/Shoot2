@@ -1,5 +1,7 @@
 package com.gondragon.shoot2.effect;
 
+import com.gondragon.shoot2.MyRenderer;
+
 import javax.microedition.khronos.opengles.GL10;
 
 public interface ScreenEffectable {
