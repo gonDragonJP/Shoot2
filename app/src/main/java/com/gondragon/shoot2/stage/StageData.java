@@ -5,7 +5,6 @@ import android.util.Log;
 
 import com.gondragon.shoot2.database.AccessOfEnemyData;
 import com.gondragon.shoot2.database.AccessOfEventData;
-import com.gondragon.shoot2.database.AccessOfTextureData;
 import com.gondragon.shoot2.enemy.EnemyData;
 import com.gondragon.shoot2.enemy.derivativeType.DerivativeEnemyFactory;
 import com.gondragon.shoot2.texture.TextureInitializer;
@@ -35,7 +34,10 @@ public class StageData {
 
     public static DerivativeEnemyFactory derivativeEnemyFactory;
 
-    public static TextureSheet[] textureSheets;
+    public static TextureSheet[] enemyTexSheets;
+    public static TextureSheet[] enumTexSheets;
+
+    public static boolean isGLTexBinded;
 
     private StageData(){
 
@@ -47,28 +49,44 @@ public class StageData {
         isShadowOn = isStageShadowOn[stageNumber -1];
         stageEndPoint = stageLength [stageNumber -1];
 
-        textureSheets
+        enemyTexSheets
                 = TextureInitializer.getStageEnemyTexSheets(stageNumber);
+        enumTexSheets
+                = TextureInitializer.getEnumTexSheets();
 
         refreshEventListFromDB();
         refreshEnemyListFromDB();
 
         derivativeEnemyFactory = new DerivativeEnemyFactory(stageNumber);
+
+        isGLTexBinded = false; // glインターフェイスへのテクスチャバインドはまだ行われていません
     }
 
     public static void bindGLTextures(GL10 gl){
         // glインターフェイスが必要なのでDB読み込みの直後、ゲームスレッドから呼ばれます
 
-        Log.e("@@@@@@@@@@@@@", String.valueOf(textureSheets.length));
+        if(isGLTexBinded) return;
+            //スレッドから何度も呼ばれるとバインドが上手くいかないので既に呼ばれていたら何もしません
 
-        for(TextureSheet sheet : textureSheets){
+        for(TextureSheet sheet : enemyTexSheets){
 
             if(sheet!=null) {
                 sheet.bindGLTexture(gl);
-                Log.e("**********", sheet.pictureName);
-                Log.e("---------", String.valueOf(sheet.GLtexID));
+                //Log.e("**********", sheet.pictureName);
+                //Log.e("---------", String.valueOf(sheet.GLtexID));
             }
         }
+
+        for(TextureSheet sheet : enumTexSheets){
+
+            if(sheet!=null) {
+                sheet.bindGLTexture(gl);
+                //Log.e("**********", sheet.pictureName);
+                //Log.e("---------", String.valueOf(sheet.GLtexID));
+            }
+        }
+
+        isGLTexBinded = true;
     }
 
     public static void refreshEventListFromDB(){

@@ -8,6 +8,7 @@ import com.gondragon.shoot2.UtilGL;
 import com.gondragon.shoot2.animation.AnimationData;
 import com.gondragon.shoot2.animation.AnimationManager;
 import com.gondragon.shoot2.animation.AnimationSet;
+import com.gondragon.shoot2.stage.StageData;
 import com.gondragon.shoot2.texture.TextureInitializer;
 import com.gondragon.shoot2.texture.TextureSheet;
 
@@ -29,21 +30,20 @@ public class MyPlaneDrawer {
     private int shieldAnimeFrameIndex, shieldAnimeFrame;
     private int burnerAnimeFrameIndex, burnerAnimeFrame;
 
-    private TextureSheet[] textureSheets;
+    private MyPlane plane;
 
-    public MyPlaneDrawer(){
+    public MyPlaneDrawer(MyPlane myPlane){
 
-        screenX = (int)Global.virtualScreenSize.x;
-        screenY = (int)Global.virtualScreenSize.y;
-
-        screenBottomLimit = screenY - planeSize;
+        plane = myPlane;
 
         initialize();
     }
 
     public void initialize(){
 
-        textureSheets = TextureInitializer.getEnumTexSheets();
+        screenX = (int)Global.virtualScreenSize.x;
+        screenY = (int)Global.virtualScreenSize.y;
+        screenBottomLimit = screenY - planeSize;
 
         animeSet = AnimationManager.AnimeObject.getAnimeSet
                 (AnimationManager.AnimeObject.MYPLANE);
@@ -62,6 +62,8 @@ public class MyPlaneDrawer {
 
         burnerAnimeSet = AnimationManager.AnimeObject.getAnimeSet
                 (AnimationManager.AnimeObject.MYBURNER);
+
+        resetAnimeState();
     }
 
     public void resetAnimeState(){
@@ -83,7 +85,7 @@ public class MyPlaneDrawer {
         chargeAnimeFrame = 0;
     }
 
-    public void resetConversion(){
+    public void resetConversionAnime(){
 
         conversionAnimeFrameIndex = 0;
         conversionAnimeFrame = 0;
@@ -97,31 +99,17 @@ public class MyPlaneDrawer {
         if(plane.y > screenBottomLimit) plane.y=screenBottomLimit;
     }
 
-    public void bindGLTextures(GL10 gl){
-        // glインターフェイスが必要なのでDB読み込みの直後、ゲームスレッドから呼ばれます
-
-        Log.e("@@@@@@@@@@@@@", String.valueOf(textureSheets.length));
-
-        for(TextureSheet sheet : textureSheets){
-
-            if(sheet!=null) {
-                sheet.bindGLTexture(gl);
-                Log.e("**********", sheet.pictureName);
-                Log.e("---------", String.valueOf(sheet.GLtexID));
-            }
-        }
-    }
-
-    private static final int planeSize =64;
+    public static final int planeSize =64;
     private static PointF drawCenter = new PointF();
-    private static PointF drawSize = new PointF(planeSize, planeSize);
+    private static PointF drawSize = new PointF();
     private static TextureSheet drawSheet;
 
     private void setFrame(AnimationData animeData, int currentIndex){
 
         int frameIndex = animeData.frameOffset + currentIndex;
         int textureID = animeData.textureID;
-        drawSheet = textureSheets[textureID];
+        drawSize.set((float)animeData.drawSize.x, (float)animeData.drawSize.y);
+        drawSheet = StageData.enumTexSheets[textureID];
 
         UtilGL.setTextureSTCoords(drawSheet.getSTRect(frameIndex));
     }
@@ -147,7 +135,7 @@ public class MyPlaneDrawer {
     private static final float shadowScaleX = 0.75f;
     private static final float shadowScaleY = 0.75f;
 
-    synchronized public void drawShadow(GL10 gl, MyPlane plane){
+    public void drawShadow(GL10 gl){
 
         UtilGL.changeTexColor(gl, shadowColor);
 
@@ -165,7 +153,7 @@ public class MyPlaneDrawer {
         UtilGL.changeTexColor(gl,null);
     }
 
-    synchronized public void onDraw(GL10 gl, MyPlane plane){
+    public void onDraw(GL10 gl){
 
         drawCenter.set(plane.x, plane.y);
 
@@ -214,9 +202,11 @@ public class MyPlaneDrawer {
             );
             drawFrame(gl);
         }
+
+        plane.shotGenerator.onDraw(gl);
     }
 
-    public void changeAnimeFrame(MyPlane plane){
+    public void changeAnimeFrame(){
 
         double divideSpeed = plane.maxSpeed * 2 / 5d; // 全速の2倍を５フレームに割り当てindexを求めます
 
@@ -231,7 +221,7 @@ public class MyPlaneDrawer {
 
             if(chargeBallAnimeFrameIndex == -1) {
 
-                plane.state.setChargeFinish();
+                plane.setAlreadyCharged();
                 chargeAnimeFrame = 0;
             }
         }

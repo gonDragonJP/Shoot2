@@ -8,6 +8,7 @@ import com.gondragon.shoot2.database.AccessOfTextureData;
 import com.gondragon.shoot2.enemy.EnemyData;
 import com.gondragon.shoot2.myplane.CallbackOfMyPlane;
 import com.gondragon.shoot2.myplane.MyPlane;
+import com.gondragon.shoot2.myshot.ShotGenerator;
 import com.gondragon.shoot2.stage.StageData;
 import com.gondragon.shoot2.stage.StageManager;
 import com.gondragon.shoot2.vector.Int2Vector;
@@ -57,7 +58,6 @@ public class GameThreadModule {
             public void render(GL10 gl) {
 
                 StageData.bindGLTextures(gl);
-                myPlane.drawer.bindGLTextures(gl);
             }
         };
         renderer.addRenderingTask(renderTask);
@@ -114,8 +114,11 @@ public class GameThreadModule {
         makeTimerTask();
 
         isTestMode = false;
-        timer.schedule(timerTask, 0, Global.frameIntervalTime);
-        
+        timer.schedule(timerTask, 500, Global.frameIntervalTime);
+        // ステージのセット時にレンダリングフレームからテクスチャのバインドを行う為、
+        // レンダリングスレッドを少し待つ必要のでdelayを置いています
+        // ※ここで作ったゲームスレッドはステージセット後すぐに呼び出されると
+        //　 ステージセット時のバインド操作を実行前に消去してしまいます！
     }
 
     synchronized public void pushStopButton(){
@@ -156,35 +159,24 @@ public class GameThreadModule {
                         scrollPoint = scrollMax;
                         this.cancel();
                     }
-
-                    //drawModule.drawScreen();
-
-                    /*MyRenderer.Renderable renderTask = new MyRenderer.Renderable() {
-                        @Override
-                        public void render(GL10 gl) {
-
-                            float y0= (float)Math.random()*300;
-                            float y1= (float)Math.random()*300;
-
-                            PointF startPoint = new PointF(0,y0);
-                            PointF endPoint = new PointF(500,y1);
-
-                            UtilGL.drawLine(gl, startPoint, endPoint);
-                        }
-                    };
-                    renderer.addRenderingTask(renderTask);*/
                 }
 
                 stageManager.periodicalProcess(scrollPoint, isTestMode);
+                myPlane.periodicalProcess(renderer.graphicPad);
+
+                renderer.setScreenSlidingX(myPlane.x);
 
                 MyRenderer.Renderable renderTask = new MyRenderer.Renderable() {
                     @Override
                     public void render(GL10 gl) {
 
                         stageManager.drawEnemies(gl, isEnableTex);
-                        myPlane.drawer.onDraw(gl,myPlane);
+                        myPlane.drawer.onDraw(gl);
+                        myPlane.shotGenerator.onDraw(gl);
                     }
                 };
+
+                renderer.resetRenderingTask();
                 renderer.addRenderingTask(renderTask);
 
                 if(isTestMode){

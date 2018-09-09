@@ -30,7 +30,7 @@ public class MainActivityTest extends AppCompatActivity {
             paint.setColor(Color.RED);
             canvas.drawCircle(200,200,200, paint);
 
-            Bitmap bitmap = StageData.textureSheets[0].texImage;
+            Bitmap bitmap = StageData.enemyTexSheets[0].texImage;
             canvas.drawBitmap(bitmap,0,0,null);
         }
     }

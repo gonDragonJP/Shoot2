@@ -1,6 +1,5 @@
 package com.gondragon.shoot2.enemy;
 
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.PointF;
 
@@ -111,7 +110,7 @@ public class EnemyDrawer {
         int frameIndex = anime.frameOffset + enemy.animeFrame;
         drawSize.set((float)anime.drawSize.x, (float)anime.drawSize.y);
 
-        TextureSheet sheet = StageData.textureSheets[textureID];
+        TextureSheet sheet = StageData.enemyTexSheets[textureID];
         if(sheet == null) return false;
 
         drawCenter.set(enemy.x, enemy.y);
