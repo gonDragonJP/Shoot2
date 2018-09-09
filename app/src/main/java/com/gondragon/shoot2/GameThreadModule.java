@@ -114,8 +114,11 @@ public class GameThreadModule {
         makeTimerTask();
 
         isTestMode = false;
-        timer.schedule(timerTask, 0, Global.frameIntervalTime);
-        
+        timer.schedule(timerTask, 500, Global.frameIntervalTime);
+        // ステージのセット時にレンダリングフレームからテクスチャのバインドを行う為、
+        // レンダリングスレッドを少し待つ必要のでdelayを置いています
+        // ※ここで作ったゲームスレッドはステージセット後すぐに呼び出されると
+        //　 ステージセット時のバインド操作を実行前に消去してしまいます！
     }
 
     synchronized public void pushStopButton(){
@@ -161,6 +164,8 @@ public class GameThreadModule {
                 stageManager.periodicalProcess(scrollPoint, isTestMode);
                 myPlane.periodicalProcess(renderer.graphicPad);
 
+                renderer.setScreenSlidingX(myPlane.x);
+
                 MyRenderer.Renderable renderTask = new MyRenderer.Renderable() {
                     @Override
                     public void render(GL10 gl) {
@@ -170,6 +175,8 @@ public class GameThreadModule {
                         myPlane.shotGenerator.onDraw(gl);
                     }
                 };
+
+                renderer.resetRenderingTask();
                 renderer.addRenderingTask(renderTask);
 
                 if(isTestMode){

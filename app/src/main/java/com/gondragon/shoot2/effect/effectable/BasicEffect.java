@@ -25,20 +25,22 @@ public abstract class BasicEffect implements ScreenEffectable{
 
     @Override
     public boolean isActive(){
+            // レンダリングスレッドが終了を認識すると非アクティブになります
 
         return isActive;
     }
 
     @Override
     public boolean isFinished(){
-
+            // エフェクト個別のスレッドでエフェクトプロセスが終了すると非アクティブになります
+            // レンダリングはまだ終了していません
         return isFinished;
     }
 
     @Override
     public boolean draw(GL10 gl){
 
-        if(!isStarted || !isActive) return false;
+        if(!isActive || !isStarted) return false;
         if(isFinished){
 
             finish(gl);

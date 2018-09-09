@@ -52,7 +52,6 @@ public class TurningColor extends BasicEffect {
 
         for(int i=0; i<4; i++)
             matrix[i] = startColor[i] + (endColor[i]-startColor[i]) * rate;
-
     }
 
     @Override
