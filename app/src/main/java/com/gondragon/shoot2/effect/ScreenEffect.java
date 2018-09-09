@@ -3,6 +3,7 @@ package com.gondragon.shoot2.effect;
 import android.graphics.RectF;
 
 import com.gondragon.shoot2.Global;
+import com.gondragon.shoot2.MyRenderer;
 import com.gondragon.shoot2.effect.effectable.Cutin;
 import com.gondragon.shoot2.effect.effectable.TurningColor;
 
@@ -11,47 +12,14 @@ import java.util.List;
 
 import javax.microedition.khronos.opengles.GL10;
 
-public class ScreenEffect {/*
+public class ScreenEffect {
 
-    enum EffectableKind{ CUTIN, CHANGINGCOLOR, TYPEOUT, WIPESCREEN};
-    public enum WipeKind{ HOLEWIPE, REEDSCREENWIPE};
-
-
+    private static MyRenderer renderer;
     static final int frameIntervalTime = Global.frameIntervalTime;
 
-    static WorkThread workThread = new WorkThread();
-    private static RectF screenRect = new RectF();
+    public static void setRenderer(MyRenderer arg){
 
-    public static void setScreenRect(RectF rect){
-
-        screenRect.set(rect);
-    }
-
-    public static void preDraw(GL10 gl){
-
-        for(int i=0; i<workThread.Effectable List0.size(); i++){
-
-            Effectable Effectable = workThread.Effectable List0.get(i);
-
-            Effectable.draw(gl);
-        }
-    }
-
-    public static void draw(GL10 gl){
-
-        for(int i=0; i<workThread.Effectable List1.size(); i++){
-
-            Effectable Effectable = workThread.Effectable List1.get(i);
-
-            Effectable.draw(gl);
-        }
-
-        for(int i=0; i<workThread.Effectable List2.size(); i++){
-
-            Effectable Effectable = workThread.Effectable List2.get(i);
-
-            Effectable.draw(gl);
-        }
+        renderer = arg;
     }
 
     public static void cutinText(
@@ -67,23 +35,22 @@ public class ScreenEffect {/*
                 startAngle, endAngle, turningColor
         );
 
-        workThread.addEffectable(cutin);
+        new WorkThread(renderer).startEffectableAfterDraw(cutin);
     }
 
-    static public turningColor getturningColor(
+    static public TurningColor getTurningColor(
             int startColor, int endColor, int intervalSec, boolean isPendulum,
             int preWaitingSec, int processSec, int durationSec){
 
-        turningColor cColor =
-                new ScreenEffect().new turningColor
-                        (Effectable Kind.turningColor, preWaitingSec, processSec, durationSec);
+        TurningColor tColor = new TurningColor (preWaitingSec, processSec, durationSec);
 
-        cColor.setParam(startColor, endColor, intervalSec, isPendulum);
+        tColor.setParam(startColor, endColor, intervalSec, isPendulum);
 
-        workThread.addEffectable(cColor);
+        new WorkThread(renderer).startEffectablePreDraw(tColor);
 
-        return cColor;
+        return tColor;
     }
+    /*
     public static void typeOutText(
             RectF drawRect, String string, int typeIntervalSec,
             int preWaitingSec, int processSec, int durationSec,
@@ -96,6 +63,9 @@ public class ScreenEffect {/*
 
         workThread.addEffectable(typeOut);
     }
+
+    public enum WipeKind{ HOLEWIPE, REEDSCREENWIPE};
+
     public static void wipeScreen(
             RectF wipeRect, WipeKind wipeKind, int wipeAngle,  boolean isWipeIn,
             int preWaitingSec, int processSec, int durationSec){
