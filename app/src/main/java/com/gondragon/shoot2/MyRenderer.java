@@ -4,7 +4,9 @@ import android.graphics.Color;
 import android.graphics.PointF;
 import android.graphics.Rect;
 import android.opengl.GLSurfaceView;
+import android.util.Log;
 
+import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -80,13 +82,15 @@ public class MyRenderer implements GLSurfaceView.Renderer{
 
     private void renderScreen(GL10 gl){
 
+        UtilGL.setupFont(gl,0);
+
         UtilGL.enableDefaultBlend(gl);
         UtilGL.setTextureSTCoords(null);
         UtilGL.changeTexColor(gl, null);
+       // gl.glDisable(GL10.GL_STENCIL_TEST);
 
-        gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_STENCIL_BUFFER_BIT);
+        gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
         gl.glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
-        gl.glClearStencil(0);
 
         doAllRenderingTasks(gl, Renderable.Timing.PREDRAW);
 

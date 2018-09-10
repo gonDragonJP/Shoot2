@@ -42,15 +42,13 @@ public class WipeScreen extends BasicEffect {
     }
 
     @Override
-    public void render(GL10 gl) {
-
-        super.render(gl);
+    public void effectRender(GL10 gl) {
 
         gl.glEnable(GL10.GL_STENCIL_TEST);
         gl.glClear(GL10.GL_STENCIL_BUFFER_BIT);
         gl.glStencilFunc(GL10.GL_ALWAYS, 0x01, 0x01);
         gl.glStencilOp(GL10.GL_REPLACE, GL10.GL_REPLACE, GL10.GL_REPLACE);
-        //gl.glColorMask(false, false, false, false);
+        gl.glColorMask(false, false, false, false);
 
         switch(wipeKind){
 

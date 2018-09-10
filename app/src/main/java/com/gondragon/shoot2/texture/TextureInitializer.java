@@ -49,6 +49,20 @@ public class TextureInitializer {
         return sheets;
     }
 
+    public static TextureSheet getCharactersSheet(){
+
+        TextureSheet sheet = new TextureSheet();
+
+        sheet.textureID = 0;
+        sheet.frameNumberX = 16;
+        sheet.frameNumberY = 16;
+        sheet.pictureName = "chr_sheet.png";
+
+        AccessOfTextureData.setAssetImage(sheet);
+
+        return sheet;
+    }
+
     public static TextureSheet[] getStageEnemyTexSheets(int stageNumber){
 
         // 配列でsheetを扱う為にリストでdbから読みこんだsheetListは配列にセットした後、破棄します

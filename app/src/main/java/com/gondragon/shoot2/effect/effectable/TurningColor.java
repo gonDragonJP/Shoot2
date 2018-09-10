@@ -37,9 +37,8 @@ public class TurningColor extends BasicEffect {
     }
 
     @Override
-    public void render(GL10 gl) {
+    public void effectRender(GL10 gl) {
 
-        super.render(gl);
     }
 
     @Override
