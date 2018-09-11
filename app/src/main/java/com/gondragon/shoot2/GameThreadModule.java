@@ -9,6 +9,7 @@ import com.gondragon.shoot2.effect.ScreenEffect;
 import com.gondragon.shoot2.effect.StageEffect;
 import com.gondragon.shoot2.enemy.EnemyData;
 import com.gondragon.shoot2.myplane.MyPlane;
+import com.gondragon.shoot2.stage.Background;
 import com.gondragon.shoot2.stage.StageData;
 import com.gondragon.shoot2.stage.StageManager;
 
@@ -184,6 +185,7 @@ public class GameThreadModule {
                     @Override
                     public void render(GL10 gl) {
 
+                        Background.onDraw(gl, scrollPoint);
                         stageManager.drawEnemies(gl, isEnableTex);
                         myPlane.drawer.onDraw(gl);
                         myPlane.shotGenerator.onDraw(gl);

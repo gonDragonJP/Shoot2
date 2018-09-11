@@ -44,7 +44,7 @@ public class TextureInitializer {
         for(EnumTexture e : EnumTexture.values()) {
 
             sheets[e.textureId] = e.getSheet();
-            AccessOfTextureData.setAssetImage(sheets[e.textureId]);
+            AccessOfTextureData.setAssetImage(sheets[e.textureId], false);
         }
         return sheets;
     }
@@ -58,7 +58,7 @@ public class TextureInitializer {
         sheet.frameNumberY = 16;
         sheet.pictureName = "chr_sheet.png";
 
-        AccessOfTextureData.setAssetImage(sheet);
+        AccessOfTextureData.setAssetImage(sheet, false);
 
         return sheet;
     }
