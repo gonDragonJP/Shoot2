@@ -16,6 +16,33 @@ import javax.microedition.khronos.opengles.GL10;
 
 public class StageData {
 
+    private enum ByStage {
+
+        Stage_01(1,"myplanesheet.png",4,4),
+        Stage_02(2,"effect_sheet000.png",8,8),
+        Stage_03(3,"effect_sheet001.png",8,8),
+        Stage_04(4,"effect_sheet002.png",4,4),
+        Stage_05(5,"effect_sheet003.png",8,8);
+
+        int textureId, frameX, frameY;
+        String pictureName;
+
+        EnumTexture(int id, String name, int xc, int yc)
+        { textureId = id; pictureName = name; frameX = xc; frameY = yc;};
+
+        public TextureSheet getSheet(){
+
+            TextureSheet sheet = new TextureSheet();
+
+            sheet.textureID = textureId;
+            sheet.frameNumberX = frameX;
+            sheet.frameNumberY = frameY;
+            sheet.pictureName = pictureName;
+
+            return sheet;
+        }
+    }
+
     private static Context context;
 
     private static final int stageLength[]
