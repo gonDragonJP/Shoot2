@@ -11,6 +11,9 @@ import android.graphics.RectF;
 import android.opengl.GLUtils;
 import android.util.Log;
 
+import com.gondragon.shoot2.texture.TextureInitializer;
+import com.gondragon.shoot2.texture.TextureSheet;
+
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
@@ -276,22 +279,29 @@ public class UtilGL {
     }
 
     private static FontStructure font;
+    private static boolean isFontInitialized = false;
 
-    public static void setupFont
-            (GL10 gl, Resources res, int resID, int nx, int ny, int offset){
+    public static void setupFont(GL10 gl, int offset){
 
-        int texID = loadTexture(gl, res, resID);
-        if(texID==0) return;
+        TextureSheet charSheet = TextureInitializer.getCharactersSheet();
+        if(charSheet == null) return;
+
+        if(isFontInitialized) return;
+
+        charSheet.bindGLTexture(gl);
 
         font = new FontStructure();
 
-        font.fontSheetTexture = texID;
-        font.chrmapXnumber= nx;
-        font.chrmapYnumber = ny;
+        font.fontSheetTexture = charSheet.GLtexID;
+        font.chrmapXnumber= charSheet.frameNumberX;
+        font.chrmapYnumber = charSheet.frameNumberY;
         font.asciiOffset = offset;
 
         font.chrSizeX = 1.0f  / font.chrmapXnumber;
         font.chrSizeY = 1.0f  / font.chrmapYnumber;
+
+        isFontInitialized= true;
+
     }
 
     public static void drawText(GL10 gl, RectF position, String text){

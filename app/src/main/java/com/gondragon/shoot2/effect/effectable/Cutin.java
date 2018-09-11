@@ -40,7 +40,7 @@ public class Cutin extends BasicEffect {
     }
 
     @Override
-    protected void _draw(GL10 gl) {
+    public void effectRender(GL10 gl) {
 
         if(turningColor!=null)
             UtilGL.changeTexColor(gl, turningColor.matrix);
@@ -62,7 +62,7 @@ public class Cutin extends BasicEffect {
     }
 
     @Override
-    protected void _periodicalProcess() {
+    protected void effectProcess() {
 
         float rate = (float)(processFrameCount + 1) / processFrame;
 

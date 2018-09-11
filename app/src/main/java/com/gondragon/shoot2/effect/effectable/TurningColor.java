@@ -37,12 +37,12 @@ public class TurningColor extends BasicEffect {
     }
 
     @Override
-    protected void _draw(GL10 gl) {
+    public void effectRender(GL10 gl) {
 
     }
 
     @Override
-    protected void _periodicalProcess() {
+    public void effectProcess() {
 
         if(matrix == null) return;
 

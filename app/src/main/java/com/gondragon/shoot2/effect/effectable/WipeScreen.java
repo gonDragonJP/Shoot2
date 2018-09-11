@@ -3,6 +3,7 @@ package com.gondragon.shoot2.effect.effectable;
 import android.graphics.Color;
 import android.graphics.PointF;
 import android.graphics.RectF;
+import android.util.Log;
 
 import com.gondragon.shoot2.UtilGL;
 import com.gondragon.shoot2.effect.ScreenEffect;
@@ -41,7 +42,7 @@ public class WipeScreen extends BasicEffect {
     }
 
     @Override
-    protected void _draw(GL10 gl) {
+    public void effectRender(GL10 gl) {
 
         gl.glEnable(GL10.GL_STENCIL_TEST);
         gl.glClear(GL10.GL_STENCIL_BUFFER_BIT);
@@ -65,7 +66,6 @@ public class WipeScreen extends BasicEffect {
         gl.glStencilFunc(GL10.GL_EQUAL, 0x01, 0x01);
         gl.glStencilOp(GL10.GL_KEEP, GL10.GL_KEEP, GL10.GL_KEEP);
         gl.glColorMask(true, true, true, true);
-
     }
 
     private void cutHole(GL10 gl){
@@ -119,7 +119,7 @@ public class WipeScreen extends BasicEffect {
     }
 
     @Override
-    protected void _periodicalProcess() {
+    public void effectProcess() {
 
         float rate = (isWipeIn)?
                 (float)(processFrameCount + 1) / processFrame
@@ -133,6 +133,6 @@ public class WipeScreen extends BasicEffect {
     @Override
     protected void finish(GL10 gl) {
 
-        //gl.glDisable(GL10.GL_STENCIL_TEST);
+        gl.glDisable(GL10.GL_STENCIL_TEST);
     }
 }
