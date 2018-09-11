@@ -37,12 +37,13 @@ public class TurningColor extends BasicEffect {
     }
 
     @Override
-    protected void _draw(GL10 gl) {
+    public void render(GL10 gl) {
 
+        super.render(gl);
     }
 
     @Override
-    protected void _periodicalProcess() {
+    public void effectProcess() {
 
         if(matrix == null) return;
 
@@ -52,7 +53,6 @@ public class TurningColor extends BasicEffect {
 
         for(int i=0; i<4; i++)
             matrix[i] = startColor[i] + (endColor[i]-startColor[i]) * rate;
-
     }
 
     @Override

@@ -3,55 +3,27 @@ package com.gondragon.shoot2.effect;
 import android.graphics.RectF;
 
 import com.gondragon.shoot2.Global;
+import com.gondragon.shoot2.MyRenderer;
+import com.gondragon.shoot2.effect.effectable.BasicEffect;
 import com.gondragon.shoot2.effect.effectable.Cutin;
 import com.gondragon.shoot2.effect.effectable.TurningColor;
+import com.gondragon.shoot2.effect.effectable.TypeOut;
+import com.gondragon.shoot2.effect.effectable.WipeScreen;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.microedition.khronos.opengles.GL10;
 
-public class ScreenEffect {/*
+public class ScreenEffect {
 
-    enum EffectableKind{ CUTIN, CHANGINGCOLOR, TYPEOUT, WIPESCREEN};
-    public enum WipeKind{ HOLEWIPE, REEDSCREENWIPE};
-
-
+    private static MyRenderer renderer;
     static final int frameIntervalTime = Global.frameIntervalTime;
 
-    static WorkThread workThread = new WorkThread();
-    private static RectF screenRect = new RectF();
+    public static void setRenderer(MyRenderer arg){
 
-    public static void setScreenRect(RectF rect){
-
-        screenRect.set(rect);
-    }
-
-    public static void preDraw(GL10 gl){
-
-        for(int i=0; i<workThread.Effectable List0.size(); i++){
-
-            Effectable Effectable = workThread.Effectable List0.get(i);
-
-            Effectable.draw(gl);
-        }
-    }
-
-    public static void draw(GL10 gl){
-
-        for(int i=0; i<workThread.Effectable List1.size(); i++){
-
-            Effectable Effectable = workThread.Effectable List1.get(i);
-
-            Effectable.draw(gl);
-        }
-
-        for(int i=0; i<workThread.Effectable List2.size(); i++){
-
-            Effectable Effectable = workThread.Effectable List2.get(i);
-
-            Effectable.draw(gl);
-        }
+        renderer = arg;
     }
 
     public static void cutinText(
@@ -67,46 +39,94 @@ public class ScreenEffect {/*
                 startAngle, endAngle, turningColor
         );
 
-        workThread.addEffectable(cutin);
+        addPreDrawEffect(cutin);
     }
 
-    static public turningColor getturningColor(
+    static public TurningColor getTurningColor(
             int startColor, int endColor, int intervalSec, boolean isPendulum,
             int preWaitingSec, int processSec, int durationSec){
 
-        turningColor cColor =
-                new ScreenEffect().new turningColor
-                        (Effectable Kind.turningColor, preWaitingSec, processSec, durationSec);
+        TurningColor tColor = new TurningColor (preWaitingSec, processSec, durationSec);
 
-        cColor.setParam(startColor, endColor, intervalSec, isPendulum);
+        tColor.setParam(startColor, endColor, intervalSec, isPendulum);
 
-        workThread.addEffectable(cColor);
+        addPreDrawEffect(tColor);
 
-        return cColor;
+        return tColor;
     }
+
     public static void typeOutText(
             RectF drawRect, String string, int typeIntervalSec,
             int preWaitingSec, int processSec, int durationSec,
-            turningColor turningColor){
+            TurningColor turningColor){
 
-        TypeOut typeOut = new ScreenEffect().new TypeOut
-                (Effectable Kind.TYPEOUT, preWaitingSec, processSec, durationSec);
+        TypeOut typeOut = new TypeOut(preWaitingSec, processSec, durationSec);
 
         typeOut.setParam(drawRect, string, typeIntervalSec, turningColor);
 
-        workThread.addEffectable(typeOut);
+        addPreDrawEffect(typeOut);
     }
+
     public static void wipeScreen(
-            RectF wipeRect, WipeKind wipeKind, int wipeAngle,  boolean isWipeIn,
+            RectF wipeRect, WipeScreen.WipeKind wipeKind, int wipeAngle, boolean isWipeIn,
             int preWaitingSec, int processSec, int durationSec){
 
-        WipeScreen wScreen = new ScreenEffect().new WipeScreen
-                (Effectable Kind.WIPESCREEN, preWaitingSec, processSec, durationSec);
+        WipeScreen wScreen = new WipeScreen(preWaitingSec, processSec, durationSec);
 
-        wScreen.setParam(wipeRect, wipeKind, wipeAngle, isWipeIn);
+        wScreen.setParam(wipeRect, wipeKind , wipeAngle, isWipeIn);
 
-        workThread.addEffectable PreDraw(wScreen);
-        //workThread.addEffectable
-        //(wScreen);
-    }*/
+        addPreDrawEffect(wScreen);
+    }
+
+    private static ArrayList<MyRenderer.Renderable> preDrawEffectList = new ArrayList<>();
+    private static ArrayList<MyRenderer.Renderable> afterDrawEffectList = new ArrayList<>();
+
+    public static void addPreDrawEffect(BasicEffect effect) {
+
+        effect.renderingTiming = MyRenderer.Renderable.Timing.PREDRAW;
+        preDrawEffectList.add(effect);
+    }
+
+    public static void afterPreDrawEffect(BasicEffect effect) {
+
+        effect.renderingTiming = MyRenderer.Renderable.Timing.AFTERDRAW;
+        afterDrawEffectList.add(effect);
+    }
+
+    public static void renderAllLists(){
+
+        renderer.deleteRenderingTask(MyRenderer.Renderable.Timing.PREDRAW);
+        renderer.deleteRenderingTask(MyRenderer.Renderable.Timing.AFTERDRAW);
+
+        for(MyRenderer.Renderable e: preDrawEffectList){
+
+            renderer.addRenderingTask(e);
+        }
+
+        for(MyRenderer.Renderable e: afterDrawEffectList){
+
+            renderer.addRenderingTask(e);
+        }
+    }
+
+    public static void periodicalProcess(){
+
+        Iterator<MyRenderer.Renderable> it;
+
+        it = preDrawEffectList.iterator();
+        while(it.hasNext()){
+
+            BasicEffect effect = (BasicEffect) it.next();
+            effect.periodicalProcess();
+            if(!effect.isActive) it.remove();
+        }
+
+        it = afterDrawEffectList.iterator();
+        while(it.hasNext()){
+
+            BasicEffect effect = (BasicEffect) it.next();
+            effect.periodicalProcess();
+            if(!effect.isActive) it.remove();
+        }
+    }
 }

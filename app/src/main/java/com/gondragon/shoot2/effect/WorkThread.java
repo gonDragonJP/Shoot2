@@ -1,27 +1,32 @@
 package com.gondragon.shoot2.effect;
 
-import android.util.Log;
-
 import com.gondragon.shoot2.Global;
+import com.gondragon.shoot2.MyRenderer;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.logging.Logger;
+import javax.microedition.khronos.opengles.GL10;
 
 public class WorkThread extends Thread {
 
-    private ScreenEffectable drawEffect;
+    private MyRenderer renderer;
+    private ScreenEffectable effectTask;
+    private MyRenderer.Renderable.Timing renderingTiming;
+
+    public WorkThread(MyRenderer renderer){
+
+        this.renderer = renderer;
+    }
 
     public void startEffectablePreDraw(ScreenEffectable effectable){
 
-        drawEffect = effectable;
+        effectTask = effectable;
+        renderingTiming = MyRenderer.Renderable.Timing.PREDRAW;
         this.start();
     }
 
     public void startEffectableAfterDraw(ScreenEffectable effectable){
 
-        drawEffect = effectable;
+        effectTask = effectable;
+        renderingTiming = MyRenderer.Renderable.Timing.AFTERDRAW;
         this.start();
     }
 
@@ -38,10 +43,27 @@ public class WorkThread extends Thread {
 
             if(countTime > Global.frameIntervalTime){
 
-                drawEffect.periodicalProcess();
+                effectTask.periodicalProcess();
                 lastUpdateTime = System.currentTimeMillis();
 
-                if (drawEffect.isFinished()) isActive = false;
+                MyRenderer.Renderable renderTask = new MyRenderer.Renderable() {
+
+                    @Override
+                    public Timing getTiming() {
+
+                        return renderingTiming;
+                    }
+
+                    @Override
+                    public void render(GL10 gl) {
+
+                        effectTask.draw(gl);
+                    }
+                };
+                renderer.deleteRenderingTask(renderingTiming);
+                renderer.addRenderingTask(renderTask);
+
+                if (effectTask.isFinished()) isActive = false;
             }
         }
     }
