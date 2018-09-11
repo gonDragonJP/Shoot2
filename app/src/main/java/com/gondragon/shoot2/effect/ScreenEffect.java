@@ -1,6 +1,7 @@
 package com.gondragon.shoot2.effect;
 
 import android.graphics.RectF;
+import android.util.Log;
 
 import com.gondragon.shoot2.Global;
 import com.gondragon.shoot2.MyRenderer;
@@ -13,6 +14,7 @@ import com.gondragon.shoot2.effect.effectable.WipeScreen;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Logger;
 
 import javax.microedition.khronos.opengles.GL10;
 

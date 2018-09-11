@@ -44,9 +44,23 @@ public class TextureInitializer {
         for(EnumTexture e : EnumTexture.values()) {
 
             sheets[e.textureId] = e.getSheet();
-            AccessOfTextureData.setAssetImage(sheets[e.textureId]);
+            AccessOfTextureData.setAssetImage(sheets[e.textureId], false);
         }
         return sheets;
+    }
+
+    public static TextureSheet getCharactersSheet(){
+
+        TextureSheet sheet = new TextureSheet();
+
+        sheet.textureID = 0;
+        sheet.frameNumberX = 16;
+        sheet.frameNumberY = 16;
+        sheet.pictureName = "chr_sheet.png";
+
+        AccessOfTextureData.setAssetImage(sheet, false);
+
+        return sheet;
     }
 
     public static TextureSheet[] getStageEnemyTexSheets(int stageNumber){

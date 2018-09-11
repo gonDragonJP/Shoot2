@@ -45,9 +45,7 @@ public class TypeOut extends BasicEffect {
     }
 
     @Override
-    public void render(GL10 gl) {
-
-        super.render(gl);
+    public void effectRender(GL10 gl) {
 
         if(turningColor !=null)
             UtilGL.changeTexColor(gl, turningColor.matrix);

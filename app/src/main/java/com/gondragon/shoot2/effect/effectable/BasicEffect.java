@@ -50,6 +50,7 @@ public abstract class BasicEffect implements MyRenderer.Renderable {
             return;
         }
 
+        effectRender(gl);
         //ここに固有の描画処理
     }
 
@@ -77,6 +78,7 @@ public abstract class BasicEffect implements MyRenderer.Renderable {
         }
     }
 
+    protected abstract void effectRender(GL10 gl);
     protected abstract void effectProcess();
     protected abstract void finish(GL10 gl);
 }

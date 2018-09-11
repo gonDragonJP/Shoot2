@@ -16,13 +16,35 @@ import javax.microedition.khronos.opengles.GL10;
 
 public class StageData {
 
+    private enum DataByStage {
+
+        Stage_01(1,1,8000,false),
+        Stage_02(2,3,8000,true),
+        Stage_03(3,1,8000,false),
+        Stage_04(4,1,8000,false),
+        Stage_05(5,1,8000,false);
+
+        public int stageNo, bgPicNumber, stageLength;
+        public boolean isStageShadowOn;
+
+        DataByStage(int stageNo, int bgPicNumber, int stageLength, boolean isStageShadowOn){
+            this.stageNo = stageNo;
+            this.bgPicNumber = bgPicNumber;
+            this.stageLength = stageLength;
+            this.isStageShadowOn = isStageShadowOn;
+        };
+
+        public static DataByStage getData(int stage){
+
+            for(DataByStage e: DataByStage.values()){
+
+                if(e.stageNo == stage) return e;
+            }
+            return null;
+        }
+    }
+
     private static Context context;
-
-    private static final int stageLength[]
-            = {8000,8000,8000,8000,8000};
-
-    private static final boolean isStageShadowOn[]
-            = {false,true,false,false,false};
 
     public static int stage;
 
@@ -36,6 +58,7 @@ public class StageData {
 
     public static TextureSheet[] enemyTexSheets;
     public static TextureSheet[] enumTexSheets;
+    public static TextureSheet[] backgroundSheets;
 
     public static boolean isGLTexBinded;
 
@@ -45,14 +68,18 @@ public class StageData {
 
     public static void setStage(int stageNumber){
 
-        stage = stageNumber;
-        isShadowOn = isStageShadowOn[stageNumber -1];
-        stageEndPoint = stageLength [stageNumber -1];
+        DataByStage data = DataByStage.getData(stageNumber);
+        isShadowOn = data.isStageShadowOn;
+        stageEndPoint = data.stageLength;
+
+        Background.initialize(data.bgPicNumber);
 
         enemyTexSheets
                 = TextureInitializer.getStageEnemyTexSheets(stageNumber);
         enumTexSheets
                 = TextureInitializer.getEnumTexSheets();
+        backgroundSheets
+                = Background.getBackgroundSheets(stageNumber);
 
         refreshEventListFromDB();
         refreshEnemyListFromDB();
@@ -72,8 +99,6 @@ public class StageData {
 
             if(sheet!=null) {
                 sheet.bindGLTexture(gl);
-                //Log.e("**********", sheet.pictureName);
-                //Log.e("---------", String.valueOf(sheet.GLtexID));
             }
         }
 
@@ -81,8 +106,15 @@ public class StageData {
 
             if(sheet!=null) {
                 sheet.bindGLTexture(gl);
+            }
+        }
+
+        for(TextureSheet sheet : backgroundSheets){
+
+            if(sheet!=null) {
+                sheet.bindGLTexture(gl);
                 //Log.e("**********", sheet.pictureName);
-                //Log.e("---------", String.valueOf(sheet.GLtexID));
+                // Log.e("---------", String.valueOf(sheet.GLtexID));
             }
         }
 
@@ -103,7 +135,7 @@ public class StageData {
 
     public static boolean isLastStage(){
 
-        return (stage == stageLength.length);
+        return (stage == DataByStage.values().length);
     }
 
     public static int getIndexOfEnemyList(int objectID){

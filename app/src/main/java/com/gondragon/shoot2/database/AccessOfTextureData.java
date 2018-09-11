@@ -29,7 +29,7 @@ public class AccessOfTextureData {
     private static Context context;
     private static String databaseName = Global.textureDatabaseName;
     private static int databaseVersion = Global.textureDB_Version;
-    private static final String imageAssetsDir = "texImage/";
+    private static String imageAssetsDir;
 
     public static void setContext(Context arg){
 
@@ -74,6 +74,8 @@ public class AccessOfTextureData {
 
     private static void setImage(TextureSheet textureSheet){
 
+        imageAssetsDir = "texImage/";
+
         textureSheet.texImage = getTexImage(textureSheet.pictureName);
 
         textureSheet.frameNumberX = textureSheet.texImage.getWidth() / textureSheet.gridSizeX;
@@ -99,9 +101,11 @@ public class AccessOfTextureData {
         return texImage;
     }
 
-    public static void setAssetImage(TextureSheet sheet){
+    public static void setAssetImage(TextureSheet sheet, boolean isBackgroungSheet){
         //イニシャライザーで列挙定義されたシートに画像を読み込む為のメソッドです
         //ToDo)いずれデータベース化してこのメソッドは破棄する
+
+        imageAssetsDir = isBackgroungSheet ? "bgImage/" : "texImage/";
 
         sheet.texImage = getTexImage(sheet.pictureName);
 

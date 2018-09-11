@@ -34,13 +34,19 @@ public class StageEffect {
         RectF wipeRect = new RectF(sxc - elh, syc - elh, sxc + elh, syc + elh);
         ScreenEffect.wipeScreen(wipeRect,
                 WipeScreen.WipeKind.REEDSCREENWIPE, 45, true,
-                0, 3000, 0);
-/*
+                0, 2000, 0);
+
         ScreenEffect.cutinText(
                 new RectF(0,0,0,0),
-                new RectF(sxc - 100, syc + 25, sxc + 100, syc - 25),
+                new RectF(sxc - 100, syc - 25, sxc + 100, syc + 25),
                 "Stage 1",
-                2000, 1000, 2000, 0, 720, null);*/
+                1000, 1000, 500, 0, 720, null);
+
+        ScreenEffect.cutinText(
+                new RectF(sxc - 100, syc - 25, sxc + 100, syc + 25),
+                new RectF(sx,0,sx,0),
+                "Stage 1",
+                2500, 1000, 0, 720, 0, null);
     }
 /*
     public void briefing(int eventObjectID){
