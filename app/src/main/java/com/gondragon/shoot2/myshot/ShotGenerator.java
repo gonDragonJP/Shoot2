@@ -152,12 +152,12 @@ public class ShotGenerator {
 
         for(MyShot e: shotList){
 
-            if(!e.isInScreen) e.isNowUsed = false;
+            if(!e.isInScreen) e.setNotUsed();
         }
 
         for(MyLaser e: laserList){
 
-            if(!e.isInScreen) e.isNowUsed = false;
+            if(!e.isInScreen) e.setNotUsed();
         }
     }
 

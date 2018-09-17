@@ -42,6 +42,7 @@ public class Enemy extends ProtoEnemy{
 
     public double drawAngle, oldDrawAngle;
 
+    private CollisionChecker collisionChecker;
 
     public Enemy(
             CallbackOfMyPlane cbOfMyPlanePos,
@@ -66,7 +67,11 @@ public class Enemy extends ProtoEnemy{
 
         isHoming = false;
         animeKind = AnimationSet.AnimeKind.NORMAL;
+    }
 
+    public void destroy(){
+
+        if(collisionChecker !=null) collisionChecker.setActive(false);
     }
 
     public void setData(
@@ -88,6 +93,12 @@ public class Enemy extends ProtoEnemy{
             CollisionRegion col = new CollisionRegion(e);
             this.collisionRotated.add(col);
         }
+
+        if(myData.collision.size()!=0) {
+            collisionChecker = new CollisionChecker(this);
+            collisionChecker.setActive(true);
+        }
+
         animeSet = myData.animationSet;
         drawAngle = AnimationManager.getEnemyRotateAngle(animeSet.normalAnime, this, true);
         //tendAheadの為にnodesetの後でないとマズイ(子がすぐに参照する可能性あり）

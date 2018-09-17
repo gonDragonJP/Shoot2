@@ -19,11 +19,13 @@ public class MyShot {
     public int shotPower, shotRadius;
 
     public MyShotDrawer drawer;
+    private CollisionChecker collisonChecker;
 
     public MyShot(){
 
         isNowUsed = false; //作成直後は使用されていない
         drawer = new MyShotDrawer(this);
+        collisonChecker = new CollisionChecker(this);
     }
 
     public void initialize(){//弾オブジェクトとして使用開始される時に呼び出されます
@@ -31,6 +33,13 @@ public class MyShot {
         isNowUsed = true;
         isInScreen = true;
         isInExplosion = false;
+        collisonChecker.setActive(true);
+    }
+
+    public void setNotUsed(){
+
+        isNowUsed = false;
+        collisonChecker.setActive(false);
     }
 
     public void setShape(MyShotDrawer.Shape shape){
