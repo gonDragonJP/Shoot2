@@ -2,6 +2,7 @@ package com.gondragon.shoot2.myplane;
 
 import android.util.Log;
 
+import com.gondragon.shoot2.CollisionDetection;
 import com.gondragon.shoot2.Global;
 import com.gondragon.shoot2.GraphicPad;
 import com.gondragon.shoot2.myshot.ShotGenerator;
@@ -53,8 +54,6 @@ public class MyPlane implements CallbackOfMyPlane{
     public static final float maxHP = 500;
     public int hitPoints = (int)maxHP;
 
-    final int collisionRadius = 16;
-
     public final int maxSpeed = 6;
 
     public int x, y;
@@ -63,6 +62,7 @@ public class MyPlane implements CallbackOfMyPlane{
     public ShotGenerator shotGenerator;
     private CruisingProgram cruisingProgram;
     public MyPlaneDrawer drawer;
+    private CollisionChecker collisionChecker;
 
     public MyPlane(){
 
@@ -70,6 +70,7 @@ public class MyPlane implements CallbackOfMyPlane{
         velocity = new Double2Vector();
         shotGenerator = new ShotGenerator(this);
         drawer = new MyPlaneDrawer(this);
+        collisionChecker = new CollisionChecker(this);
 
         initialize();
     }

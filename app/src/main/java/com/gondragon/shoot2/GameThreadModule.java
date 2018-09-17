@@ -172,6 +172,7 @@ public class GameThreadModule {
                 stageManager.periodicalProcess(scrollPoint, isTestMode);
                 myPlane.periodicalProcess(renderer.graphicPad);
                 ScreenEffect.periodicalProcess();
+                CollisionDetection.doAllDetection();
 
                 renderer.setScreenSlidingX(myPlane.x);
 

@@ -94,7 +94,11 @@ public class EnemiesManager {
         for(int i=j; i>=0; i--){
 
             Enemy enemy = enemyList.get(i);
-            if(enemy.isInScreen == false) enemyList.remove(i);
+            if(enemy.isInScreen == false){
+
+                enemy.destroy();
+                enemyList.remove(i);
+            }
         }
     }
 
