@@ -42,8 +42,6 @@ public class Enemy extends ProtoEnemy{
 
     public double drawAngle;
 
-    private CollisionChecker collisionChecker;
-
     public Enemy(
             CallbackOfMyPlane cbOfMyPlanePos,
             CallbackOfGeneratingChild cbOfGeneratingChild
@@ -67,11 +65,6 @@ public class Enemy extends ProtoEnemy{
 
         isHoming = false;
         animeKind = AnimationSet.AnimeKind.NORMAL;
-    }
-
-    public void destroy(){
-
-        if(collisionChecker !=null) collisionChecker.setActive(false);
     }
 
     public void setData(
@@ -156,18 +149,14 @@ public class Enemy extends ProtoEnemy{
         return result;
     }
 
-    public Double2Vector getDrawSizeOfNormalAnime(){
+    @Override
+    protected void setExplosion(){
 
-        return animeSet.normalAnime.drawSize;
-    }
+        super.setExplosion();
 
-    public void setExplosion(){
-
-        isInExplosion = true;
         animeKind = AnimationSet.AnimeKind.EXPLOSION;
         totalAnimeFrame = 0;
 
-        hasShadow = false;
         //SoundEffect.play(SoundKind.EXPLOSION1);
     }
 
@@ -250,18 +239,19 @@ public class Enemy extends ProtoEnemy{
             if(myData.generator.size() > genIndex) checkGeneratingCount();
 
             if(!checkNodeDuration()){
-                isInScreen=false;
+
+                setOutOfScreen();
                 return;
             }
 
             refreshCollisionRegion();
 
-            variableProcess();
+            movingProcess();
         }
         animate();
     }
 
-    protected void variableProcess(){
+    protected void movingProcess(){
 
         flyAhead();
         checkScreenLimit();
@@ -361,7 +351,7 @@ public class Enemy extends ProtoEnemy{
 
         int eva = AnimationManager.checkAnimeLimit(anime, ++totalAnimeFrame);
 
-        if (eva == -1) isInScreen = false;
+        if (eva == -1) setOutOfScreen();
         else
             animeFrame = eva;
     }
@@ -373,6 +363,11 @@ public class Enemy extends ProtoEnemy{
     }
 
     //DerrivativeTypeで使用のメソッド群　↓
+
+    public Double2Vector getDrawSizeOfNormalAnime(){
+
+        return animeSet.normalAnime.drawSize;
+    }
 
     public void addNodeDuration(int index, int addDuration){
 

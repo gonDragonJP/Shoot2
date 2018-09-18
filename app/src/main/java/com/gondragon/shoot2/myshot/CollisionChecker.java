@@ -44,6 +44,7 @@ public class CollisionChecker implements CollisionDetection.Collisionable {
     @Override
     public void doCollisionProcess(CollisionDetection.Collisionable object){
 
+        myShot.setExplosion();
     };
 
     @Override
