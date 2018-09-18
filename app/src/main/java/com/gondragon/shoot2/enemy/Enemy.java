@@ -1,8 +1,8 @@
 package com.gondragon.shoot2.enemy;
 
 import com.gondragon.shoot2.Global;
+import com.gondragon.shoot2.collision.CollisionRegion;
 import com.gondragon.shoot2.myplane.CallbackOfMyPlane;
-import com.gondragon.shoot2.myplane.MyPlane;
 import com.gondragon.shoot2.animation.AnimationData;
 import com.gondragon.shoot2.animation.AnimationManager;
 import com.gondragon.shoot2.animation.AnimationSet;
@@ -40,7 +40,7 @@ public class Enemy extends ProtoEnemy{
     public AnimationSet animeSet;
     public AnimationSet.AnimeKind animeKind;
 
-    public double drawAngle, oldDrawAngle;
+    public double drawAngle;
 
     private CollisionChecker collisionChecker;
 
@@ -254,7 +254,7 @@ public class Enemy extends ProtoEnemy{
                 return;
             }
 
-            if(myData.collision.size()>0 && oldDrawAngle!=drawAngle) rotateCollisionRegion();
+            refreshCollisionRegion();
 
             variableProcess();
         }
@@ -331,22 +331,25 @@ public class Enemy extends ProtoEnemy{
         return cbOfGeneratingChild.getGeneratingChild(this);
     }
 
-    protected void rotateCollisionRegion(){
+    protected void refreshCollisionRegion(){
 
         for(int i=0; i<myData.collision.size(); i++){
 
             CollisionRegion colSrc = myData.collision.get(i);
             CollisionRegion colDst = collisionRotated.get(i);
 
-            if(colSrc.centerX==0 && colSrc.centerY==0) continue;
+            colDst.centerX = x;
+            colDst.centerY = y;
 
-            double c = Math.cos(drawAngle * Global.radian);
-            double s = Math.sin(drawAngle * Global.radian);
+            if(colSrc.centerX !=0 || colSrc.centerY !=0) {
 
-            colDst.centerX = (int)(colSrc.centerX * c - colSrc.centerY * s);
-            colDst.centerY = (int)(colSrc.centerX * s + colSrc.centerY * c);
+                double c = Math.cos(drawAngle * Global.radian);
+                double s = Math.sin(drawAngle * Global.radian);
+
+                colDst.centerX += (int) (colSrc.centerX * c - colSrc.centerY * s);
+                colDst.centerY += (int) (colSrc.centerX * s + colSrc.centerY * c);
+            }
         }
-        oldDrawAngle = drawAngle;
     }
 
     protected void animate(){

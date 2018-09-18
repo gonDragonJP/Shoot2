@@ -1,4 +1,4 @@
-package com.gondragon.shoot2.enemy;
+package com.gondragon.shoot2.collision;
 
 public class CollisionRegion {
 
@@ -54,5 +54,14 @@ public class CollisionRegion {
         centerY = src.centerY;
         size = src.size;
         collisionShape = src.collisionShape;
+    }
+
+    public boolean checkCollision(CollisionRegion object){
+
+        int dx = (centerX - object.centerX);
+        int dy = (centerY - object.centerY);
+        int r = (size + object.size);
+
+        return (dx * dx + dy * dy) < r * r;
     }
 }

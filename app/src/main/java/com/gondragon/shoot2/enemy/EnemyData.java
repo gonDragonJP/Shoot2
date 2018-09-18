@@ -2,6 +2,7 @@ package com.gondragon.shoot2.enemy;
 
 import com.gondragon.shoot2.animation.AnimationData;
 import com.gondragon.shoot2.animation.AnimationSet;
+import com.gondragon.shoot2.collision.CollisionRegion;
 import com.gondragon.shoot2.vector.Int2Vector;
 
 import java.util.ArrayList;

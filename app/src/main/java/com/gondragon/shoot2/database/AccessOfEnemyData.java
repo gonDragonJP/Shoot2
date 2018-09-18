@@ -6,7 +6,7 @@ import android.database.Cursor;
 import com.gondragon.shoot2.Global;
 import com.gondragon.shoot2.animation.AnimationData;
 import com.gondragon.shoot2.animation.AnimationSet;
-import com.gondragon.shoot2.enemy.CollisionRegion;
+import com.gondragon.shoot2.collision.CollisionRegion;
 import com.gondragon.shoot2.enemy.EnemyData;
 import com.gondragon.shoot2.enemy.GeneratingChild;
 import com.gondragon.shoot2.enemy.MovingNode;

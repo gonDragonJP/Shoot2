@@ -1,8 +1,5 @@
 package com.gondragon.shoot2.myplane;
 
-import android.util.Log;
-
-import com.gondragon.shoot2.CollisionDetection;
 import com.gondragon.shoot2.Global;
 import com.gondragon.shoot2.GraphicPad;
 import com.gondragon.shoot2.myshot.ShotGenerator;
