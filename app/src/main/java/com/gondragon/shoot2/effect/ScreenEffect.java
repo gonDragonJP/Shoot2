@@ -41,7 +41,7 @@ public class ScreenEffect {
                 startAngle, endAngle, turningColor
         );
 
-        addPreDrawEffect(cutin);
+        addAfterDrawEffect(cutin);
     }
 
     static public TurningColor getTurningColor(
@@ -89,7 +89,7 @@ public class ScreenEffect {
         preDrawEffectList.add(effect);
     }
 
-    public static void afterPreDrawEffect(BasicEffect effect) {
+    public static void addAfterDrawEffect(BasicEffect effect) {
 
         effect.renderingTiming = MyRenderer.Renderable.Timing.AFTERDRAW;
         afterDrawEffectList.add(effect);

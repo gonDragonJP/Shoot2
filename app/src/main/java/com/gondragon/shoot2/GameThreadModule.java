@@ -2,6 +2,7 @@ package com.gondragon.shoot2;
 
 import android.content.Context;
 
+import com.gondragon.shoot2.collision.CollisionDetection;
 import com.gondragon.shoot2.database.AccessOfEnemyData;
 import com.gondragon.shoot2.database.AccessOfEventData;
 import com.gondragon.shoot2.database.AccessOfTextureData;

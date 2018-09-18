@@ -5,6 +5,7 @@ import android.graphics.PointF;
 
 import com.gondragon.shoot2.UtilGL;
 import com.gondragon.shoot2.animation.AnimationData;
+import com.gondragon.shoot2.collision.CollisionRegion;
 import com.gondragon.shoot2.stage.StageData;
 import com.gondragon.shoot2.texture.TextureSheet;
 import com.gondragon.shoot2.vector.Double2Vector;
@@ -76,14 +77,10 @@ public class EnemyDrawer {
 
         for(CollisionRegion e: list){
 
-            int colX = enemy.x + e.centerX;
-            int colY = enemy.y + e.centerY;
-            int colRadius = e.size;
-
-            center.set(colX, colY);
+            center.set(e.centerX, e.centerY);
 
             UtilGL.drawStrokeCircle
-                    (gl, center, colRadius, 20);
+                    (gl, center, e.size, 20);
         }
     }
 

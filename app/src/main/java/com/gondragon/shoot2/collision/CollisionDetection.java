@@ -1,4 +1,4 @@
-package com.gondragon.shoot2;
+package com.gondragon.shoot2.collision;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -16,9 +16,9 @@ public class CollisionDetection {
 
         boolean checkCollision(Collisionable object);
         boolean checkCollisionableYet();
-
         void doCollisionProcess(Collisionable object);
         CollisionableObject getObject();
+        CollisionRegion getCollisionRegion();
     }
 
     private static ArrayList<Collisionable> enemyList = new ArrayList<>();
@@ -39,7 +39,7 @@ public class CollisionDetection {
 
     public static void doAllDetection(){
 
-        Logger.getLogger("enemyCollList:").warning(String.valueOf(enemyList.size()));
+        //Logger.getLogger("enemyCollList:").warning(String.valueOf(enemyList.size()));
 
         shotVsEnemy();
         planeVsEnemy();
@@ -112,7 +112,8 @@ public class CollisionDetection {
                 for(int k=0; k<enemy.colNumber; k++){
 
                     CollisionRegion col = enemy.collisionRotated.get(k);
-                    int x = enemy.x + col.centerX;
+                    int x = enemy.x + col.
+                    centerX;
                     int y = enemy.y + col.centerY;
                     int radius = col.size + shotRadius;
 

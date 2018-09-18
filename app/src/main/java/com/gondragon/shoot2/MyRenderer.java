@@ -3,6 +3,7 @@ package com.gondragon.shoot2;
 import android.graphics.Color;
 import android.graphics.PointF;
 import android.graphics.Rect;
+import android.graphics.RectF;
 import android.opengl.GLSurfaceView;
 import android.util.Log;
 

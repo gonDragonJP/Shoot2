@@ -1,7 +1,7 @@
 package com.gondragon.shoot2.myshot;
 
-import com.gondragon.shoot2.CollisionDetection;
-import com.gondragon.shoot2.myplane.MyPlane;
+import com.gondragon.shoot2.collision.CollisionDetection;
+import com.gondragon.shoot2.collision.CollisionRegion;
 
 public class CollisionChecker implements CollisionDetection.Collisionable {
 
@@ -9,12 +9,13 @@ public class CollisionChecker implements CollisionDetection.Collisionable {
 
     private MyShot myShot;
 
-    final int collisionRadius = 16;
+    private CollisionRegion collisionRegion;
 
     public CollisionChecker(MyShot myShot){
 
-        this.myShot = myShot;
         this.isActive = false;
+        this.myShot = myShot;
+        collisionRegion = new CollisionRegion();
     }
 
     public void setActive(boolean sw){
@@ -49,6 +50,16 @@ public class CollisionChecker implements CollisionDetection.Collisionable {
     public CollisionableObject getObject(){
 
         return CollisionableObject.Shot;
-    };
+    }
+
+    @Override
+    public CollisionRegion getCollisionRegion() {
+
+        collisionRegion.centerX = myShot.x;
+        collisionRegion.centerY = myShot.y;
+        collisionRegion.size =myShot.shotRadius;
+
+        return collisionRegion;
+    }
 }
 
