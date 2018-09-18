@@ -29,6 +29,7 @@ public class MyLaser extends MyShot {
 
         flyAhead();
         isInScreen = drawer.checkScreenLimit(x, y);
+        drawer.animate();
 
         if(previousLaser != null) previousLaser.x = x;
     }
