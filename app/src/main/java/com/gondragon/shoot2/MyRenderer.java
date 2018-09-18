@@ -73,6 +73,12 @@ public class MyRenderer implements GLSurfaceView.Renderer{
     @Override
     public void onSurfaceCreated(GL10 gl, EGLConfig config) {
 
+        UtilGL.setupFont(gl,0);
+
+        UtilGL.enableDefaultBlend(gl);
+        UtilGL.setTextureSTCoords(null);
+        UtilGL.changeTexColor(gl, null);
+        // gl.glDisable(GL10.GL_STENCIL_TEST);
     }
 
     @Override
@@ -82,13 +88,6 @@ public class MyRenderer implements GLSurfaceView.Renderer{
     }
 
     private void renderScreen(GL10 gl){
-
-        UtilGL.setupFont(gl,0);
-
-        UtilGL.enableDefaultBlend(gl);
-        UtilGL.setTextureSTCoords(null);
-        UtilGL.changeTexColor(gl, null);
-       // gl.glDisable(GL10.GL_STENCIL_TEST);
 
         gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
         gl.glClearColor(0.3f, 0.3f, 0.3f, 1.0f);

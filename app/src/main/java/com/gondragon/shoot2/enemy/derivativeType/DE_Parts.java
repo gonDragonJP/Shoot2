@@ -30,7 +30,7 @@ public class DE_Parts extends DerivativeEnemy{
 	}
 
 	@Override
-	protected void variableProcess(){
+	protected void movingProcess(){
 		
 		checkPartsParameter();
 	}

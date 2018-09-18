@@ -123,38 +123,21 @@ public class EnemyDrawer {
 
             drawCenter.set(0, 0);
             UtilGL.setTextureSTCoords(sheet.getSTRect(frameIndex));
-            UtilGL.drawTexture(gl, drawCenter, drawSize, sheet.GLtexID);
+
+            if(enemy.isNowDamaged) {
+
+                float[] cc = {(float)Math.random(),(float)Math.random(),(float)Math.random(),0};
+                UtilGL.changeTexColor(gl, cc);
+                UtilGL.drawTexture(gl, drawCenter, drawSize, sheet.GLtexID);
+                UtilGL.changeTexColor(gl, null);
+                enemy.isNowDamaged = false;
+            }
+            else
+                UtilGL.drawTexture(gl, drawCenter, drawSize, sheet.GLtexID);
+
         }
         gl.glPopMatrix();
 
-        //IntRect texRect = sheet.getTexRect(frameIndex); // テクスチャ座標取得
-
-       // setAffine(enemy.x, enemy.y, drawSizeX, drawSizeY, enemy.drawAngle);
-
-       /* gl.drawImage(
-                img, texRect.left, texRect.top, sheet.gridSizeX, sheet.gridSizeY,
-                0, 0, drawSizeX, drawSizeY
-        );
-
-        toIdentityAffine();*/
         return true;
-    }
-
-    //private static Affine affine = new Affine();
-
-    static void setAffine(int x, int y, double sizeX, double sizeY, double angle){
-
-        //affineのappendは数学の式のように左から行列を書き並べる感じで記述します
-     /*   affine.appendTranslation(x, y);
-        affine.appendRotation(angle);
-        affine.appendTranslation(-sizeX/2, -sizeY/2);
-
-        gl.setTransform(affine);*/
-    }
-
-    static void toIdentityAffine(){
-
-        //affine.setToIdentity();
-        //gl.setTransform(affine);
     }
 }

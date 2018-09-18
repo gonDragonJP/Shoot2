@@ -24,7 +24,7 @@ public class CollisionChecker implements CollisionDetection.Collisionable {
             CollisionDetection.setCollisonListener(this);
         }
         else{
-            this.isActive = false;
+            this.isActive = false; //CollisionDetectorから検出され衝突物リストから削除されます
         }
     }
 
@@ -52,7 +52,10 @@ public class CollisionChecker implements CollisionDetection.Collisionable {
     @Override
     public void doCollisionProcess(CollisionDetection.Collisionable object){
 
-        enemy.setExplosion();
+        if(enemy.hitPoints == 0) return; // 敵弾オブジェクトなどは最初からHP0です
+
+        enemy.getDamaged(10);
+
         //Logger.getLogger("enemyCollisonChecker").warning("Collision!");
     };
 
