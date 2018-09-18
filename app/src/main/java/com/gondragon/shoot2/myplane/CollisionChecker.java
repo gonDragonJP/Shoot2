@@ -49,4 +49,10 @@ public class CollisionChecker implements CollisionDetection.Collisionable {
 
         return collisionRegion;
     }
+
+    @Override
+    public int getAttackPower() {
+
+        return 100;
+    }
 }

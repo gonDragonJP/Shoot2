@@ -11,12 +11,14 @@ public class ProtoEnemy {
 
     protected IntRect screenLimit;
 
-    public boolean isInScreen, isInExplosion, hasShadow, isGrounder;
+    public boolean isInScreen, isNowDamaged, isInExplosion, hasShadow, isGrounder;
 
     public int x, y;
 
     protected int hitPoints, atackPoints;
     protected boolean neededCheckingWithBullet;
+
+    protected CollisionChecker collisionChecker;
 
     public ProtoEnemy(){
 
@@ -28,8 +30,38 @@ public class ProtoEnemy {
         screenLimit = new IntRect();
         setScreenLimit();
 
+        collisionChecker = new CollisionChecker((Enemy)this);
+
         isInScreen = true;
+        isNowDamaged = false;
         isInExplosion = false;
+    }
+
+    protected  void getDamaged(int damage){
+
+        hitPoints -= damage;
+
+        if(hitPoints <= 0) setExplosion();
+        else
+            isNowDamaged = true;
+    }
+
+    protected void setExplosion(){
+
+        isNowDamaged = false;
+        collisionChecker.setActive(false); // 爆発したら衝突判定は無効にする
+        isInExplosion = true;
+        hasShadow = false;
+    }
+
+    protected  void setOutOfScreen(){
+
+        isInScreen = false;
+    }
+
+    protected  void destroy(){ // setOutOfScreenされた後にmanagerの方から破壊されます
+
+        if(collisionChecker !=null) collisionChecker.setActive(false);
     }
 
     private void setScreenLimit(){

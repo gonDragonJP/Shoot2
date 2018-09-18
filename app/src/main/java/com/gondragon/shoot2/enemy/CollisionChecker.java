@@ -24,12 +24,14 @@ public class CollisionChecker implements CollisionDetection.Collisionable {
             CollisionDetection.setCollisonListener(this);
         }
         else{
-            this.isActive = false;
+            this.isActive = false; //CollisionDetectorから検出され衝突物リストから削除されます
         }
     }
 
     @Override
     public boolean checkCollision(CollisionDetection.Collisionable object){
+
+        if(enemy.hitPoints == 0) return false; // 敵弾オブジェクトなどは最初からHP0です
 
         CollisionRegion colObject = object.getCollisionRegion();
 
@@ -52,7 +54,8 @@ public class CollisionChecker implements CollisionDetection.Collisionable {
     @Override
     public void doCollisionProcess(CollisionDetection.Collisionable object){
 
-        enemy.setExplosion();
+        enemy.getDamaged(object.getAttackPower());
+
         //Logger.getLogger("enemyCollisonChecker").warning("Collision!");
     };
 
@@ -66,5 +69,11 @@ public class CollisionChecker implements CollisionDetection.Collisionable {
     public CollisionRegion getCollisionRegion() {
 
         return null;
+    }
+
+    @Override
+    public int getAttackPower() {
+
+        return enemy.atackPoints;
     }
 }

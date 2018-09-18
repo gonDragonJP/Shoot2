@@ -24,7 +24,7 @@ public class MyShotDrawer {
     private int totalAnimeFrame;
     private int animeFrame;
     private AnimationSet animeSet;
-    private AnimationSet.AnimeKind animeKind = AnimationSet.AnimeKind.NORMAL;
+    private AnimationSet.AnimeKind animeKind;
 
     private static Rect screenLimit = new Rect();
     private static boolean isInitialized = false;
@@ -66,6 +66,8 @@ public class MyShotDrawer {
                     (AnimationManager.AnimeObject.MYLASER);
                 break;
         }
+
+        animeKind = AnimationSet.AnimeKind.NORMAL;
     }
 
     public void setExplosion(){
@@ -122,11 +124,11 @@ public class MyShotDrawer {
     }
 
     public void onDraw(GL10 gl){
-
+/*
         if(!myShot.isInExplosion){
 
             setFrame(
-                    animeSet.getAnime(AnimationSet.AnimeKind.NORMAL,0),
+                    animeSet.getAnime(animeKind,0),
                     animeFrame
             );
         }
@@ -137,7 +139,12 @@ public class MyShotDrawer {
                     animeSet.getAnime(AnimationSet.AnimeKind.EXPLOSION,0),
                     animeFrame
             );
-        }
+        }*/
+
+        setFrame(
+                animeSet.getAnime(animeKind,0),
+                animeFrame
+        );
 
         drawCenter.set(myShot.x, myShot.y);
         drawAngle = 90+(float)(Math.atan2(myShot.velocity.y, myShot.velocity.x) / Global.radian);

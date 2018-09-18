@@ -44,6 +44,7 @@ public class CollisionChecker implements CollisionDetection.Collisionable {
     @Override
     public void doCollisionProcess(CollisionDetection.Collisionable object){
 
+        myShot.setExplosion();
     };
 
     @Override
@@ -60,6 +61,12 @@ public class CollisionChecker implements CollisionDetection.Collisionable {
         collisionRegion.size =myShot.shotRadius;
 
         return collisionRegion;
+    }
+
+    @Override
+    public int getAttackPower() {
+
+        return myShot.shotPower;
     }
 }
 

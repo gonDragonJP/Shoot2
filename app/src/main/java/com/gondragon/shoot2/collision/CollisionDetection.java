@@ -19,6 +19,7 @@ public class CollisionDetection {
         void doCollisionProcess(Collisionable object);
         CollisionableObject getObject();
         CollisionRegion getCollisionRegion();
+        int getAttackPower();
     }
 
     private static ArrayList<Collisionable> enemyList = new ArrayList<>();

@@ -57,12 +57,14 @@ public class MyShot {
 
     public void setExplosion(){
 
+        collisonChecker.setActive(false);
         isInExplosion = true;
+        drawer.setExplosion();
     }
 
     public void periodicalProcess(){
 
-        flyAhead();
+        if(!isInExplosion) flyAhead();
         isInScreen = drawer.checkScreenLimit(x, y) && drawer.animate();
     }
 
