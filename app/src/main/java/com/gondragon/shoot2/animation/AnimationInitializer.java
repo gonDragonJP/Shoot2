@@ -154,7 +154,7 @@ public class AnimationInitializer {
         myLaserSet.explosionAnime.textureID = 1;
         myLaserSet.explosionAnime.frameOffset = 40;
         myLaserSet.explosionAnime.frameNumber = 8;
-        myLaserSet.explosionAnime.frameInterval = 2;
+        myLaserSet.explosionAnime.frameInterval = 1;
         myLaserSet.explosionAnime.repeatAttribute = AnimationData.RepeatAttribute.LOOP;
     }
 

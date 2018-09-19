@@ -25,6 +25,15 @@ public class MyLaser extends MyShot {
     }
 
     @Override
+    public void setExplosion(){
+
+        collisonChecker.setActive(false);
+        isInExplosion = true;
+        drawer.setExplosion((int)(Math.random()*10));
+            //レーザーの爆発は適当に開始をずらさないと停止した敵に順次当たった時アニメが停止して見える
+    }
+
+    @Override
     public void periodicalProcess(){
 
         flyAhead();

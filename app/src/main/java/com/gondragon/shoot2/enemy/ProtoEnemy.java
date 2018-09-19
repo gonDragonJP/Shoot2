@@ -12,6 +12,7 @@ public class ProtoEnemy {
     protected IntRect screenLimit;
 
     public boolean isInScreen, isNowDamaged, isInExplosion, hasShadow, isGrounder;
+    public int damageRecoveryFrame;
 
     public int x, y;
 
@@ -42,8 +43,20 @@ public class ProtoEnemy {
         hitPoints -= damage;
 
         if(hitPoints <= 0) setExplosion();
-        else
+        else {
             isNowDamaged = true;
+            damageRecoveryFrame = 5;
+        }
+    }
+
+    protected boolean checkNowDamaged() {
+
+        if(isNowDamaged){
+            if (--damageRecoveryFrame > 0) return true;
+
+            isNowDamaged = false;
+        }
+        return false;
     }
 
     protected void setExplosion(){

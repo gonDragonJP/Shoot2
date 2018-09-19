@@ -70,10 +70,10 @@ public class MyShotDrawer {
         animeKind = AnimationSet.AnimeKind.NORMAL;
     }
 
-    public void setExplosion(){
+    public void setExplosion(int startAnimeFrame){
 
         animeKind = AnimationSet.AnimeKind.EXPLOSION;
-        totalAnimeFrame = 0;
+        totalAnimeFrame = startAnimeFrame;
     }
 
     public boolean animate(){
