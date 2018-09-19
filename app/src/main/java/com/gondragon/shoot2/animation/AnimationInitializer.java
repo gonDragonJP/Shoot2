@@ -149,12 +149,12 @@ public class AnimationInitializer {
         myLaserSet.normalAnime.frameInterval = 1;
         myLaserSet.normalAnime.repeatAttribute = AnimationData.RepeatAttribute.ONCE;
 
-        myLaserSet.explosionAnime.drawSize.set(64, 64);
+        myLaserSet.explosionAnime.drawSize.set(48, 48);
         //myLaserSet.explosionAnime.textureSheet = effectTex0;
         myLaserSet.explosionAnime.textureID = 1;
         myLaserSet.explosionAnime.frameOffset = 40;
         myLaserSet.explosionAnime.frameNumber = 8;
-        myLaserSet.explosionAnime.frameInterval = 2;
+        myLaserSet.explosionAnime.frameInterval = 1;
         myLaserSet.explosionAnime.repeatAttribute = AnimationData.RepeatAttribute.LOOP;
     }
 

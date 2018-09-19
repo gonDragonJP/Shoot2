@@ -171,10 +171,10 @@ public class UtilGL {
         gl.glBindTexture(GL10.GL_TEXTURE_2D, textures[0]);
         GLUtils.texImage2D(GL10.GL_TEXTURE_2D, 0, bitmap, 0);
         gl.glTexParameterf
-                (GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MIN_FILTER, GL10.GL_LINEAR);
+                (GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MIN_FILTER, GL10.GL_NEAREST);
         gl.glTexParameterf
-                (GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MAG_FILTER, GL10.GL_LINEAR);
-
+                (GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MAG_FILTER, GL10.GL_NEAREST);
+        //LINEARのフィルターだと辺縁にノイズが入ります(何故か不明）
 
         gl.glBindTexture(GL10.GL_TEXTURE_2D, 0);
 

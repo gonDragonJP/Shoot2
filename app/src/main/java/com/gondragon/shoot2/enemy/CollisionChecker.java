@@ -31,6 +31,8 @@ public class CollisionChecker implements CollisionDetection.Collisionable {
     @Override
     public boolean checkCollision(CollisionDetection.Collisionable object){
 
+        if(enemy.hitPoints == 0) return false; // 敵弾オブジェクトなどは最初からHP0です
+
         CollisionRegion colObject = object.getCollisionRegion();
 
         for(int i=0; i<enemy.collisionRotated.size(); i++){
@@ -52,9 +54,7 @@ public class CollisionChecker implements CollisionDetection.Collisionable {
     @Override
     public void doCollisionProcess(CollisionDetection.Collisionable object){
 
-        if(enemy.hitPoints == 0) return; // 敵弾オブジェクトなどは最初からHP0です
-
-        enemy.getDamaged(10);
+        enemy.getDamaged(object.getAttackPower());
 
         //Logger.getLogger("enemyCollisonChecker").warning("Collision!");
     };
@@ -69,5 +69,11 @@ public class CollisionChecker implements CollisionDetection.Collisionable {
     public CollisionRegion getCollisionRegion() {
 
         return null;
+    }
+
+    @Override
+    public int getAttackPower() {
+
+        return enemy.atackPoints;
     }
 }
