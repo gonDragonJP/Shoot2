@@ -1,11 +1,14 @@
 package com.gondragon.shoot2;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
 
+import com.gondragon.shoot2.UI.MenuDialog;
 import com.gondragon.shoot2.effect.ScreenEffect;
 import com.gondragon.shoot2.effect.StageEffect;
 
@@ -68,4 +71,38 @@ public class MainActivity extends Activity {
         gameThread.startThread();
     }
 
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+
+        if(keyCode != KeyEvent.KEYCODE_BACK){
+            return super.onKeyDown(keyCode, event);
+        }else{
+
+            gameThread.flipGameTaskActivity();
+
+            openDialog();
+        }
+        return false;
+    }
+
+    private void openDialog(){
+
+        MenuDialog dialog = new MenuDialog(this);
+        dialog.show();
+    }
+
+    @Override
+    protected void onResume() {
+
+
+
+        super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+
+        gameThread.setGameTaskActivity(false);
+
+        super.onPause();
+    }
 }

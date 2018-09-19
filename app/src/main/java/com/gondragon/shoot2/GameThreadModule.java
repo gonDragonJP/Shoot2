@@ -23,7 +23,7 @@ public class GameThreadModule {
 
     private Timer timer;
     private TimerTask timerTask;
-    private boolean isTestMode;
+    private boolean isTestMode, isGameTaskActive;
 
     private MyPlane myPlane;
     private StageManager stageManager;
@@ -121,6 +121,7 @@ public class GameThreadModule {
         makeTimerTask();
 
         isTestMode = false;
+        isGameTaskActive = true;
         timer.schedule(timerTask, 1000, Global.frameIntervalTime);
         // ステージのセット時にレンダリングフレームからテクスチャのバインドを行う為、
         // レンダリングスレッドを少し待つ必要のでdelayを置いています
@@ -128,6 +129,16 @@ public class GameThreadModule {
         //　 ステージセット時のバインド操作を実行前に消去してしまいます！
 
         StageEffect.startStageEffect();
+    }
+
+    public void flipGameTaskActivity(){
+
+        isGameTaskActive = isGameTaskActive==true ? false : true ;
+    }
+
+    public void setGameTaskActivity(boolean sw){
+
+        isGameTaskActive = sw;
     }
 
     synchronized public void pushStopButton(){
@@ -154,6 +165,8 @@ public class GameThreadModule {
 
             @Override
             synchronized public void run() {
+
+                if(!isGameTaskActive) return;
 
                 if(isTestMode){
 
