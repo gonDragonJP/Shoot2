@@ -14,7 +14,7 @@ public class MenuDialog extends AlertDialog {
         public DialogView(Context context) {
             super(context);
 
-            
+
         }
     }
 
@@ -24,6 +24,13 @@ public class MenuDialog extends AlertDialog {
         setView(new DialogView(context));
         setTitle("Menu");
         setButton(DialogInterface.BUTTON_POSITIVE,"hoge", new OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+            }
+        });
+
+        setButton(DialogInterface.BUTTON_NEGATIVE,"fuga", new OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
 
