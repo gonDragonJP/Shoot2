@@ -126,7 +126,7 @@ public class MyRenderer implements GLSurfaceView.Renderer{
         //drawFPS();
     }
 
-    private void testDraw(GL10 gl){
+    synchronized private void testDraw(GL10 gl){
 
         UtilGL.setColor(gl,Color.RED);
         UtilGL.drawLine(gl,new PointF(0,0),new PointF(Global.virtualScreenSize.x, Global.virtualScreenSize.y));
