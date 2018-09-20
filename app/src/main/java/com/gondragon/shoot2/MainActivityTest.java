@@ -12,6 +12,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
 
+import com.gondragon.shoot2.effect.ScreenEffect;
 import com.gondragon.shoot2.stage.StageData;
 
 public class MainActivityTest extends AppCompatActivity {
@@ -42,19 +43,17 @@ public class MainActivityTest extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
         initializeGame();
 
-        gameThread.setStage(1);
-        gameThread.startThread();
-
-        setContentView(new testView(this));
+        //実際にレンダリングが始まるのはこれの後だと思われる
     }
 
     private void initializeGame(){
 
         initializeScreen();
         gameThread = new GameThreadModule(this, renderer);
+
+        ScreenEffect.setRenderer(renderer);
     }
 
     private void initializeScreen(){
@@ -83,5 +82,16 @@ public class MainActivityTest extends AppCompatActivity {
     private LinearLayout.LayoutParams getParams(int arg0, int arg1){
 
         return new LinearLayout.LayoutParams(arg0, arg1);
+    }
+
+    @Override
+    protected void onStart() {
+
+        super.onStart();
+
+        gameThread.setStage(1);
+        gameThread.startThread();
+
+        setContentView(new testView(this));
     }
 }

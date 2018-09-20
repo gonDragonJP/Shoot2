@@ -244,15 +244,17 @@ public class UtilGL {
 
     public static void drawTexture(GL10 gl, PointF center, PointF size, int texID){
 
-        vLeft = center.x - size.x / 2;
-        vTop = center.y + size.y / 2;
-        vRight = vLeft + size.x;
-        vBottom = vTop - size.y;
+        //左上(0,0)座標系で[0,1]左下　[2,3]左上　[4,5]右下　[6,7]右上　です
 
-        vertices[0] = vLeft;	vertices[1] = vTop;
-        vertices[2] = vLeft;	vertices[3] = vBottom;
-        vertices[4] = vRight;	vertices[5] = vTop;
-        vertices[6] = vRight;	vertices[7] = vBottom;
+        vLeft = center.x - size.x / 2;
+        vTop = center.y - size.y / 2;
+        vRight = vLeft + size.x;
+        vBottom = vTop + size.y;
+
+        vertices[0] = vLeft;	vertices[1] = vBottom;
+        vertices[2] = vLeft;	vertices[3] = vTop;
+        vertices[4] = vRight;	vertices[5] = vBottom;
+        vertices[6] = vRight;	vertices[7] = vTop;
 
         FloatBuffer polygonVertices = makeFloatBuffer(vertices);
         FloatBuffer texCoords = makeFloatBuffer(textureSTCoords);
@@ -280,14 +282,11 @@ public class UtilGL {
     }
 
     private static FontStructure font;
-    private static boolean isFontInitialized = false;
 
     public static void setupFont(GL10 gl, int offset){
 
         TextureSheet charSheet = TextureInitializer.getCharactersSheet();
         if(charSheet == null) return;
-
-        if(isFontInitialized) return;
 
         charSheet.bindGLTexture(gl);
 
@@ -300,9 +299,6 @@ public class UtilGL {
 
         font.chrSizeX = 1.0f  / font.chrmapXnumber;
         font.chrSizeY = 1.0f  / font.chrmapYnumber;
-
-        isFontInitialized= true;
-
     }
 
     public static void drawText(GL10 gl, RectF position, String text){

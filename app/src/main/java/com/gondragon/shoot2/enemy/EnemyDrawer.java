@@ -20,7 +20,7 @@ public class EnemyDrawer {
     static private final int drawAngleLineLength = 20;
 
     static private GL10 gl;
-    static private boolean isEnableTex = false;
+    static private boolean isEnableTex;
 
     public static void setGl(GL10 glArg){
 
@@ -124,13 +124,12 @@ public class EnemyDrawer {
             drawCenter.set(0, 0);
             UtilGL.setTextureSTCoords(sheet.getSTRect(frameIndex));
 
-            if(enemy.isNowDamaged) {
+            if(enemy.checkNowDamaged()) {
 
                 float[] cc = {(float)Math.random(),(float)Math.random(),(float)Math.random(),0};
                 UtilGL.changeTexColor(gl, cc);
                 UtilGL.drawTexture(gl, drawCenter, drawSize, sheet.GLtexID);
                 UtilGL.changeTexColor(gl, null);
-                enemy.isNowDamaged = false;
             }
             else
                 UtilGL.drawTexture(gl, drawCenter, drawSize, sheet.GLtexID);

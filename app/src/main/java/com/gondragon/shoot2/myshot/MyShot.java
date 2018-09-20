@@ -19,7 +19,7 @@ public class MyShot {
     public int shotPower, shotRadius;
 
     public MyShotDrawer drawer;
-    private CollisionChecker collisonChecker;
+    protected CollisionChecker collisonChecker;
 
     public MyShot(){
 
@@ -59,7 +59,7 @@ public class MyShot {
 
         collisonChecker.setActive(false);
         isInExplosion = true;
-        drawer.setExplosion();
+        drawer.setExplosion(0); //通常弾は爆発アニメは最初のフレームから普通に開始
     }
 
     public void periodicalProcess(){
