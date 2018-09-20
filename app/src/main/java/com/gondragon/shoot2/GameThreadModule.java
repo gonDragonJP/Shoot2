@@ -58,7 +58,7 @@ public class GameThreadModule {
             @Override
             public Timing getTiming() {
 
-                return Timing.ONDRAW;
+                return Timing.ONCREATE;
             }
 
             @Override
@@ -122,11 +122,7 @@ public class GameThreadModule {
 
         isTestMode = false;
         isGameTaskActive = true;
-        timer.schedule(timerTask, 1000, Global.frameIntervalTime);
-        // ステージのセット時にレンダリングフレームからテクスチャのバインドを行う為、
-        // レンダリングスレッドを少し待つ必要のでdelayを置いています
-        // ※ここで作ったゲームスレッドはステージセット後すぐに呼び出されると
-        //　 ステージセット時のバインド操作を実行前に消去してしまいます！
+        timer.schedule(timerTask, 0, Global.frameIntervalTime);
 
         StageEffect.startStageEffect();
     }
@@ -139,6 +135,12 @@ public class GameThreadModule {
     public void setGameTaskActivity(boolean sw){
 
         isGameTaskActive = sw;
+    }
+
+    public void requestReGLTexBind(){
+
+        StageData.isGLTexBinded = false;
+       // renderer.deleteRenderingTask(MyRenderer.Renderable.Timing.ONCREATE);
     }
 
     synchronized public void pushStopButton(){
