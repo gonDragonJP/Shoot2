@@ -113,8 +113,6 @@ public class StageData {
 
             if(sheet!=null) {
                 sheet.bindGLTexture(gl);
-                //Log.e("**********", sheet.pictureName);
-                // Log.e("---------", String.valueOf(sheet.GLtexID));
             }
         }
 
