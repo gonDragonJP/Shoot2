@@ -10,6 +10,7 @@ import android.util.Log;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.logging.Logger;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
@@ -18,7 +19,7 @@ public class MyRenderer implements GLSurfaceView.Renderer{
 
     public interface Renderable{
 
-        public enum Timing {PREDRAW, ONDRAW, AFTERDRAW};
+        public enum Timing {ONCREATE, PREDRAW, ONDRAW, AFTERDRAW};
 
         Timing getTiming();
 
@@ -74,11 +75,11 @@ public class MyRenderer implements GLSurfaceView.Renderer{
     public void onSurfaceCreated(GL10 gl, EGLConfig config) {
 
         UtilGL.setupFont(gl,0);
-
         UtilGL.enableDefaultBlend(gl);
         UtilGL.setTextureSTCoords(null);
-        UtilGL.changeTexColor(gl, null);
-        // gl.glDisable(GL10.GL_STENCIL_TEST);
+        UtilGL.changeTexColor(gl, null); //テクスチャモードはreplace
+
+        doAllRenderingTasks(gl, Renderable.Timing.ONCREATE);
     }
 
     @Override
@@ -106,7 +107,7 @@ public class MyRenderer implements GLSurfaceView.Renderer{
         gl.glMatrixMode(GL10.GL_MODELVIEW);
         gl.glLoadIdentity();
 
-        testDraw(gl);
+        //testDraw(gl);
         doAllRenderingTasks(gl, Renderable.Timing.ONDRAW);
 
         //画面定位置のオブジェクト描出
@@ -121,14 +122,22 @@ public class MyRenderer implements GLSurfaceView.Renderer{
 
         doAllRenderingTasks(gl, Renderable.Timing.AFTERDRAW);
 
+        testDraw(gl);
         //drawFPS();
     }
 
-    private void testDraw(GL10 gl){
+    synchronized private void testDraw(GL10 gl){
 
         UtilGL.setColor(gl,Color.RED);
         UtilGL.drawLine(gl,new PointF(0,0),new PointF(Global.virtualScreenSize.x, Global.virtualScreenSize.y));
         UtilGL.drawLine(gl,new PointF(Global.virtualScreenSize.x,0),new PointF(0, Global.virtualScreenSize.y));
+
+        int c=0;
+        for (MyRenderer.Renderable e : renderingTaskList) {
+
+            if(e.getTiming() == Renderable.Timing.ONCREATE) c++;
+        }
+        UtilGL.drawText(gl,new RectF(0,0,80,20),"list:" + String.valueOf(c));
     }
 
     synchronized private void doAllRenderingTasks(GL10 gl, Renderable.Timing timing) {

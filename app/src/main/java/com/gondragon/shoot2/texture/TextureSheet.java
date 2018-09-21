@@ -87,7 +87,6 @@ public class TextureSheet{
     }
 
     private GL10 gl;
-    private int[] GLtexIDarg= new int[1];
 
     public void bindGLTexture(GL10 gl){
 
@@ -100,13 +99,15 @@ public class TextureSheet{
         try {
             super.finalize();
         } finally {
-            destruction();
+            releaseTex();
         }
     }
 
-    private void destruction() {
+    private void releaseTex() {
 
-        GLtexIDarg[0] = GLtexID;
-        if(GLtexID !=-1) gl.glDeleteTextures(1, GLtexIDarg, 0);
+        int[] tex = new int[1];
+        tex[0] = GLtexID;
+        if(GLtexID !=-1) gl.glDeleteTextures(1, tex, 0);
     }
 }
+
