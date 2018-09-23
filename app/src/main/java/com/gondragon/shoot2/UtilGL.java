@@ -35,6 +35,7 @@ public class UtilGL {
         fb.position(0);
         return fb;
     }
+    
 
     public static Rect setViewPortWithAspectRatio
             (GL10 gl, int width, int height, double aspect){

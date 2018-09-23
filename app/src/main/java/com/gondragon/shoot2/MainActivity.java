@@ -42,29 +42,20 @@ public class MainActivity extends Activity {
         glSurface = new MainGLSurface(this);
         renderer = new MyRenderer();
         glSurface.setRenderer(renderer);
-
         menuView = new MenuView(this);
 
-        switch (sequence){
-
-            case Menu:
-                setContentView(menuView); break;
-
-            case GameScreen:
-                setContentView(getGameLayout(glSurface)); break;
-        }
+        setGameLayout(glSurface);
     }
 
     private void initializeGameCompornent(){
 
         gameThread = new GameThreadModule(this, renderer);
-        ScreenEffect.setRenderer(renderer);
     }
 
     private final int matchParent = LinearLayout.LayoutParams.MATCH_PARENT;
     private final int wrapContent = LinearLayout.LayoutParams.WRAP_CONTENT;
 
-    private LinearLayout getGameLayout(MainGLSurface glSurface){
+    private LinearLayout setGameLayout(MainGLSurface glSurface){
 
         gameLayout = new LinearLayout(this);
         gameLayout.setLayoutParams(getParams(matchParent,matchParent));
@@ -86,6 +77,20 @@ public class MainActivity extends Activity {
 
         gameThread.setStage(1);
         gameThread.startThread();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        switch (sequence){
+
+            case Menu:
+                setContentView(menuView); break;
+
+            case GameScreen:
+                setContentView(gameLayout); break;
+        }
     }
 
     public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -119,23 +124,19 @@ public class MainActivity extends Activity {
 
     private void openMenu(){
 
-        //sequence = Sequence.Menu;
-        setContentView(menuView);
-        setContentView(gameLayout);
-        //glSurface.invalidate();
 
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
 
-
-    }
 
     @Override
     protected void onPause() {
 
+
+
         super.onPause();
+
+
+        gameThread.cancelTimer();
     }
 }

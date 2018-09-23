@@ -6,6 +6,7 @@ import com.gondragon.shoot2.enemy.derivativeType.DerivativeEnemyFactory;
 import com.gondragon.shoot2.vector.Int2Vector;
 
 import java.util.ArrayList;
+import java.util.logging.Logger;
 
 import javax.microedition.khronos.opengles.GL10;
 

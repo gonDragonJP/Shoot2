@@ -29,23 +29,25 @@ public class GameThreadModule {
     private StageManager stageManager;
     private MyRenderer renderer;
 
-    private int scrollPoint =0;
     private boolean isEnableTex = true;
 
     private GameThreadModule(){}; //デフォルトコンストラクタ無効
 
     public GameThreadModule(Context context, MyRenderer renderer){
 
+        this.renderer = renderer;
+
         //アセットにアクセスするクラスにはcontextが必要なのでセット
         AccessOfEventData.setContext(context);
         AccessOfEnemyData.setContext(context);
         AccessOfTextureData.setContext(context);
 
+        ScreenEffect.setRenderer(renderer);
+
+
         myPlane = new MyPlane();
 
-        stageManager = new StageManager(context, myPlane);
-
-        this.renderer = renderer;
+        stageManager = new StageManager(myPlane);
     }
 
     public void setStage(int stageNumber){
@@ -65,8 +67,11 @@ public class GameThreadModule {
             public void render(GL10 gl) {
 
                 StageData.bindGLTextures(gl);
+
             }
         };
+
+        renderer.deleteRenderingTask(MyRenderer.Renderable.Timing.ONCREATE);
         renderer.addRenderingTask(renderTask);
     }
 
@@ -96,7 +101,7 @@ public class GameThreadModule {
     public void refreshQueueOfEvent(){
         //slider操作時やtableによるpoint変更に伴い呼び出されイベント位置を再設定します
 
-        stageManager.updateEventIndex(scrollPoint);
+        stageManager.updateEventIndex();
         stageManager.resetAllEnemies();
     }
 
@@ -110,7 +115,6 @@ public class GameThreadModule {
 
     synchronized public void pushResetButton(){
 
-        scrollPoint =0;
         updateSlider();
     }
 
@@ -174,18 +178,8 @@ public class GameThreadModule {
 
                    // drawModule.clearScreen();
                 }
-                else{
 
-                    scrollPoint += Global.scrollSpeedPerFrame;
-
-                    if(scrollPoint > scrollMax) {
-
-                        scrollPoint = scrollMax;
-                        this.cancel();
-                    }
-                }
-
-                stageManager.periodicalProcess(scrollPoint, isTestMode);
+                stageManager.periodicalProcess(isTestMode);
                 myPlane.periodicalProcess(renderer.graphicPad);
                 ScreenEffect.periodicalProcess();
                 CollisionDetection.doAllDetection();
@@ -202,8 +196,7 @@ public class GameThreadModule {
                     @Override
                     public void render(GL10 gl) {
 
-                        Background.onDraw(gl, scrollPoint);
-                        stageManager.drawEnemies(gl, isEnableTex);
+                        stageManager.onDraw(gl, isEnableTex);
                         myPlane.drawer.onDraw(gl);
                         myPlane.shotGenerator.onDraw(gl);
                     }
