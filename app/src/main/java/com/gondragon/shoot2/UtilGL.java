@@ -63,12 +63,21 @@ public class UtilGL {
 
     public static void setColor(GL10 gl, int color){
 
+        float[] array = getColorArray(color);
+
+        gl.glColor4f(array[0], array[1], array[2], array[3]);
+    }
+
+    public static float[] getColorArray(int color){
+
         float red   = Color.red(color) / 255f;
         float green = Color.green(color) / 255f;
         float blue  = Color.blue(color)  / 255f;
         float alpha = Color.alpha(color) / 255f;
 
-        gl.glColor4f(red, green, blue, alpha);
+        float[] array = {red, green, blue, alpha};
+
+        return array;
     }
 
     public static void drawLine(GL10 gl, PointF start, PointF end){

@@ -49,6 +49,11 @@ public class GraphicPad {
         padCenter.set(Global.virtualScreenSize.x * p, Global.virtualScreenSize.y * q);
     }
 
+    public  PointF getPadCenter(){
+
+        return padCenter;
+    }
+
     public void onDraw(GL10 gl){
 
         UtilGL.setColor(gl, Color.WHITE);
