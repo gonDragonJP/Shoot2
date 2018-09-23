@@ -15,7 +15,7 @@ public class StageManager {
 
     private class CurrentStageState{
 
-        public boolean isPreparedScroll, isPreparedStageData;
+        public boolean isPreparedScroll;
         public boolean isStarted;
 
         public int scrollPoint;
@@ -30,52 +30,27 @@ public class StageManager {
 
             this.isStarted = false;
             this.isPreparedScroll = false;
-            this.isPreparedStageData = false;
             this.scrollPoint = 0;
             this.eventIndex = 0;
         }
     }
 
-    private Context context;
     private CallbackOfMyPlane cbOfMyPlane;
 
     private EnemiesManager enemiesManager;
-    private AnimationManager animationManager;
-    //private StageEffect stageEffect;
 
-    private CurrentStageState stageState = new CurrentStageState();
+    private CurrentStageState stageState;
 
-    public StageManager(Context context, CallbackOfMyPlane cbOfMyPlane){
+    public StageManager(CallbackOfMyPlane cbOfMyPlane){
 
-        this.context = context;
         this.cbOfMyPlane = cbOfMyPlane;
-
-        initialize();
-
-        //stageEffect = new StageEffect(this);
-        //ScrollGraphicManager.setResources(context.getResources());
-    }
-
-    public void initialize(){
-
-        enemiesManager = null;
-        stageState.initialize();
-
-        //stageEffect.initialize(objectsContainer);
-        //ScrollGraphicManager.initialize();
-
-        //InitGL.setupFont(
-        //		context.getResources(), R.drawable.chrsheet,
-        //		16, 16, 0
-        //);
+        this.stageState = new CurrentStageState();
     }
 
     public void setStage(int stageNumber){
 
         StageData.setStage(stageNumber);
         stageState.initialize();
-
-        stageState.isPreparedStageData = true;
 
         enemiesManager = new EnemiesManager
                 (cbOfMyPlane, StageData.enemyList, StageData.derivativeEnemyFactory);
@@ -111,7 +86,7 @@ public class StageManager {
         return enemiesManager.getEnemyCount();
     }
 
-    public void updateEventIndex(double scrollPoint){
+    public void updateEventIndex(){
 
         int i =0;
 
@@ -119,7 +94,7 @@ public class StageManager {
 
             EventData eventData = StageData.eventList.get(i);
 
-            if(eventData.scrollPoint >= scrollPoint) break;
+            if(eventData.scrollPoint >= stageState.scrollPoint) break;
 
             i++;
         }
@@ -127,7 +102,13 @@ public class StageManager {
         stageState.eventIndex = i;
     }
 
-    synchronized public void drawEnemies(GL10 gl, boolean isEnableTex){
+    synchronized public void onDraw(GL10 gl, boolean isEnableTex){
+
+        Background.onDraw(gl, stageState.scrollPoint);
+        drawEnemies(gl, isEnableTex);
+    }
+
+    private void drawEnemies(GL10 gl, boolean isEnableTex){
 
         enemiesManager.onDrawEnemies(gl, isEnableTex);
     }
@@ -142,11 +123,17 @@ public class StageManager {
         enemiesManager.periodicalProcess();
     }
 
-    synchronized public void periodicalProcess(double scrollPoint, boolean isTestMode){
+    synchronized public void periodicalProcess(boolean isTestMode){
 
         if(!isTestMode){
 
-            stageState.scrollPoint = (int)scrollPoint;
+            stageState.scrollPoint += Global.scrollSpeedPerFrame;
+
+            if(stageState.scrollPoint > StageData.stageEndPoint) {
+
+                stageState.scrollPoint = StageData.stageEndPoint;
+            }
+
             checkEvent();
         }
 
