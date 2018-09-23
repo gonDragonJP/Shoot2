@@ -163,7 +163,7 @@ public class PauseMenu {
 
                 selectedItem = getSelection();
 
-                if(selectedItem != null) callBack.resumeGame();
+                if(selectedItem != null) callBack.resumeGameAtMenu();
             }
         };
 

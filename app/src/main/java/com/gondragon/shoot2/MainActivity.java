@@ -45,13 +45,7 @@ public class MainActivity extends Activity {
         glSurface.setRenderer(renderer);
         setGameLayout(glSurface);
 
-        pauseMenu = new PauseMenu(renderer, new MenuCallBack() {
-            @Override
-            public void resumeGame() {
-
-                resumeGameFromMenu();
-            }
-        });
+        pauseMenu = new PauseMenu(renderer, getMenuCallback());
         menuView = new MenuView(this);
     }
 
@@ -135,23 +129,34 @@ public class MainActivity extends Activity {
 
     public interface  MenuCallBack{
 
-        void resumeGame();
+        void resumeGameAtMenu();
+        void exitGameAtMenu();
     }
 
-    public void resumeGameFromMenu(){
+    private MenuCallBack getMenuCallback(){
+
+        return new MenuCallBack() {
+            @Override
+            public void resumeGameAtMenu() {  resumeGame(); }
+            public void exitGameAtMenu() { exitGame();}
+        };
+    }
+
+    private void resumeGame(){
 
         sequence = Sequence.GameScreen;
         gameThread.setGameTaskActivity(true);
         pauseMenu.hide();
     }
 
+    private  void exitGame(){
+
+        this.finish();
+    }
+
     @Override
     protected void onPause() {
-
-
-
         super.onPause();
-
 
         gameThread.cancelTimer();
     }
