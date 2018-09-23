@@ -114,8 +114,8 @@ public class PauseMenu {
 
     private void drawMenuItems(GL10 gl){
 
-        frameCount = (++frameCount) % 4;
-        boolean signalFrame = frameCount <2;
+        frameCount = (++frameCount) % 8;
+        boolean signalFrame = frameCount <4;
 
         for(MenuItem e: MenuItem.values()){
 
@@ -163,7 +163,15 @@ public class PauseMenu {
 
                 selectedItem = getSelection();
 
-                if(selectedItem != null) callBack.resumeGameAtMenu();
+                if(selectedItem != null) {
+
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    doMenuItems();
+                }
             }
         };
 
@@ -189,5 +197,18 @@ public class PauseMenu {
             }
         }
         return null;
+    }
+
+    private void doMenuItems(){
+
+        switch (selectedItem){
+
+            case ResumeGame:
+                callBack.resumeGameAtMenu();
+                break;
+            case ExitGame:
+                callBack.exitGameAtMenu();
+                break;
+        }
     }
 }
