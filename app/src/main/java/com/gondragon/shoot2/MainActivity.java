@@ -8,7 +8,7 @@ import android.view.WindowManager;
 import android.widget.LinearLayout;
 
 import com.gondragon.shoot2.UI.MenuView;
-import com.gondragon.shoot2.effect.ScreenEffect;
+import com.gondragon.shoot2.UI.PauseMenu;
 
 public class MainActivity extends Activity {
 
@@ -18,6 +18,7 @@ public class MainActivity extends Activity {
 
     private MyRenderer renderer;
     private GameThreadModule gameThread;
+    private PauseMenu pauseMenu;
 
     enum Sequence{
         GameScreen, Menu
@@ -30,11 +31,11 @@ public class MainActivity extends Activity {
 
         sequence = Sequence.GameScreen;
 
-        initializeScreen();
+        initializeScreenCompornent();
         initializeGameCompornent();
     }
 
-    private void initializeScreen(){
+    private void initializeScreenCompornent(){
 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -42,9 +43,10 @@ public class MainActivity extends Activity {
         glSurface = new MainGLSurface(this);
         renderer = new MyRenderer();
         glSurface.setRenderer(renderer);
-        menuView = new MenuView(this);
-
         setGameLayout(glSurface);
+
+        pauseMenu = new PauseMenu(renderer, getMenuCallback());
+        menuView = new MenuView(this);
     }
 
     private void initializeGameCompornent(){
@@ -106,15 +108,18 @@ public class MainActivity extends Activity {
                 case GameScreen:
                     sequence = Sequence.Menu;
                     gameThread.setGameTaskActivity(false);
-                    setContentView(menuView);
+                    pauseMenu.show();
                     break;
 
                 case Menu:
                     sequence = Sequence.GameScreen;
-                    //setContentView(gameLayout);
                     gameThread.setGameTaskActivity(true);
-                    setContentView(gameLayout);
-                    gameThread.requestReGLTexBind();
+                    pauseMenu.hide();
+
+                    // contentviewを切り替えた後はゲーム画面に戻すのに以下が必要
+                    //　たぶんGLインターフェイスが更新される為？　テクスチャの再登録が必要
+                    //setContentView(gameLayout);
+                    //gameThread.requestReGLTexBind();
             }
 
 
@@ -122,20 +127,36 @@ public class MainActivity extends Activity {
         return false;
     }
 
-    private void openMenu(){
+    public interface  MenuCallBack{
 
-
+        void resumeGameAtMenu();
+        void exitGameAtMenu();
     }
 
+    private MenuCallBack getMenuCallback(){
 
+        return new MenuCallBack() {
+            @Override
+            public void resumeGameAtMenu() {  resumeGame(); }
+            public void exitGameAtMenu() { exitGame();}
+        };
+    }
+
+    private void resumeGame(){
+
+        sequence = Sequence.GameScreen;
+        gameThread.setGameTaskActivity(true);
+        pauseMenu.hide();
+    }
+
+    private  void exitGame(){
+
+        this.finish();
+    }
 
     @Override
     protected void onPause() {
-
-
-
         super.onPause();
-
 
         gameThread.cancelTimer();
     }
