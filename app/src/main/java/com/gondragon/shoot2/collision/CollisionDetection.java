@@ -22,9 +22,15 @@ public class CollisionDetection {
         int getAttackPower();
     }
 
-    private static ArrayList<Collisionable> enemyList = new ArrayList<>();
-    private static ArrayList<Collisionable> shotList = new ArrayList<>();
+    private static ArrayList<Collisionable> enemyList;
+    private static ArrayList<Collisionable> shotList;
     private static Collisionable myPlane;
+
+    public static void initializeLists(){
+
+        enemyList = new ArrayList<>();
+        shotList = new ArrayList<>();
+    }
 
     public static void setCollisonListener(Collisionable c){
 

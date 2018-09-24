@@ -72,6 +72,8 @@ public class PauseMenu {
 
     private void requestRender(){
 
+        renderer.deleteRenderingTask(MyRenderer.Renderable.Timing.AFTERDRAW);
+
         MyRenderer.Renderable renderable = new MyRenderer.Renderable() {
             @Override
             public Timing getTiming() {
@@ -87,7 +89,7 @@ public class PauseMenu {
             }
         };
 
-        renderer.deleteRenderingTask(MyRenderer.Renderable.Timing.AFTERDRAW);
+
         renderer.addRenderingTask(renderable);
     }
 
@@ -181,8 +183,8 @@ public class PauseMenu {
     private MenuItem getSelection(){
 
         GraphicPad pad = renderer.graphicPad;
-        float touchX = pad.getPadCenter().x;
-        float touchY = pad.getPadCenter().y;
+        float touchX = pad.getAnyPadCenter().x;
+        float touchY = pad.getAnyPadCenter().y;
 
         for(MenuItem e: MenuItem.values()){
 

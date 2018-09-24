@@ -135,7 +135,7 @@ public class MyRenderer implements GLSurfaceView.Renderer{
         int c=0;
         for (MyRenderer.Renderable e : renderingTaskList) {
 
-            if(e.getTiming() == Renderable.Timing.ONCREATE) c++;
+            if(e.getTiming() == Renderable.Timing.AFTERDRAW) c++;
         }
         UtilGL.drawText(gl,new RectF(0,0,80,20),"list:" + String.valueOf(c));
     }

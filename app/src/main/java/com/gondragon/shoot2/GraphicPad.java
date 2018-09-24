@@ -13,20 +13,26 @@ public class GraphicPad {
 
     private final float padRadius = 50;
 
-    private Point leftPadCenter = new Point();
-    private Point rightPadCenter = new Point();
+    private Point leftPadCenter, rightPadCenter;
 
     public boolean isSetLeftPadCenter = false;
     public boolean isSetRightPadCenter = false;
-    public Point leftPadDirVector = new Point();
-    public Point rightPadDirVector = new Point();
+    public Point leftPadDirVector, rightPadDirVector;
 
     public int pointerCount;
     private int leftPointerID, rightPointerID;
 
+    private PointF padCenter;
 
     public GraphicPad(){
 
+        leftPadCenter = new Point();
+        rightPadCenter = new Point();
+
+        leftPadDirVector = new Point();
+        rightPadDirVector = new Point();
+
+        padCenter = new PointF();
     }
 
     public double getLeftDirectionalAngle(){
@@ -39,8 +45,6 @@ public class GraphicPad {
         return Math.atan2(rightPadDirVector.y, rightPadDirVector.x);
     }
 
-    private static PointF padCenter = new PointF();
-
     private void setPadCenter(Point realPos){
 
         float p = (realPos.x - MyRenderer.surfaceRect.left) / (float)MyRenderer.surfaceRect.width();
@@ -49,7 +53,11 @@ public class GraphicPad {
         padCenter.set(Global.virtualScreenSize.x * p, Global.virtualScreenSize.y * q);
     }
 
-    public  PointF getPadCenter(){
+    public  PointF getAnyPadCenter(){ //menu操作などの為に右手優位のパッド仮想座標位置を返します
+
+        padCenter.set(-1,-1);
+        if(isSetLeftPadCenter) setPadCenter(leftPadCenter);
+        if(isSetRightPadCenter) setPadCenter(rightPadCenter);
 
         return padCenter;
     }

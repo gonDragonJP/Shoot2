@@ -52,6 +52,8 @@ public class GameThreadModule {
 
     public void setStage(int stageNumber){
 
+        CollisionDetection.initializeLists(); // staticリストをステージの最初にリセットします。
+
         stageManager.setStage(stageNumber);
 
         //テクスチャをGLインターフェイスにバインドします
