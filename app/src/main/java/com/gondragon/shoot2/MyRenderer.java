@@ -17,6 +17,12 @@ import javax.microedition.khronos.opengles.GL10;
 
 public class MyRenderer implements GLSurfaceView.Renderer{
 
+    @Override
+    public void onSurfaceChanged(GL10 gl, int width, int height) {
+
+        setSurfaceRect(UtilGL.setViewPortWithAspectRatio(gl, width, height, Global.aspectRatio));
+    }
+
     public interface Renderable{
 
         public enum Timing {ONCREATE, PREDRAW, ONDRAW, AFTERDRAW};
@@ -44,7 +50,7 @@ public class MyRenderer implements GLSurfaceView.Renderer{
         screenSlidingX = (planeX - virturalCenterX) / screenSlidingFactor;
     }
 
-    public boolean isDrawableGraphicPad = false; //操作パッドの描画が必要かどうかのスイッチ
+    public boolean isNowOnTouchPad = false; //現在パッド入力があるかどうかのフラグ
     public GraphicPad graphicPad;
 
     public void setGraphicPad(GraphicPad pad){
@@ -118,12 +124,20 @@ public class MyRenderer implements GLSurfaceView.Renderer{
                 Global.virtualScreenSize.y, 0,
                 0.5f, -0.5f
         );
-        if(isDrawableGraphicPad) graphicPad.onDraw(gl);
+        if(isNowOnTouchPad) graphicPad.onDraw(gl);
 
         doAllRenderingTasks(gl, Renderable.Timing.AFTERDRAW);
 
-        testDraw(gl);
-        //drawFPS();
+        //testDraw(gl);
+        drawFPS(gl);
+    }
+
+    synchronized private void doAllRenderingTasks(GL10 gl, Renderable.Timing timing) {
+
+        for (MyRenderer.Renderable e : renderingTaskList) {
+
+            if(e.getTiming() == timing) e.render(gl);
+        }
     }
 
     synchronized private void testDraw(GL10 gl){
@@ -140,17 +154,19 @@ public class MyRenderer implements GLSurfaceView.Renderer{
         UtilGL.drawText(gl,new RectF(0,0,80,20),"list:" + String.valueOf(c));
     }
 
-    synchronized private void doAllRenderingTasks(GL10 gl, Renderable.Timing timing) {
+    private long lastUpdateTime;
+    private int fps, frameCount =0;
 
-        for (MyRenderer.Renderable e : renderingTaskList) {
+    synchronized private void drawFPS(GL10 gl){
 
-            if(e.getTiming() == timing) e.render(gl);
+        ++frameCount;
+        long currentTime = System.currentTimeMillis();
+
+        if(currentTime - lastUpdateTime >1000){
+            fps = frameCount;
+            frameCount =0;
+            lastUpdateTime = currentTime;
         }
-    }
-
-@Override
-    public void onSurfaceChanged(GL10 gl, int width, int height) {
-
-        setSurfaceRect(UtilGL.setViewPortWithAspectRatio(gl, width, height, Global.aspectRatio));
+        UtilGL.drawText(gl,new RectF(0,0,80,20),"FPS:" + String.valueOf(fps));
     }
 }

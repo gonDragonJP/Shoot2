@@ -28,7 +28,7 @@ public class MainGLSurface extends GLSurfaceView{
     @Override
     public boolean onTouchEvent(MotionEvent event){
 
-       myRenderer.isDrawableGraphicPad = graphicPad.onTouch(event);
+       myRenderer.isNowOnTouchPad = graphicPad.onTouch(event);
 
        return  true;
     }

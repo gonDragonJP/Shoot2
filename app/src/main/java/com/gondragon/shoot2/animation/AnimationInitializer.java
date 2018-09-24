@@ -9,23 +9,39 @@ public class AnimationInitializer {
 
     private static final int stageLimitedEnemyTexSheetNumber = 9;
     private static final int maxEnemyTexSheetNumber = 30;
-    public static GLTexSheet[] enemyTex = new GLTexSheet[maxEnemyTexSheetNumber];
+    public static GLTexSheet[] enemyTex;
 
-    public static AnimationSet myPlaneSet = new AnimationSet();
-    public static AnimationSet myConversionSet = new AnimationSet();
-    public static AnimationSet myShieldSet = new AnimationSet();
-    public static AnimationSet myBurnerSet = new AnimationSet();
+    public static AnimationSet myPlaneSet;
+    public static AnimationSet myConversionSet;
+    public static AnimationSet myShieldSet;
+    public static AnimationSet myBurnerSet;
 
-    public static AnimationSet myBulletSet = new AnimationSet();
-    public static AnimationSet myLaserSet = new AnimationSet();
+    public static AnimationSet myBulletSet;
+    public static AnimationSet myLaserSet;
 
-    public static AnimationSet myChargingBallSet = new AnimationSet();
-    public static AnimationSet myChargedBallSet = new AnimationSet();
+    public static AnimationSet myChargingBallSet;
+    public static AnimationSet myChargedBallSet;
 
-    public static AnimationSet shieldEnergySet = new AnimationSet();
-    public static AnimationSet weaponEnergySet = new AnimationSet();
+    public static AnimationSet shieldEnergySet;
+    public static AnimationSet weaponEnergySet;
 
-    static {
+    public static void initialize(){
+
+        enemyTex = new GLTexSheet[maxEnemyTexSheetNumber];
+
+        myPlaneSet = new AnimationSet();
+        myConversionSet = new AnimationSet();
+        myShieldSet = new AnimationSet();
+        myBurnerSet = new AnimationSet();
+
+        myBulletSet = new AnimationSet();
+        myLaserSet = new AnimationSet();
+
+        myChargingBallSet = new AnimationSet();
+        myChargedBallSet = new AnimationSet();
+
+        shieldEnergySet = new AnimationSet();
+        weaponEnergySet = new AnimationSet();
 		/*
 		planeTex = new GLTexSheet(R.drawable.myplanesheet, 4, 4);
 		effectTex0 = new GLTexSheet(R.drawable.effect_sheet000, 8, 8);

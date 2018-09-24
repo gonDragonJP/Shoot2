@@ -121,8 +121,6 @@ public class MainActivity extends Activity {
                     //setContentView(gameLayout);
                     //gameThread.requestReGLTexBind();
             }
-
-
         }
         return false;
     }

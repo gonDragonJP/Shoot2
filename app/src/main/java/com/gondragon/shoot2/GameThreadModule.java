@@ -2,6 +2,7 @@ package com.gondragon.shoot2;
 
 import android.content.Context;
 
+import com.gondragon.shoot2.animation.AnimationInitializer;
 import com.gondragon.shoot2.collision.CollisionDetection;
 import com.gondragon.shoot2.database.AccessOfEnemyData;
 import com.gondragon.shoot2.database.AccessOfEventData;
@@ -10,7 +11,6 @@ import com.gondragon.shoot2.effect.ScreenEffect;
 import com.gondragon.shoot2.effect.StageEffect;
 import com.gondragon.shoot2.enemy.EnemyData;
 import com.gondragon.shoot2.myplane.MyPlane;
-import com.gondragon.shoot2.stage.Background;
 import com.gondragon.shoot2.stage.StageData;
 import com.gondragon.shoot2.stage.StageManager;
 
@@ -44,6 +44,7 @@ public class GameThreadModule {
 
         ScreenEffect.setRenderer(renderer);
 
+        AnimationInitializer.initialize();
 
         myPlane = new MyPlane();
 
@@ -53,6 +54,7 @@ public class GameThreadModule {
     public void setStage(int stageNumber){
 
         CollisionDetection.initializeLists(); // staticリストをステージの最初にリセットします。
+
 
         stageManager.setStage(stageNumber);
 
@@ -77,16 +79,6 @@ public class GameThreadModule {
         renderer.addRenderingTask(renderTask);
     }
 
-    public void refreshEventList(){
-
-        stageManager.refreshEventList();
-    }
-
-    public void refreshEnemyList(){
-
-        stageManager.refreshEnemyList();
-    }
-
     synchronized public void testEnemy(EnemyData enemyData){
 
         stageManager.resetAllEnemies();
@@ -98,26 +90,6 @@ public class GameThreadModule {
 
         isTestMode = true;
         timer.schedule(timerTask, 0, Global.frameIntervalTime);
-    }
-
-    public void refreshQueueOfEvent(){
-        //slider操作時やtableによるpoint変更に伴い呼び出されイベント位置を再設定します
-
-        stageManager.updateEventIndex();
-        stageManager.resetAllEnemies();
-    }
-
-    synchronized public void updateSlider(){
-
-        //DrawModule drawModule = cbOfMainApp.getdrawModule();
-
-        //drawModule.drawScreen();
-        refreshQueueOfEvent();
-    }
-
-    synchronized public void pushResetButton(){
-
-        updateSlider();
     }
 
     synchronized public void startThread(){
@@ -133,20 +105,9 @@ public class GameThreadModule {
         StageEffect.startStageEffect();
     }
 
-    public void flipGameTaskActivity(){
-
-        isGameTaskActive = isGameTaskActive==true ? false : true ;
-    }
-
     public void setGameTaskActivity(boolean sw){
 
         isGameTaskActive = sw;
-    }
-
-    public void requestReGLTexBind(){
-
-        StageData.isGLTexBinded = false;
-       // renderer.deleteRenderingTask(MyRenderer.Renderable.Timing.ONCREATE);
     }
 
     synchronized public void pushStopButton(){
@@ -164,8 +125,6 @@ public class GameThreadModule {
     }
 
     private void makeTimerTask(){
-
-        //DrawModule drawModule = cbOfMainApp.getdrawModule();
 
         timerTask = new TimerTask(){
 

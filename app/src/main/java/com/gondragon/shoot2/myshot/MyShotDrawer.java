@@ -141,10 +141,17 @@ public class MyShotDrawer {
             );
         }*/
 
-        setFrame(
-                animeSet.getAnime(animeKind,0),
-                animeFrame
-        );
+        try {
+
+            AnimationData anime = animeSet.getAnime(animeKind,0);
+
+            setFrame(
+                    anime,
+                    animeFrame
+            );
+        }catch (NullPointerException e){
+            e.printStackTrace();
+        }
 
         drawCenter.set(myShot.x, myShot.y);
         drawAngle = 90+(float)(Math.atan2(myShot.velocity.y, myShot.velocity.x) / Global.radian);
