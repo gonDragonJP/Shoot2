@@ -152,7 +152,7 @@ public class MainActivity extends Activity {
     private  void exitGame(){
 
         pauseMenu.hide();
-        this.finish();
+        this.finishAndRemoveTask();
     }
 
     @Override

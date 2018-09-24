@@ -193,7 +193,7 @@ public class PauseMenu {
 
             if ((touchX > left && touchX < right) && (touchY > top && touchY < bottom)){
 
-                return e;
+                if(e.selectable) return e;
             }
         }
         return null;
