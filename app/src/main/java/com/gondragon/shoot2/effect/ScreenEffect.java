@@ -87,18 +87,20 @@ public class ScreenEffect {
 
         effect.renderingTiming = MyRenderer.Renderable.Timing.PREDRAW;
         preDrawEffectList.add(effect);
+        renderer.addRenderingTask(effect);
     }
 
     public static void addAfterDrawEffect(BasicEffect effect) {
 
-        effect.renderingTiming = MyRenderer.Renderable.Timing.AFTERDRAW;
+        effect.renderingTiming = MyRenderer.Renderable.Timing.AFTEREFFECT;
         afterDrawEffectList.add(effect);
+        renderer.addRenderingTask(effect);
     }
 
     public static void renderAllLists(){
 
         renderer.deleteRenderingTask(MyRenderer.Renderable.Timing.PREDRAW);
-        renderer.deleteRenderingTask(MyRenderer.Renderable.Timing.AFTERDRAW);
+        renderer.deleteRenderingTask(MyRenderer.Renderable.Timing.AFTEREFFECT);
 
         for(MyRenderer.Renderable e: preDrawEffectList){
 
@@ -130,5 +132,10 @@ public class ScreenEffect {
             effect.periodicalProcess();
             if(!effect.isActive) it.remove();
         }
+
+        if (preDrawEffectList.size() ==0)
+            renderer.deleteRenderingTask(MyRenderer.Renderable.Timing.PREDRAW);
+        if(afterDrawEffectList.size() ==0)
+            renderer.deleteRenderingTask(MyRenderer.Renderable.Timing.AFTEREFFECT);
     }
 }

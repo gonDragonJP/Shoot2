@@ -247,9 +247,9 @@ public class ShotGenerator {
         return laser;
     }
 
-    final float maxWeaponEnergy = 500;
-    int weaponEnergy = 500;
-    int weaponLevel;
+    public final float maxWeaponEnergy = 500;
+    public int weaponEnergy = 500;
+    public int weaponLevel;
 
     private void checkWeaponLevel(){
 

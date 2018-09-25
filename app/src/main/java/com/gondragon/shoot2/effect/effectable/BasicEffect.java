@@ -2,7 +2,6 @@ package com.gondragon.shoot2.effect.effectable;
 
 import com.gondragon.shoot2.Global;
 import com.gondragon.shoot2.MyRenderer;
-import com.gondragon.shoot2.effect.ScreenEffectable;
 
 import javax.microedition.khronos.opengles.GL10;
 
