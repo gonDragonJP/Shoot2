@@ -25,7 +25,7 @@ public class MyRenderer implements GLSurfaceView.Renderer{
 
     public interface Renderable{
 
-        public enum Timing {ONCREATE, PREDRAW, ONDRAW, AFTERDRAW};
+        public enum Timing {ONCREATE, PREDRAW, ONDRAW, AFTERDRAW, AFTEREFFECT, MENU};
 
         Timing getTiming();
 
@@ -124,9 +124,12 @@ public class MyRenderer implements GLSurfaceView.Renderer{
                 Global.virtualScreenSize.y, 0,
                 0.5f, -0.5f
         );
-        if(isNowOnTouchPad) graphicPad.onDraw(gl);
 
         doAllRenderingTasks(gl, Renderable.Timing.AFTERDRAW);
+        doAllRenderingTasks(gl, Renderable.Timing.AFTEREFFECT);
+        doAllRenderingTasks(gl, Renderable.Timing.MENU);
+
+        if(isNowOnTouchPad) graphicPad.onDraw(gl);
 
         //testDraw(gl);
         drawFPS(gl);

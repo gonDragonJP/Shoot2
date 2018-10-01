@@ -3,8 +3,6 @@ package com.gondragon.shoot2.effect.effectable;
 import android.graphics.RectF;
 
 import com.gondragon.shoot2.UtilGL;
-import com.gondragon.shoot2.effect.ScreenEffect;
-import com.gondragon.shoot2.effect.ScreenEffectable;
 
 import javax.microedition.khronos.opengles.GL10;
 

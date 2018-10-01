@@ -7,7 +7,7 @@ import java.util.List;
 
 public class TextureInitializer {
 
-    private enum EnumTexture {
+    public enum EnumTexture {
 
         MyPlane(0,"myplanesheet.png",4,4),
         Effect_0(1,"effect_sheet000.png",8,8),
@@ -16,10 +16,11 @@ public class TextureInitializer {
         Effect_3(4,"effect_sheet003.png",8,8),
         Bullet_0(5,"bullet_sheet000.png",8,8),
         Bullet_1(6,"bullet_sheet001.png",8,8),
-        Item(7,"item_sheet.png",8,8);
+        Item(7,"item_sheet.png",8,8),
+        Meter(8,"meter.png",1,1);
 
-        int textureId, frameX, frameY;
-        String pictureName;
+        public int textureId, frameX, frameY;
+        public String pictureName;
 
         EnumTexture(int id, String name, int xc, int yc)
             { textureId = id; pictureName = name; frameX = xc; frameY = yc;};

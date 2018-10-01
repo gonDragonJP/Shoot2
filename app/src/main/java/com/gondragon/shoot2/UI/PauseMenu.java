@@ -66,18 +66,18 @@ public class PauseMenu {
 
     public void hide(){
 
-        renderer.deleteRenderingTask(MyRenderer.Renderable.Timing.AFTERDRAW);
+        renderer.deleteRenderingTask(MyRenderer.Renderable.Timing.MENU);
         timer.cancel();
     }
 
     private void requestRender(){
 
-        renderer.deleteRenderingTask(MyRenderer.Renderable.Timing.AFTERDRAW);
+        renderer.deleteRenderingTask(MyRenderer.Renderable.Timing.MENU);
 
         MyRenderer.Renderable renderable = new MyRenderer.Renderable() {
             @Override
             public Timing getTiming() {
-                return Timing.AFTERDRAW;
+                return Timing.MENU;
             }
 
             @Override

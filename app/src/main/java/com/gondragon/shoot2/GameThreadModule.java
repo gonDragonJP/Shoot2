@@ -10,6 +10,7 @@ import com.gondragon.shoot2.database.AccessOfTextureData;
 import com.gondragon.shoot2.effect.ScreenEffect;
 import com.gondragon.shoot2.effect.StageEffect;
 import com.gondragon.shoot2.enemy.EnemyData;
+import com.gondragon.shoot2.indicator.MyIndicator;
 import com.gondragon.shoot2.myplane.MyPlane;
 import com.gondragon.shoot2.stage.StageData;
 import com.gondragon.shoot2.stage.StageManager;
@@ -27,6 +28,7 @@ public class GameThreadModule {
 
     private MyPlane myPlane;
     private StageManager stageManager;
+    private MyIndicator indicator;
     private MyRenderer renderer;
 
     private boolean isEnableTex = true;
@@ -49,14 +51,20 @@ public class GameThreadModule {
         myPlane = new MyPlane();
 
         stageManager = new StageManager(myPlane);
+
+        indicator = new MyIndicator(myPlane);
     }
 
-    public void setStage(int stageNumber){
+    public void initStageStarting(int stageNumber){
 
         CollisionDetection.initializeLists(); // staticリストをステージの最初にリセットします。
 
-
         stageManager.setStage(stageNumber);
+
+        setRendereringTasks();
+    }
+
+    private void setRendereringTasks(){
 
         //テクスチャをGLインターフェイスにバインドします
         MyRenderer.Renderable renderTask = new MyRenderer.Renderable() {
@@ -77,7 +85,44 @@ public class GameThreadModule {
 
         renderer.deleteRenderingTask(MyRenderer.Renderable.Timing.ONCREATE);
         renderer.addRenderingTask(renderTask);
+
+        renderTask = new MyRenderer.Renderable() {
+            @Override
+            public Timing getTiming() {
+
+                return Timing.ONDRAW;
+            }
+
+            @Override
+            public void render(GL10 gl) {
+
+                stageManager.onDraw(gl, isEnableTex);
+                myPlane.drawer.onDraw(gl);
+                myPlane.shotGenerator.onDraw(gl);
+            }
+        };
+
+        renderer.deleteRenderingTask(MyRenderer.Renderable.Timing.ONDRAW);
+        renderer.addRenderingTask(renderTask);
+
+        renderTask = new MyRenderer.Renderable() {
+            @Override
+            public Timing getTiming() {
+
+                return Timing.AFTERDRAW;
+            }
+
+            @Override
+            public void render(GL10 gl) {
+
+                indicator.onDraw(gl);
+            }
+        };
+
+        renderer.deleteRenderingTask(MyRenderer.Renderable.Timing.AFTERDRAW);
+        renderer.addRenderingTask(renderTask);
     }
+
 
     synchronized public void testEnemy(EnemyData enemyData){
 
@@ -126,9 +171,9 @@ public class GameThreadModule {
 
     private void makeTimerTask(){
 
-        timerTask = new TimerTask(){
 
-            int scrollMax = StageData.stageEndPoint;
+
+        timerTask = new TimerTask(){
 
             @Override
             synchronized public void run() {
@@ -146,26 +191,6 @@ public class GameThreadModule {
                 CollisionDetection.doAllDetection();
 
                 renderer.setScreenSlidingX(myPlane.x);
-
-                MyRenderer.Renderable renderTask = new MyRenderer.Renderable() {
-                    @Override
-                    public Timing getTiming() {
-
-                        return Timing.ONDRAW;
-                    }
-
-                    @Override
-                    public void render(GL10 gl) {
-
-                        stageManager.onDraw(gl, isEnableTex);
-                        myPlane.drawer.onDraw(gl);
-                        myPlane.shotGenerator.onDraw(gl);
-                    }
-                };
-
-                renderer.deleteRenderingTask(MyRenderer.Renderable.Timing.ONDRAW);
-                renderer.addRenderingTask(renderTask);
-                ScreenEffect.renderAllLists();
 
                 if(isTestMode){
 

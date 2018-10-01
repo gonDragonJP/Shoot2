@@ -1,5 +1,7 @@
 package com.gondragon.shoot2.animation;
 
+import com.gondragon.shoot2.texture.TextureInitializer;
+
 public class AnimationInitializer {
 
     public static GLTexSheet planeTex;
@@ -111,7 +113,7 @@ public class AnimationInitializer {
 
         myPlaneSet.normalAnime.drawSize.set(64, 64);
         //myPlaneSet.normalAnime.textureSheet = planeTex;
-        myPlaneSet.normalAnime.textureID = 0;
+        myPlaneSet.normalAnime.textureID = TextureInitializer.EnumTexture.MyPlane.textureId;
         myPlaneSet.normalAnime.frameOffset = 0;
 
         myShieldSet.normalAnime.drawSize.set(64, 64);
