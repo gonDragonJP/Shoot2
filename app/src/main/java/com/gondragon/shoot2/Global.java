@@ -47,7 +47,7 @@ public class Global {
         }
     }
 
-    public static final String enemyAndEventDatabaseName = "test";
+    public static final String enemyAndEventDatabaseName = "testDB";
     public static final int enemyAndEventDB_Version = 1;
     public static final String textureDatabaseName ="texDB";
     public static final int textureDB_Version = 1;

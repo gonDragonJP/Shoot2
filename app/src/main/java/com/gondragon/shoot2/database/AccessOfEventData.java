@@ -19,17 +19,20 @@ public class AccessOfEventData {
     private static Context context;
     private static String databaseName = Global.enemyAndEventDatabaseName;
     private static int databaseVersion = Global.enemyAndEventDB_Version;
+    private static String stgTableSuffix;
 
     public static void setContext(Context arg){
 
         context = arg;
     }
 
-    public static void setEventList(ArrayList<EventData> eventList){
+    public static void setEventList(ArrayList<EventData> eventList, int stage){
 
         SQLiteManager.initDatabase(context, databaseName, databaseVersion);
+        stgTableSuffix = "_Stage_" + String.valueOf(stage);
 
-        Cursor cursor = SQLiteManager.getRowValuesWithOrder("EventData","scrollPoint");
+        Cursor cursor = SQLiteManager.getRowValuesWithOrder
+                ("EventData"+stgTableSuffix,"scrollPoint");
         //sql = "select * from EventData order by scrollPoint;";
         cursor.moveToFirst();
 

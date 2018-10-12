@@ -3,7 +3,10 @@ package com.gondragon.shoot2.texture;
 import com.gondragon.shoot2.database.AccessOfTextureData;
 
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
+import java.util.function.Predicate;
 
 public class TextureInitializer {
 
@@ -77,7 +80,9 @@ public class TextureInitializer {
         TextureSheet[] sheets = new TextureSheet[maxIndex + 1];
         for(TextureSheet e: texSheetList){
 
-            sheets[e.textureID] = new TextureSheet(e);
+            if(e.textureID<1000) {
+                sheets[e.textureID] = new TextureSheet(e);
+            }
         }
 
         return sheets;
@@ -88,8 +93,41 @@ public class TextureInitializer {
         int result = 0;
         for(TextureSheet e: list){
 
-            result = Math.max(result, e.textureID);
+            if(e.textureID<1000)	// index1000番台は背景用テクスチャです
+                result = Math.max(result, e.textureID);
         }
         return result;
+    }
+
+    public static TextureSheet[] getBackgroundTexSheets(int stageNumber){
+
+        //未使用のメソッド　背景をdb登録から読みにいくメソッドですが煩雑なのでペンディング
+
+        List<TextureSheet> texSheetList = new ArrayList<>();
+        AccessOfTextureData.setTexDataList(texSheetList, stageNumber);
+        if (texSheetList.size() ==0) return null;
+
+        Iterator<TextureSheet> it = texSheetList.iterator();
+        while(it.hasNext()){
+            if(it.next().textureID<1000) it.remove();
+        }
+
+        List<TextureSheet> sortList = new ArrayList<>();
+        for(TextureSheet e: texSheetList){
+            if(sortList.size()==0) {sortList.add(e); continue;}
+            for(TextureSheet e2: sortList){
+                if(e.textureID < e2.textureID) {sortList.add(sortList.indexOf(e2),e); break;}
+                if(sortList.indexOf(e2) == sortList.size()-1) sortList.add(e);
+            }
+        }
+
+        TextureSheet[] sheets = new TextureSheet[sortList.size()];
+        for(int i=0; i<sortList.size(); i++){
+
+            TextureSheet e = sortList.get(i);
+            sheets[i] = new TextureSheet(e);
+        }
+
+        return sheets;
     }
 }

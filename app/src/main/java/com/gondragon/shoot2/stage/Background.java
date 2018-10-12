@@ -48,7 +48,7 @@ public class Background {
         return sheets;
     }
 
-    public static TextureSheet getSheet(int stageNumber, int textureId){
+    private static TextureSheet getSheet(int stageNumber, int textureId){
 
         TextureSheet sheet = new TextureSheet();
 
@@ -69,7 +69,7 @@ public class Background {
         drawOnePicture(gl, scrollPosition);
 
         // 続くスクロールを上に描写
-        int preIndex = (pictureIndex -1) <0 ? pictureNumber -1 : pictureIndex -1;
+        int preIndex = (pictureIndex +1) == pictureNumber ? 0 : pictureIndex +1;
         drawSheet = StageData.backgroundSheets[preIndex];
         drawOnePicture(gl, scrollPosition - pictureLength);
     }

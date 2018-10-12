@@ -68,6 +68,8 @@ public class StageData {
 
     public static void setStage(int stageNumber){
 
+        stage = stageNumber;
+
         DataByStage data = DataByStage.getData(stageNumber);
         isShadowOn = data.isStageShadowOn;
         stageEndPoint = data.stageLength;
@@ -122,13 +124,13 @@ public class StageData {
     public static void refreshEventListFromDB(){
 
         eventList.clear();
-        AccessOfEventData.setEventList(eventList);
+        AccessOfEventData.setEventList(eventList, stage);
     }
 
     public static void refreshEnemyListFromDB(){
 
         enemyList.clear();
-        AccessOfEnemyData.setEnemyList(enemyList);
+        AccessOfEnemyData.setEnemyList(enemyList, stage);
     }
 
     public static boolean isLastStage(){

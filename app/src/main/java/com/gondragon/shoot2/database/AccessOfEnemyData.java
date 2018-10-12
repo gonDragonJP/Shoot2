@@ -23,6 +23,7 @@ public class AccessOfEnemyData {
     private static Context context;
     private static String databaseName = Global.enemyAndEventDatabaseName;
     private static int databaseVersion = Global.enemyAndEventDB_Version;
+    private static String stgTableSuffix;
 
     private static Logger logger = Logger.getLogger("AccessOfEnemyData");
 
@@ -31,15 +32,17 @@ public class AccessOfEnemyData {
         context = arg;
     }
 
-    public static void setEnemyList(ArrayList<EnemyData> enemyList){
+    public static void setEnemyList(ArrayList<EnemyData> enemyList, int stage){
 
         SQLiteManager.initDatabase(context, databaseName, databaseVersion);
+        stgTableSuffix = "_Stage_" + String.valueOf(stage);
 
         ArrayList<Integer> stackList = new ArrayList<>();
         // cursorが単一オブジェクトの為、ネストでクエリ呼び出しすると正常に作動しない
         // ネストを避ける為、結果の一時退避用に使用しています
 
-        Cursor cursor = SQLiteManager.getTheColumnValues("BasicData", "objectID");
+        Cursor cursor = SQLiteManager.getTheColumnValues
+                ("BasicData"+stgTableSuffix, "objectID");
         // sql = "select objectID from BasicData ;";
         cursor.moveToFirst();
 
@@ -72,23 +75,28 @@ public class AccessOfEnemyData {
         String objectID =String.valueOf(enemyData.objectID);
         Cursor cursor;
 
-        cursor = SQLiteManager.getRowValuesWithSelection("BasicData", "objectID", objectID);
+        cursor = SQLiteManager.getRowValuesWithSelection
+                ("BasicData"+stgTableSuffix, "objectID", objectID);
         //sql = "select * from BasicData where objectID="+objectID+";";
         setBasicData(enemyData, cursor);
 
-        cursor = SQLiteManager.getRowValuesWithSelection("MovingNode", "parentID", objectID);
+        cursor = SQLiteManager.getRowValuesWithSelection
+                ("MovingNode"+stgTableSuffix, "parentID", objectID);
         //sql = "select * from MovingNode where parentID="+objectID+";";
         setMovingNode(enemyData, cursor);
 
-        cursor = SQLiteManager.getRowValuesWithSelection("GeneratorNode", "parentID", objectID);
+        cursor = SQLiteManager.getRowValuesWithSelection
+                ("GeneratorNode"+stgTableSuffix, "parentID", objectID);
         //sql = "select * from GeneratorNode where parentID="+objectID+";";
         setGeneratorNode(enemyData, cursor);
 
-        cursor = SQLiteManager.getRowValuesWithSelection("CollisionNode", "parentID", objectID);
+        cursor = SQLiteManager.getRowValuesWithSelection
+                ("CollisionNode"+stgTableSuffix, "parentID", objectID);
         //sql = "select * from CollisionNode where parentID="+objectID+";";
         setCollisionNode(enemyData, cursor);
 
-        cursor = SQLiteManager.getRowValuesWithSelection("AnimationData", "parentID", objectID);
+        cursor = SQLiteManager.getRowValuesWithSelection
+                ("AnimationData"+stgTableSuffix, "parentID", objectID);
         //sql = "select * from AnimationData where parentID="+objectID+";";
         setAnimationData(enemyData, cursor);
     }

@@ -29,7 +29,7 @@ public class AccessOfTextureData {
     private static Context context;
     private static String databaseName = Global.textureDatabaseName;
     private static int databaseVersion = Global.textureDB_Version;
-    private static String imageAssetsDir;
+    private static String imageAssetsDir, stgTableSuffix;
 
     public static void setContext(Context arg){
 
@@ -39,8 +39,10 @@ public class AccessOfTextureData {
     public static void setTexDataList(List<TextureSheet> texSheetList, int stageNumber){
 
         SQLiteManager.initDatabase(context, databaseName, databaseVersion);
+        stgTableSuffix = "_Stage_"+String.valueOf(stageNumber);
 
-        Cursor cursor = SQLiteManager.getRowValuesWithOrder("TextureData", "textureID");
+        Cursor cursor = SQLiteManager.getRowValuesWithOrder
+                ("TextureTable"+stgTableSuffix, "textureID");
         //sql = "select * from TextureData order by textureID;";
         cursor.moveToFirst();
 
@@ -59,7 +61,7 @@ public class AccessOfTextureData {
 
         setFromDatabase(textureSheet, cursor);
 
-        setImage(textureSheet);
+        setImage(textureSheet, textureSheet.textureID >=1000);
 
         return textureSheet;
     }
@@ -72,9 +74,9 @@ public class AccessOfTextureData {
         textureSheet.gridSizeY = cursor.getInt(cursor.getColumnIndex("gridSizeY"));
     }
 
-    private static void setImage(TextureSheet textureSheet){
+    private static void setImage(TextureSheet textureSheet, boolean isBackgroungSheet){
 
-        imageAssetsDir = "texImage/";
+        imageAssetsDir = isBackgroungSheet ? "bgImage/" : "texImage/";
 
         textureSheet.texImage = getTexImage(textureSheet.pictureName);
 
