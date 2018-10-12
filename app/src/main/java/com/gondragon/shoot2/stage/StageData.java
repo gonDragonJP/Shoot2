@@ -66,27 +66,28 @@ public class StageData {
 
     }
 
-    public static void setStage(int stageNumber){
+    public static void setStage(int stage){
 
-        stage = stageNumber;
+        StageData.stage = stage;
 
-        DataByStage data = DataByStage.getData(stageNumber);
+        DataByStage data = DataByStage.getData(stage);
         isShadowOn = data.isStageShadowOn;
         stageEndPoint = data.stageLength;
 
         Background.initialize(data.bgPicNumber);
 
         enemyTexSheets
-                = TextureInitializer.getStageEnemyTexSheets(stageNumber);
+                = TextureInitializer.getStageEnemyTexSheets(stage);
         enumTexSheets
                 = TextureInitializer.getEnumTexSheets();
         backgroundSheets
-                = Background.getBackgroundSheets(stageNumber);
+                //= Background.getBackgroundSheets(stage);
+                = TextureInitializer.getBackgroundTexSheets(stage);
 
         refreshEventListFromDB();
         refreshEnemyListFromDB();
 
-        derivativeEnemyFactory = new DerivativeEnemyFactory(stageNumber);
+        derivativeEnemyFactory = new DerivativeEnemyFactory(stage);
 
         isGLTexBinded = false; // glインターフェイスへのテクスチャバインドはまだ行われていません
     }

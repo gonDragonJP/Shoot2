@@ -3,10 +3,8 @@ package com.gondragon.shoot2.texture;
 import com.gondragon.shoot2.database.AccessOfTextureData;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
-import java.util.function.Predicate;
 
 public class TextureInitializer {
 
@@ -101,9 +99,7 @@ public class TextureInitializer {
 
     public static TextureSheet[] getBackgroundTexSheets(int stageNumber){
 
-        //未使用のメソッド　背景をdb登録から読みにいくメソッドですが煩雑なのでペンディング
-
-        List<TextureSheet> texSheetList = new ArrayList<>();
+        ArrayList<TextureSheet> texSheetList = new ArrayList<>();
         AccessOfTextureData.setTexDataList(texSheetList, stageNumber);
         if (texSheetList.size() ==0) return null;
 
@@ -112,14 +108,7 @@ public class TextureInitializer {
             if(it.next().textureID<1000) it.remove();
         }
 
-        List<TextureSheet> sortList = new ArrayList<>();
-        for(TextureSheet e: texSheetList){
-            if(sortList.size()==0) {sortList.add(e); continue;}
-            for(TextureSheet e2: sortList){
-                if(e.textureID < e2.textureID) {sortList.add(sortList.indexOf(e2),e); break;}
-                if(sortList.indexOf(e2) == sortList.size()-1) sortList.add(e);
-            }
-        }
+        List<TextureSheet> sortList = getSortList(texSheetList);
 
         TextureSheet[] sheets = new TextureSheet[sortList.size()];
         for(int i=0; i<sortList.size(); i++){
@@ -129,5 +118,24 @@ public class TextureInitializer {
         }
 
         return sheets;
+    }
+
+    private static ArrayList<TextureSheet> getSortList(ArrayList<TextureSheet> argList){
+
+        ArrayList<TextureSheet> sortList = new ArrayList<>();
+        for(TextureSheet e: argList){
+
+            if(sortList.size()==0) {sortList.add(e); continue;}
+
+            for(int i=0; i<sortList.size(); i++){
+
+                if(e.textureID < sortList.get(i).textureID) {
+                    sortList.add(i , e);
+                    break;
+                }
+                if(i == sortList.size()-1) sortList.add(e);
+            }
+        }
+        return sortList;
     }
 }
