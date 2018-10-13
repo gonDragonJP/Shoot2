@@ -18,18 +18,17 @@ public class StageData {
 
     private enum DataByStage {
 
-        Stage_01(1,1,8000,false),
-        Stage_02(2,3,8000,true),
-        Stage_03(3,1,8000,false),
-        Stage_04(4,1,8000,false),
-        Stage_05(5,1,8000,false);
+        Stage_01(1,8000,false),
+        Stage_02(2,8000,true),
+        Stage_03(3,8000,false),
+        Stage_04(4,8000,false),
+        Stage_05(5,8000,false);
 
-        public int stageNo, bgPicNumber, stageLength;
+        public int stageNo, stageLength;
         public boolean isStageShadowOn;
 
-        DataByStage(int stageNo, int bgPicNumber, int stageLength, boolean isStageShadowOn){
+        DataByStage(int stageNo, int stageLength, boolean isStageShadowOn){
             this.stageNo = stageNo;
-            this.bgPicNumber = bgPicNumber;
             this.stageLength = stageLength;
             this.isStageShadowOn = isStageShadowOn;
         };
@@ -74,15 +73,14 @@ public class StageData {
         isShadowOn = data.isStageShadowOn;
         stageEndPoint = data.stageLength;
 
-        Background.initialize(data.bgPicNumber);
-
         enemyTexSheets
                 = TextureInitializer.getStageEnemyTexSheets(stage);
         enumTexSheets
                 = TextureInitializer.getEnumTexSheets();
         backgroundSheets
-                //= Background.getBackgroundSheets(stage);
                 = TextureInitializer.getBackgroundTexSheets(stage);
+
+        Background.initialize(backgroundSheets.length);
 
         refreshEventListFromDB();
         refreshEnemyListFromDB();

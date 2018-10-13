@@ -140,7 +140,6 @@ public class TextureInitializer {
                 }
             }
         }
-
         return sortList;
     }
 }

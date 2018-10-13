@@ -36,30 +36,6 @@ public class Background {
         scrollPosition =0;
     }
 
-    public static TextureSheet[] getBackgroundSheets(int stageNumber){
-
-        TextureSheet[] sheets = new TextureSheet[pictureNumber];
-
-        for(int i=0; i<pictureNumber; i++) {
-
-            sheets[i] = getSheet(stageNumber, i);
-            AccessOfTextureData.setAssetImage(sheets[i], true);
-        }
-        return sheets;
-    }
-
-    private static TextureSheet getSheet(int stageNumber, int textureId){
-
-        TextureSheet sheet = new TextureSheet();
-
-        sheet.textureID = textureId;
-        sheet.frameNumberX = 1;
-        sheet.frameNumberY = 1;
-        sheet.pictureName = "bg_stg"+String.valueOf(stageNumber)+"_"+String.valueOf(textureId+1)+".png";
-
-        return sheet;
-    }
-
     public static void onDraw(GL10 gl, int scrollPoint){
 
         calcScroll(scrollPoint);
