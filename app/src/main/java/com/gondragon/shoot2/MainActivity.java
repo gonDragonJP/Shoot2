@@ -77,7 +77,7 @@ public class MainActivity extends Activity {
 
         super.onStart();
 
-        gameThread.initStageStarting(1);
+        gameThread.initStageStarting(2);
         gameThread.startThread();
     }
 

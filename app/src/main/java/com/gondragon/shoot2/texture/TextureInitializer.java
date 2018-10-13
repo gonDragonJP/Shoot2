@@ -123,6 +123,7 @@ public class TextureInitializer {
     private static ArrayList<TextureSheet> getSortList(ArrayList<TextureSheet> argList){
 
         ArrayList<TextureSheet> sortList = new ArrayList<>();
+
         for(TextureSheet e: argList){
 
             if(sortList.size()==0) {sortList.add(e); continue;}
@@ -133,9 +134,13 @@ public class TextureInitializer {
                     sortList.add(i , e);
                     break;
                 }
-                if(i == sortList.size()-1) sortList.add(e);
+                if(i == sortList.size()-1) {
+                    sortList.add(e);
+                    break;
+                }
             }
         }
+
         return sortList;
     }
 }
