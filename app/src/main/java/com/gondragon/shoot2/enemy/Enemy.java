@@ -15,7 +15,7 @@ public class Enemy extends ProtoEnemy{
 
     //private ItemGenerator itemGenerator;
     protected CallbackOfMyPlane cbOfMyPlane;
-    protected CallbackOfGeneratingChild cbOfGeneratingChild;
+    protected EnemyCommunicable enemiesManager;
 
     protected CalcParam calcParam;
 
@@ -44,13 +44,13 @@ public class Enemy extends ProtoEnemy{
 
     public Enemy(
             CallbackOfMyPlane cbOfMyPlanePos,
-            CallbackOfGeneratingChild cbOfGeneratingChild
+            EnemyCommunicable enemiesManager
     ){
         super();
         //itemGenerator = container.itemGenerator;
 
         this.cbOfMyPlane = cbOfMyPlanePos;
-        this.cbOfGeneratingChild = cbOfGeneratingChild;
+        this.enemiesManager = enemiesManager;
 
         initialize();
     }
@@ -157,6 +157,7 @@ public class Enemy extends ProtoEnemy{
         animeKind = AnimationSet.AnimeKind.EXPLOSION;
         totalAnimeFrame = 0;
 
+        if(myData.explosiveObjectID != -1) enemiesManager.generateExplosiveObject(this);
         //SoundEffect.play(SoundKind.EXPLOSION1);
     }
 
@@ -318,7 +319,7 @@ public class Enemy extends ProtoEnemy{
 
     public Enemy requestGenerating(){
 
-        return cbOfGeneratingChild.getGeneratingChild(this);
+        return enemiesManager.getGeneratingChild(this);
     }
 
     protected void refreshCollisionRegion(){

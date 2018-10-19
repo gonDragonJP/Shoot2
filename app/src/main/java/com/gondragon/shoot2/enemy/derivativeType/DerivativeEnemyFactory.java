@@ -1,8 +1,7 @@
 package com.gondragon.shoot2.enemy.derivativeType;
 
 import com.gondragon.shoot2.myplane.CallbackOfMyPlane;
-import com.gondragon.shoot2.myplane.MyPlane;
-import com.gondragon.shoot2.enemy.CallbackOfGeneratingChild;
+import com.gondragon.shoot2.enemy.EnemyCommunicable;
 import com.gondragon.shoot2.enemy.Enemy;
 import com.gondragon.shoot2.enemy.EnemyData;
 
@@ -39,7 +38,7 @@ public class DerivativeEnemyFactory {
 
             String enemyName, EnemyData.EnemyCategory category,
             CallbackOfMyPlane cbOfMyPlanePos,
-            CallbackOfGeneratingChild cbOfGeneratingChild
+            EnemyCommunicable enemiesManager
     ){
 
         DerivativeEnemy derivativeEnemy;
@@ -57,7 +56,7 @@ public class DerivativeEnemyFactory {
 
         }
 
-        derivativeEnemy.initialize(cbOfMyPlanePos, cbOfGeneratingChild);
+        derivativeEnemy.initialize(cbOfMyPlanePos, enemiesManager);
         // リフレクションで簡単にデフォルトインストラクタによる生成を行っているため後からイニシャライザで設定しています
 
         return (Enemy)derivativeEnemy;

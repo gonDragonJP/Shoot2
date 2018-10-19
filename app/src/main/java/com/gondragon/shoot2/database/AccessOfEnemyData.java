@@ -107,7 +107,7 @@ public class AccessOfEnemyData {
 
             enemyData.name = cursor.getString(cursor.getColumnIndex("name"));
             enemyData.isDerivativeType = cursor.getInt(cursor.getColumnIndex("isDerivativeType")) >0;
-            enemyData.textureID = cursor.getInt(cursor.getColumnIndex("textureID"));
+            enemyData.explosiveObjectID = cursor.getInt(cursor.getColumnIndex("explosiveObjectID"));
             enemyData.hitPoints = cursor.getInt(cursor.getColumnIndex("hitPoint"));
             enemyData.atackPoints = cursor.getInt(cursor.getColumnIndex("atackPoint"));
             enemyData.startPosition.x = cursor.getInt(cursor.getColumnIndex("startPosition_X"));

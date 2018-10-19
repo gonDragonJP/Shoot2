@@ -1,16 +1,14 @@
 package com.gondragon.shoot2.enemy;
 
 import com.gondragon.shoot2.myplane.CallbackOfMyPlane;
-import com.gondragon.shoot2.myplane.MyPlane;
 import com.gondragon.shoot2.enemy.derivativeType.DerivativeEnemyFactory;
 import com.gondragon.shoot2.vector.Int2Vector;
 
 import java.util.ArrayList;
-import java.util.logging.Logger;
 
 import javax.microedition.khronos.opengles.GL10;
 
-public class EnemiesManager {
+public class EnemiesManager implements EnemyCommunicable{
 
     private DerivativeEnemyFactory derivativeEnemyFactory;
     private CallbackOfMyPlane cbOfMyPlanePos;
@@ -43,6 +41,21 @@ public class EnemiesManager {
     public int getEnemyCount(){
 
         return enemyList.size();
+    }
+
+    @Override
+    public Enemy getGeneratingChild(Enemy parent) {
+
+        return addChildEnemy(parent);
+    }
+
+    @Override
+    public void generateExplosiveObject(Enemy parent) {
+
+        EnemyData srcData = getEnemyDataFromObjectID(parent.myData.explosiveObjectID);
+        Int2Vector startPos = new Int2Vector(0, 0);
+
+        generateEnemy(srcData, startPos, parent);
     }
 
 	/*synchronized public void onDrawShadow(GL10 gl){
@@ -149,25 +162,12 @@ public class EnemiesManager {
 
             EnemyData.EnemyCategory category = enemyData.getCategory();
 
-            enemy = derivativeEnemyFactory.getDerivativeEnemy(enemyData.name, category, cbOfMyPlanePos,
-                        new CallbackOfGeneratingChild() {
-                            @Override
-                            public Enemy getGeneratingChild(Enemy parent) {
-
-                                return addChildEnemy(parent);
-                            }
-                        });
+            enemy = derivativeEnemyFactory.getDerivativeEnemy
+                    (enemyData.name, category, cbOfMyPlanePos,this);
         }
         else{
 
-            enemy = new Enemy(cbOfMyPlanePos,
-                        new CallbackOfGeneratingChild() {
-                            @Override
-                            public Enemy getGeneratingChild(Enemy parent) {
-
-                                return addChildEnemy(parent);
-                            }
-                        });
+            enemy = new Enemy(cbOfMyPlanePos,this);
         }
 
         enemy.setData(enemyData, requestStartPos, parentEnemy);

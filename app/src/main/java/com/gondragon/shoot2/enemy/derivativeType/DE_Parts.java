@@ -21,8 +21,8 @@ public class DE_Parts extends DerivativeEnemy{
 		
 		super.setData(enemyData, requestPos, parentEnemy);
 		
-		partsProportion.x = enemyData.startPosition.x / 100f;
-		partsProportion.y = enemyData.startPosition.y / 100f;
+		partsProportion.x = (enemyData.startPosition.x + requestPos.x) / 100f;
+		partsProportion.y = (enemyData.startPosition.y + requestPos.y) / 100f;
 		
 		setPartsPosition();
 		

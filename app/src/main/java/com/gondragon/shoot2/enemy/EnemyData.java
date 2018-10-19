@@ -114,7 +114,7 @@ public class EnemyData {
     public String name;
     public boolean isDerivativeType;
     public int objectID;
-    public int textureID;
+    public int explosiveObjectID;
     public int hitPoints;
     public int atackPoints;
     public Int2Vector startPosition;
@@ -142,7 +142,7 @@ public class EnemyData {
         name = "";
         isDerivativeType = false;
         objectID = -1;
-        textureID = -1;
+        explosiveObjectID = -1;
 
         hitPoints = 0;
         atackPoints = 0;
@@ -162,7 +162,7 @@ public class EnemyData {
         this.name = src.name;
         this.isDerivativeType = src.isDerivativeType;
         this.objectID = src.objectID;
-        this.textureID = src.textureID;
+        this.explosiveObjectID = src.explosiveObjectID;
 
         this.hitPoints = src.hitPoints;
         this.atackPoints = src.atackPoints;
