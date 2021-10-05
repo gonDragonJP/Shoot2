@@ -9,6 +9,7 @@ import android.widget.LinearLayout;
 
 import com.gondragon.shoot2.UI.MenuView;
 import com.gondragon.shoot2.UI.PauseMenu;
+import com.gondragon.shoot2.sound.MusicManager;
 
 public class MainActivity extends Activity {
 
