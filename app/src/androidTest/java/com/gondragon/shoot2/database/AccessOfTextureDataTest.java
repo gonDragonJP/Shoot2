@@ -1,8 +1,8 @@
 package com.gondragon.shoot2.database;
 
 import android.content.Context;
-import android.graphics.Point;
-import android.support.test.InstrumentationRegistry;
+
+import androidx.test.platform.app.InstrumentationRegistry;
 import android.util.Log;
 
 import com.gondragon.shoot2.texture.TextureSheet;
@@ -10,14 +10,8 @@ import com.gondragon.shoot2.texture.TextureSheet;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.junit.Assert.*;
 
 public class AccessOfTextureDataTest {
 
