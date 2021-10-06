@@ -52,6 +52,8 @@ public class MainActivity extends Activity {
 
     private void initializeGameCompornent(){
 
+        MusicManager.initialize(this);
+        MusicManager.playBGM(0);
         gameThread = new GameThreadModule(this, renderer);
     }
 

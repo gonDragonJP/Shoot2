@@ -3,11 +3,11 @@ package com.gondragon.shoot2.sound;
 import android.content.Context;
 import android.media.MediaPlayer;
 
-import java.util.Hashtable;
-import java.util.Map;
-
 import com.gondragon.shoot2.Global;
 import com.gondragon.shoot2.R;
+
+import java.util.Hashtable;
+import java.util.Map;
 
 public class MusicManager {
 
