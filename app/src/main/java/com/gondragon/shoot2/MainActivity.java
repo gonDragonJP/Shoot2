@@ -9,6 +9,7 @@ import android.widget.LinearLayout;
 
 import com.gondragon.shoot2.UI.MenuView;
 import com.gondragon.shoot2.UI.PauseMenu;
+import com.gondragon.shoot2.sound.MusicManager;
 
 public class MainActivity extends Activity {
 
@@ -51,6 +52,8 @@ public class MainActivity extends Activity {
 
     private void initializeGameCompornent(){
 
+        MusicManager.initialize(this);
+        MusicManager.playBGM(0);
         gameThread = new GameThreadModule(this, renderer);
     }
 
