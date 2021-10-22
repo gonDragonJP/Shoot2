@@ -7,6 +7,7 @@ import com.gondragon.shoot2.Global;
 import com.gondragon.shoot2.GraphicPad;
 import com.gondragon.shoot2.myplane.MyPlane;
 import com.gondragon.shoot2.myplane.MyPlaneDrawer;
+import com.gondragon.shoot2.sound.SoundEffect;
 import com.gondragon.shoot2.vector.Double2Vector;
 
 import javax.microedition.khronos.opengles.GL10;
@@ -272,7 +273,7 @@ public class ShotGenerator {
 
         shotTime = currentTime;
 
-        //SoundEffect.play(SoundKind.MYSHOT);
+        SoundEffect.play(SoundEffect.SoundKind.MYSHOT);
     }
 
     private void addDualShots(){
