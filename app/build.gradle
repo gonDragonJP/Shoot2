@@ -5,7 +5,7 @@ android {
     defaultConfig {
         applicationId "com.gondragon.shoot2"
         minSdkVersion 30
-        targetSdkVersion 30
+        targetSdkVersion 33
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
